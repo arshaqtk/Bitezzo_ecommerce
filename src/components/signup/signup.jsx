@@ -1,6 +1,7 @@
-import React, { useReducer } from 'react'
+import React, { useContext, useReducer } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../../api/axiosConfig'
+import { AuthContext } from '../../context/AuthContext'
 
 function reducer(state, action) {
     switch (action.type) {
@@ -21,28 +22,47 @@ const initialValue = {
     cnfmPswrd: ""
 }
 
-function SignupPage() {
+function Signup() {
 
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
     const [state, dispatch] = useReducer(reducer, initialValue)
+    const {signup}=useContext(AuthContext)
+    
 
-    const handlesubmit = (e) => {
+    const handlesubmit = async (e) => {
+
         e.preventDefault()
-        console.log(state.password)
-        console.log(state.cnfmPswrd)
+
         if (state.password !== state.cnfmPswrd) {
             alert("password and cnfrm are not same")
-            return 
-        } else {
+            return
+        } else if (
+            !state.username.trim() ||
+            !state.email.trim() ||
+            !state.password.trim() ||
+            !state.cnfmPswrd.trim()
+        ) {
+            console.log("Please fill in all fields");
+        }
+        else {
+
+            const newUser = {
+                username: state.username,
+                email: state.email,
+                password: state.password
+            }
+
+
             try {
-                const data = api.post('/users', state)
-                if (data.length === 0) {
-                    throw new Error("Error Occured")
-                } 
-                navigate('/login')
+               await signup(newUser)
+               alert("Registered Successfully")
+                // const data = api.post('/users', newUser)
+                // if (data.length === 0) {
+                //     throw new Error("Error Occured")
+                // }
+                // navigate('/login')
             } catch (e) {
                 console.error(e)
-                alert("Error On Sign-Up")
             }
         }
     }
@@ -76,8 +96,9 @@ function SignupPage() {
 
                 <button type='submit' className='border' >Submit</button>
             </form>
+            <p>Already Have an Account</p>
         </>
     )
 }
 
-export default SignupPage
+export default Signup
