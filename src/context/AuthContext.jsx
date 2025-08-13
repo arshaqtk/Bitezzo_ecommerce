@@ -7,10 +7,10 @@ export const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(localStorage.getItem("user") || null)
+  const [isAuthenticated,setIsAuthenticated]=useState(false)
   const navigate = useNavigate()
 
   const signup = async (newuser) => {
-    alert("sign up called")
     try {
       const response = await api.get(`/users?email=${newuser.email}`)
       if (response.data.length > 0) {
@@ -28,16 +28,20 @@ export const AuthProvider = ({ children }) => {
   }
 
   const login = async (email, password) => {
-    alert("login called")
     try {
+      alert(email,password
+      )
       const response = await api.get(`/users?email=${email}&&password=${password}`)
       if (response.data.length === 0) {
         throw new Error("The UserName or Password doesn't Match")
       } else {
         setUser(response.data[0])
+        setIsAuthenticated(true)
         localStorage.setItem("user", JSON.stringify(response.data[0]))
+        console.log(response.data[0].id)
         alert("success")
-        navigate('/signup')
+
+        navigate("/")
       }
     } catch (e) {
       throw (e)
