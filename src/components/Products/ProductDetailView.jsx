@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import api from "../../api/axiosConfig"
+import Axios_instance from "../../api/axiosConfig"
 import Nav from "../NavBar/Nav"
 
 function ProductDetailView(){
@@ -11,8 +11,9 @@ function ProductDetailView(){
 
     useEffect(()=>{
         async function fetchData(){
-            const {data}=await api.get(`/products?id=${id}`)
+            const {data}=await Axios_instance.get(`/products?id=${id}`)
             console.log(data)
+            
             const filteredData=data.map(({id,name,price,image,category,description})=>({id,name,price,image,description,category}))
             setProduct(filteredData)
         }

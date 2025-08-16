@@ -1,24 +1,31 @@
 import { createContext, useState } from "react"
-import api from "../api/axiosConfig"
+import Axios_instance from "../api/axiosConfig"
 import { useNavigate } from "react-router-dom"
 
 
 export const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(localStorage.getItem("user") || null)
-  const [isAuthenticated,setIsAuthenticated]=useState(false)
+  const [user, setUser] = useState(()=>{
+    try{
+      const storedUser=localStorage.getItem("user")
+      return storedUser?JSON.parse(storedUser):""
+    }catch{
+      return null
+    }
+  })
   const navigate = useNavigate()
 
   const signup = async (newuser) => {
     try {
-      const response = await api.get(`/users?email=${newuser.email}`)
+      const response = await Axios_instance.get(`/users?email=${newuser.email}`)
       if (response.data.length > 0) {
         throw new Error("Email id Already Exists")
       } else {
-        const Postresponse = await api.post('/users', newuser)
-        setUser(Postresponse.data)
-        localStorage.setItem("user", JSON.stringify(Postresponse.data))
+        const userData={...newuser,cart:[],order:[]}
+        const Postresponse = await Axios_instance.post('/users', userData)
+        // setUser(Postresponse.data)
+        // localStorage.setItem("user", JSON.stringify(Postresponse.data))
         navigate('/login')
       }
 
@@ -31,16 +38,14 @@ export const AuthProvider = ({ children }) => {
     try {
       alert(email,password
       )
-      const response = await api.get(`/users?email=${email}&&password=${password}`)
+      const response = await Axios_instance.get(`/users?email=${email}&&password=${password}`)
       if (response.data.length === 0) {
         throw new Error("The UserName or Password doesn't Match")
       } else {
         setUser(response.data[0])
-        setIsAuthenticated(true)
-        localStorage.setItem("user", JSON.stringify(response.data[0]))
-        console.log(response.data[0].id)
-        alert("success")
-
+        const localStorageLoginData={isAuthenticated:true,id:user.id,username:user.username}
+        console.log(localStorageLoginData)
+        localStorage.setItem("user", JSON.stringify(localStorageLoginData))
         navigate("/")
       }
     } catch (e) {
@@ -48,12 +53,14 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  const logout = () => {
-    setUser(null)
+    const logout = () => {
+    setUser("")
     localStorage.removeItem("user")
   }
 
-  return (<AuthContext.Provider value={{ user, signup, login, logout }}>
+
+
+  return (<AuthContext.Provider value={{ user, signup, login,logout }}>
     {children}
   </AuthContext.Provider>)
 }
