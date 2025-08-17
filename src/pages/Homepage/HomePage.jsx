@@ -4,14 +4,14 @@ import Banner from '../../components/Banner/Banner'
 import { useNavigate } from 'react-router-dom'
 import Axios_instance from '../../api/axiosConfig'
 import Footer from '../../components/Footer/Footer'
-import { addToCart } from '../../services/AddCart'
+import { useCartActions } from '../../hooks/UseCartAction'
 import { AuthContext } from '../../context/AuthContext'
 
 function HomePage() {
     const navigate=useNavigate()
     const [product,setProduct]=useState([])
      const {user}=useContext(AuthContext)
-
+ const { addToCart } = useCartActions();
 
      useEffect(()=>{
         async function fetchData(){
@@ -70,7 +70,8 @@ function HomePage() {
           {/* Add to Cart Button */}
           <div className="mt-4">
             <button className="w-full px-4 py-2 bg-[#FFD369] text-[#222831] rounded-lg text-sm font-medium hover:bg-[#e6be5c] transition cursor-pointer" 
-            onClick={()=>addToCart({user_id:user.id,product_id:item.id})}
+            onClick={()=>addToCart({user_id:user.id,productId:item.id,name:item.name,price:item.price,image:item.image})}
+                       
             >
               Add to Cart
             </button>

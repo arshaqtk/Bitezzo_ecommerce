@@ -1,15 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import Axios_instance from '../../api/axiosConfig';
+
 // import { AuthContext } from '../../context/AuthContext'
 
 function Nav() {
 
 
+
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const cartItemCount = 3; // Replace with dynamic count
-    const wishlistCount = 3;
+    const [cartItemCount,setCartItemsCount] =useState() 
+    const [wishlistCount,setWishlistCount] =useState() 
     const [showAccountMenu, setShowAccountMenu] = useState(false)
     const [user, setUser] = useState("")
+    
 
     const navigate = useNavigate()
 
@@ -18,13 +22,37 @@ function Nav() {
         console.log(user.username)
     }
     useEffect(() => {
-        const storedUser = localStorage.getItem("user")
-        setUser(storedUser ? JSON.parse(storedUser) : "")
-    }, [])
+  const storedUser = localStorage.getItem("user");
+  setUser(storedUser ? JSON.parse(storedUser) : null);
+}, []);
+
+    useEffect(() => {
+         if (!user) return;
+        async function fetchData(){
+            try{
+                const user_id = user.id
+            console.log(user_id)
+             const userResponse = await Axios_instance.get(`users/${user_id}`)
+            const userData = userResponse.data
+
+            const cartLength=userData.cart.length
+            setCartItemsCount(cartLength)
+
+             const wishlistLength=userData.wishlist.length
+            setWishlistCount(wishlistLength)
+            }catch (e) {
+      console.error(e);
+    }
+            
+        }
+        fetchData()
+       
+    }, [user])
 
     const logout = () => {
         setUser("")
         localStorage.removeItem("user")
+        navigate('/')
     }
 
     return (
@@ -32,7 +60,7 @@ function Nav() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-18 items-center">
                     {/* Logo */}
-                    <button href="/" className="text-2xl font-bold text-red-500">
+                    <button onClick={()=>navigate("/")} className="text-2xl font-bold text-red-500">
                         Bitezzo
                     </button>
 
@@ -89,7 +117,9 @@ function Nav() {
                                 </span>
                             )}
                         </button>
-                        <button className="relative text-white hover:text-red-500">
+                        <button className="relative text-white hover:text-red-500" 
+                        onClick={()=>navigate('/wishlist')}
+                        >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 className="h-6 w-6"

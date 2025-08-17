@@ -23,9 +23,11 @@ export const AuthProvider = ({ children }) => {
         throw new Error("Email id Already Exists")
       } else {
         const userData={...newuser,cart:[],order:[]}
+
         const Postresponse = await Axios_instance.post('/users', userData)
-        // setUser(Postresponse.data)
-        // localStorage.setItem("user", JSON.stringify(Postresponse.data))
+
+        setUser(Postresponse.data)
+        localStorage.setItem("user", JSON.stringify(Postresponse.data))
         navigate('/login')
       }
 
@@ -39,12 +41,14 @@ export const AuthProvider = ({ children }) => {
       alert(email,password
       )
       const response = await Axios_instance.get(`/users?email=${email}&&password=${password}`)
+     
       if (response.data.length === 0) {
         throw new Error("The UserName or Password doesn't Match")
       } else {
         setUser(response.data[0])
-        const localStorageLoginData={isAuthenticated:true,id:user.id,username:user.username}
-        console.log(localStorageLoginData)
+        
+        const localStorageLoginData={isAuthenticated:true,id:response.data[0].id,username:response.data[0].username}
+        
         localStorage.setItem("user", JSON.stringify(localStorageLoginData))
         navigate("/")
       }
@@ -53,14 +57,14 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-    const logout = () => {
-    setUser("")
-    localStorage.removeItem("user")
-  }
+  //   const logout = () => {
+  //   setUser("")
+  //   localStorage.removeItem("user")
+  // }
 
 
 
-  return (<AuthContext.Provider value={{ user, signup, login,logout }}>
+  return (<AuthContext.Provider value={{ user, signup, login }}>
     {children}
   </AuthContext.Provider>)
 }
