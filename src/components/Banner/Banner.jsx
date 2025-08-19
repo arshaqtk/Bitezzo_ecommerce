@@ -1,7 +1,10 @@
 import React from 'react'
 import BannerBg from "../../assets/images/Banner-bg.png";
+import { useNavigate } from 'react-router-dom';
+
 
 function Banner () {
+  const navigate=useNavigate()
   return (
      <section
       className="relative h-[90vh] flex items-center justify-center bg-cover bg-center"
@@ -20,7 +23,9 @@ function Banner () {
         <p className="text-lg md:text-xl mb-6">
           Your journey to amazing products starts here.
         </p>
-        <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg text-lg font-semibold shadow-lg">
+        <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg text-lg font-semibold shadow-lg"
+        onClick={() => navigate('/products')}
+        >
           Shop Now
         </button>
       </div>

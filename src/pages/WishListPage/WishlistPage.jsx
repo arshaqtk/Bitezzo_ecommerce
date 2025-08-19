@@ -1,31 +1,16 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Axios_instance from "../../api/axiosConfig";
 import Nav from "../../components/NavBar/Nav";
+import { WishListContext } from "../../context/WishlistContext";
 
-function WishlistPage({ wishlist, removeFromWishlist }) {
+function WishlistPage() {
+
   const navigate = useNavigate();
-   const [wishlistItems, setWishListItems] = useState([])
-  useEffect(() => {
-         const user = JSON.parse(localStorage.getItem("user"))||""
-        const user_id = user.id
-        if(user_id){
-            
-            async function fetchData() {
-            try {
-                console.log(user.id)
-                const { data } = await Axios_instance.get(`/users?id=${user.id}`)
-                const wishListData = data[0].wishlist
-                setWishListItems(wishListData)
-                console.log(wishListData)
-            } catch (e) {
-                console.log(e)
-            }
-        }
-        fetchData()
-        }
-        
-    }, [])
+
+   const {removeWishlist,wishlistItems}=useContext(WishListContext);
+
+
 
 
   return (<>
@@ -47,7 +32,7 @@ function WishlistPage({ wishlist, removeFromWishlist }) {
               {/* Image */}
               <div
                 className="relative overflow-hidden cursor-pointer"
-                onClick={() => navigate(`/productview/${item.id}`)}
+                onClick={() => navigate(`/productview/${item.productId}`)}
               >
                 <img
                   src={item.productImage}
@@ -60,7 +45,7 @@ function WishlistPage({ wishlist, removeFromWishlist }) {
                   className="absolute top-2 right-2 p-2 bg-white/80 rounded-full shadow-md hover:bg-red-100 transition"
                   onClick={(e) => {
                     e.stopPropagation();
-                    // removeFromWishlist(item.id);
+                    removeWishlist(item.productId);
                   }}
                 >
                   <svg
@@ -85,7 +70,7 @@ function WishlistPage({ wishlist, removeFromWishlist }) {
 
                 <button
                   className="w-full mt-4 px-4 py-2 bg-[#FFD369] text-[#222831] rounded-lg font-medium hover:bg-[#e6be5c] transition"
-                  onClick={() => navigate(`/productview/${item.id}`)}
+                  onClick={() => navigate(`/productview/${item.productId}`)}
                 >
                   View Product
                 </button>

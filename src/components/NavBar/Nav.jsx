@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Axios_instance from '../../api/axiosConfig';
+import { Sun, Moon } from "lucide-react"; 
+import { CartContext } from '../../context/CartContext';
 
 // import { AuthContext } from '../../context/AuthContext'
 
@@ -9,11 +11,14 @@ function Nav() {
 
 
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [cartItemCount,setCartItemsCount] =useState() 
-    const [wishlistCount,setWishlistCount] =useState() 
+    const [cartItemCount, setCartItemsCount] = useState()
+    const [wishlistCount, setWishlistCount] = useState()
     const [showAccountMenu, setShowAccountMenu] = useState(false)
     const [user, setUser] = useState("")
+      const { cartItems } =useContext(CartContext);
     
+    //  const [isDark, setIsDark] = useState(false);
+
 
     const navigate = useNavigate()
 
@@ -22,60 +27,69 @@ function Nav() {
         console.log(user.username)
     }
     useEffect(() => {
-  const storedUser = localStorage.getItem("user");
-  setUser(storedUser ? JSON.parse(storedUser) : null);
-}, []);
+        const storedUser = localStorage.getItem("user");
+        setUser(storedUser ? JSON.parse(storedUser) : "");
+    }, []);
 
     useEffect(() => {
-         if (!user) return;
-        async function fetchData(){
-            try{
+        if (!user) return;
+        async function fetchData() {
+            try {
                 const user_id = user.id
-            console.log(user_id)
-             const userResponse = await Axios_instance.get(`users/${user_id}`)
-            const userData = userResponse.data
+                console.log(user_id)
+                const userResponse = await Axios_instance.get(`users/${user_id}`)
+                const userData = userResponse.data
 
-            const cartLength=userData.cart.length
-            setCartItemsCount(cartLength)
+                const cartLength = userData.cart.length
+                setCartItemsCount(cartLength)
 
-             const wishlistLength=userData.wishlist.length
-            setWishlistCount(wishlistLength)
-            }catch (e) {
-      console.error(e);
-    }
-            
+                const wishlistLength = userData.wishlist.length
+                setWishlistCount(wishlistLength)
+            } catch (e) {
+                console.error(e);
+            }
+
         }
         fetchData()
-       
-    }, [user])
+
+    }, [cartItems])
 
     const logout = () => {
-        setUser("")
+        const log_out=confirm("Are You Sure !")
+        if(log_out){
+              setUser("")
         localStorage.removeItem("user")
         navigate('/')
+        }
+      
     }
 
+//      const toggleTheme = () => {
+//     setIsDark(!isDark);
+//     localStorage.setItem("DarkTheme",isDark)
+//   };
+
     return (
-        <nav className="bg-[#222831]  shadow-md">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav className={`${localStorage.getItem("DarkTheme")=="true"?"bg-[#222831]":"bg-white"}  shadow-md`}>
+            <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-18 items-center">
                     {/* Logo */}
-                    <button onClick={()=>navigate("/")} className="text-2xl font-bold text-red-500">
+                    <button onClick={() => navigate("/")} className="text-2xl font-bold text-red-500 cursor-pointer">
                         Bitezzo
                     </button>
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex space-x-8">
-                        <button className="text-white hover:text-red-500 font-medium" onClick={() => navigate('/')}>
+                        <button className="text-white hover:text-red-500 font-medium cursor-pointer" onClick={() => navigate('/')}>
                             Home
                         </button>
-                        <button className="text-white hover:text-red-500 font-medium" onClick={() => navigate('/products')}>
+                        <button className="text-white hover:text-red-500 font-medium cursor-pointer" onClick={() => navigate('/products')}>
                             Shop
                         </button>
-                        <button className="text-white hover:text-red-500 font-medium" onClick={() => navigate('/')}>
+                        <button className="text-white hover:text-red-500 font-medium cursor-pointer" onClick={() => navigate('/')}>
                             About
                         </button>
-                        <button className="text-white hover:text-red-500 font-medium" onClick={() => navigate('/')}>
+                        <button className="text-white hover:text-red-500 font-medium cursor-pointer" onClick={() => navigate('/')}>
                             Contact
                         </button>
                     </div>
@@ -87,13 +101,13 @@ function Nav() {
                             <input
                                 type="text"
                                 placeholder="Search products..."
-                                className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 text-white focus:ring-red-500"
+                                className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 text-white focus:ring-red-500 cursor-pointer"
                             />
                         </div>
 
                         {/* Cart */}
-                        <button className="relative text-white hover:text-red-500" 
-                        onClick={()=>navigate('/cart')}
+                        <button className="relative text-white hover:text-red-500 cursor-pointer"
+                            onClick={() => navigate('/cart')}
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -117,8 +131,8 @@ function Nav() {
                                 </span>
                             )}
                         </button>
-                        <button className="relative text-white hover:text-red-500" 
-                        onClick={()=>navigate('/wishlist')}
+                        <button className="relative text-white hover:text-red-500 cursor-pointer"
+                            onClick={() => navigate('/wishlist')}
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -147,7 +161,7 @@ function Nav() {
                             {/* Profile Icon Button */}
                             <button
                                 onClick={toggleAccountMenu}
-                                className="relative text-white hover:text-blue-500 transition-colors duration-200 p-2 rounded-full hover:bg-gray-100 focus:outline-none"
+                                className="relative text-white hover:text-blue-500 transition-colors duration-200 p-2 rounded-full hover:bg-gray-100 focus:outline-none cursor-pointer"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -191,7 +205,18 @@ function Nav() {
                                     </div>
                                 ))}
                         </div>
-
+                        {/* <div>
+                            <button
+                                onClick={toggleTheme}
+                                className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 transition-colors duration-300 shadow-md hover:scale-105"
+                            >
+                                {isDark ? (
+                                    <Sun className="h-5 w-5 text-yellow-400" />
+                                ) : (
+                                    <Moon className="h-5 w-5 text-gray-800" />
+                                )}
+                            </button>
+                        </div> */}
 
                         {/* Mobile menu button */}
                         <div className="md:hidden">
@@ -239,7 +264,7 @@ function Nav() {
                         Home
                     </button>
                     <button
-
+                    onClick={() => navigate('/products')}
                         className="block px-4 py-3 text-white hover:bg-indigo-50 hover:text-red-500"
                     >
                         Shop

@@ -4,14 +4,14 @@ import Banner from '../../components/Banner/Banner'
 import { useNavigate } from 'react-router-dom'
 import Axios_instance from '../../api/axiosConfig'
 import Footer from '../../components/Footer/Footer'
-import { useCartActions } from '../../hooks/UseCartAction'
+import { CartContext} from '../../context/CartContext'
 import { AuthContext } from '../../context/AuthContext'
 
 function HomePage() {
     const navigate=useNavigate()
     const [product,setProduct]=useState([])
      const {user}=useContext(AuthContext)
- const { addToCart } = useCartActions();
+ const { addToCart } = useContext(CartContext);
 
      useEffect(()=>{
         async function fetchData(){
@@ -19,13 +19,10 @@ function HomePage() {
                 const response=await Axios_instance.get('/products?_limit=4')
         const responseData=response.data
         const Products=responseData.map(({id,name,price,image})=>({id,name,price,image}))
-      
         setProduct(Products)
-        console.log(Products)
             }catch(e){
                 console.log(e)
-            }
-        
+            }    
     }
     fetchData()
     
@@ -35,8 +32,10 @@ function HomePage() {
     <> 
     <Nav/>
     <Banner/>
-    <div className="flex justify-center items-center bg-white/50">
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-6 w-[90vw]">
+    <div className=" bg-white/50">
+    <h2 className="text-3xl font-bold text-center text-black p-5 underline ">Top Selling Dishes</h2>
+    <div className='flex justify-center items-center'>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-6 w-[90vw]">
     {product.map((item, index) => (
       <div
         key={index}
@@ -80,6 +79,8 @@ function HomePage() {
       </div>
     ))}
   </div>
+    </div>
+  
 </div>
      <Footer/>
     </>

@@ -1,6 +1,7 @@
 import { createContext, useState } from "react"
 import Axios_instance from "../api/axiosConfig"
 import { useNavigate } from "react-router-dom"
+import toast from "react-hot-toast"
 
 
 export const AuthContext = createContext()
@@ -20,40 +21,42 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await Axios_instance.get(`/users?email=${newuser.email}`)
       if (response.data.length > 0) {
-        throw new Error("Email id Already Exists")
+        toast.error("Email id Already Exists")
       } else {
-        const userData={...newuser,cart:[],order:[]}
+        
+        const userData={...newuser,cart:[],wishlist:[],orders:[]}
 
         const Postresponse = await Axios_instance.post('/users', userData)
 
-        setUser(Postresponse.data)
+        setUser(userData)
         localStorage.setItem("user", JSON.stringify(Postresponse.data))
+        toast.success("Signup SuccessFull")
         navigate('/login')
       }
 
     } catch (e) {
-      throw (e)
+     console.log(e)
     }
   }
 
   const login = async (email, password) => {
     try {
-      alert(email,password
-      )
+    
       const response = await Axios_instance.get(`/users?email=${email}&&password=${password}`)
      
       if (response.data.length === 0) {
-        throw new Error("The UserName or Password doesn't Match")
+        toast.error("The UserName or Password doesn't Match")
       } else {
         setUser(response.data[0])
         
         const localStorageLoginData={isAuthenticated:true,id:response.data[0].id,username:response.data[0].username}
         
         localStorage.setItem("user", JSON.stringify(localStorageLoginData))
+        toast.success("Logined Successfully")
         navigate("/")
       }
     } catch (e) {
-      throw (e)
+      console.log(e)
     }
   }
 

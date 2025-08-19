@@ -17,10 +17,10 @@ function Footer() {
         <div>
           <h2 className="text-lg font-semibold text-white mb-4">Quick Links</h2>
           <ul className="space-y-2">
-            <li><a href="/" className="hover:text-white transition">Home</a></li>
-            <li><a href="/menu" className="hover:text-white transition">Menu</a></li>
-            <li><a href="/about" className="hover:text-white transition">About Us</a></li>
-            <li><a href="/contact" className="hover:text-white transition">Contact</a></li>
+            <li><button  className="hover:text-white transition">Home</button></li>
+            <li><button className="hover:text-white transition">Menu</button></li>
+            <li><button  className="hover:text-white transition">About Us</button></li>
+            <li><button  className="hover:text-white transition">Contact</button></li>
           </ul>
         </div>
 
@@ -28,10 +28,10 @@ function Footer() {
         <div>
           <h2 className="text-lg font-semibold text-white mb-4">Customer Service</h2>
           <ul className="space-y-2">
-            <li><a href="/faq" className="hover:text-white transition">FAQ</a></li>
-            <li><a href="/shipping" className="hover:text-white transition">Shipping Info</a></li>
-            <li><a href="/returns" className="hover:text-white transition">Returns & Refunds</a></li>
-            <li><a href="/support" className="hover:text-white transition">Support</a></li>
+            <li><button  className="hover:text-white transition">FAQ</button></li>
+            <li><button  className="hover:text-white transition">Shipping Info</button></li>
+            <li><button  className="hover:text-white transition">Returns & Refunds</button></li>
+            <li><button  className="hover:text-white transition">Support</button></li>
           </ul>
         </div>
 

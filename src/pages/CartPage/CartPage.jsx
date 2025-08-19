@@ -2,11 +2,13 @@ import React, { useContext, useEffect, useState } from 'react'
 import Axios_instance from '../../api/axiosConfig'
 import { AuthContext } from '../../context/AuthContext'
 import Nav from '../../components/NavBar/Nav'
-import { useCartActions } from '../../hooks/UseCartAction'
+import { CartContext } from '../../context/CartContext'
+import { useNavigate } from 'react-router-dom'
 
 function Cartpage() {
 
-    const {  removeItem, updateQuantity, cartItems, cartItemCount, subTotal} = useCartActions()
+    const {  removeItem, updateQuantity, cartItems, cartItemCount, subTotal} = useContext(CartContext);
+    const navigate=useNavigate()
     
     return (
         <>
@@ -33,7 +35,7 @@ function Cartpage() {
                                             />
                                             <div>
                                                 <h2 className="text-lg font-semibold">{item.productName}</h2>
-                                                <p className="text-gray-600">${item.productPrice}</p>
+                                                <p className="text-gray-600">₹{item.productPrice}</p>
                                             </div>
                                         </div>
 
@@ -71,9 +73,10 @@ function Cartpage() {
                             {/* Summary Section */}
                             <div className="mt-8 flex flex-col md:flex-row justify-between items-center">
                                 <div className="text-lg font-semibold">
-                                    Subtotal: <span className="text-green-600">${subTotal}</span>
+                                    Subtotal: <span className="text-green-600">₹{subTotal}</span>
                                 </div>
-                                <button className="mt-4 md:mt-0 bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg">
+                                <button className="mt-4 md:mt-0 bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg"
+                                onClick={()=>navigate("/order")}>
                                     Proceed to Checkout
                                 </button>
                             </div>

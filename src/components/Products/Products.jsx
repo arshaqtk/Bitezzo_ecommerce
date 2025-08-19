@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { useContext } from "react"
 import Axios_instance from '../../api/axiosConfig'
 import { useNavigate } from 'react-router-dom'
-import { useCartActions } from '../../hooks/UseCartAction'
-import { useWishListActions } from '../../hooks/UseWishListActions'
+import { CartContext } from '../../context/CartContext'
+import {  WishListContext } from '../../context/WishlistContext'
 
 import { AuthContext } from '../../context/AuthContext'
+
 
 
 function Products() {
@@ -15,8 +16,8 @@ function Products() {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const navigate = useNavigate()
   const { user } = useContext(AuthContext)
-  const { addToCart } = useCartActions();
-  const {addToWishlist}=useWishListActions()
+  const { addToCart,cartQuantity } =useContext(CartContext);
+  const {addToWishlist}=useContext(WishListContext);
 
   useEffect(() => {
     async function fetchData() {
@@ -48,35 +49,36 @@ function Products() {
   return (
 
     <>
+    
       <div className=" bg-white/50">
         <div className="bg-white/50 p-8 rounded-xl shadow-md">
           <div className="flex flex-wrap gap-4 justify-center">
-            <button className="px-6 py-3 bg-white/70 border border-gray-300 text-gray-800 font-medium rounded-lg shadow-sm hover:bg-gray-100 transition"
+            <button className="px-6 py-3 bg-white/70 border border-gray-300 text-gray-800 font-medium rounded-lg shadow-sm hover:bg-gray-100 transition cursor-pointer"
               onClick={() => filterProduct("all")}
             >
               All
             </button>
-            <button className="px-6 py-3 bg-white/70 border border-gray-300 text-gray-800 font-medium rounded-lg shadow-sm hover:bg-gray-100 transition"
+            <button className="px-6 py-3 bg-white/70 border border-gray-300 text-gray-800 font-medium rounded-lg shadow-sm hover:bg-gray-100 transition cursor-pointer"
               onClick={() => filterProduct("drinks")}
             >
               Drinks & Beverages
             </button>
-            <button className="px-6 py-3 bg-white/70 border border-gray-300 text-gray-800 font-medium rounded-lg shadow-sm hover:bg-gray-100 transition"
+            <button className="px-6 py-3 bg-white/70 border border-gray-300 text-gray-800 font-medium rounded-lg shadow-sm hover:bg-gray-100 transition cursor-pointer"
               onClick={() => filterProduct("fastFood")}
             >
               Fast Food
             </button>
-            <button className="px-6 py-3 bg-white/70 border border-gray-300 text-gray-800 font-medium rounded-lg shadow-sm hover:bg-gray-100 transition"
+            <button className="px-6 py-3 bg-white/70 border border-gray-300 text-gray-800 font-medium rounded-lg shadow-sm hover:bg-gray-100 transition cursor-pointer"
               onClick={() => filterProduct("gravy")}
             >
               Gravy & Curry Dishes
             </button>
-            <button className="px-6 py-3 bg-white/70 border border-gray-300 text-gray-800 font-medium rounded-lg shadow-sm hover:bg-gray-100 transition"
+            <button className="px-6 py-3 bg-white/70 border border-gray-300 text-gray-800 font-medium rounded-lg shadow-sm hover:bg-gray-100 transition cursor-pointer"
               onClick={() => filterProduct("snacks")}
             >
               Snacks & Sides
             </button>
-            <button className="px-6 py-3 bg-white/70 border border-gray-300 text-gray-800 font-medium rounded-lg shadow-sm hover:bg-gray-100 transition"
+            <button className="px-6 py-3 bg-white/70 border border-gray-300 text-gray-800 font-medium rounded-lg shadow-sm hover:bg-gray-100 transition cursor-pointer"
               onClick={() => filterProduct("desserts")}
             >
               Desserts & Sweets
@@ -114,7 +116,7 @@ function Products() {
                   <button
                     className="absolute top-2 right-2 p-1 rounded-full shadow-md hover:bg-red-100 transition"
                     onClick={(e) =>  {
-                      e.stopPropagation(); // prevent navigating if inside clickable card
+                      e.stopPropagation(); 
                       setIsWishlisted(!isWishlisted);
                       addToWishlist({user_id: user.id,
                           productId: item.id,
@@ -126,7 +128,7 @@ function Products() {
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-6 w-6 text-red-500"
-                      fill={isWishlisted ? "currentColor" : "transparent"} // transparent initially
+                      fill= "transparent" 
                       stroke="currentColor"
                       strokeWidth={2}
                       viewBox="0 0 24 24"
@@ -139,12 +141,13 @@ function Products() {
                   <h3 className="text-lg font-semibold text-black truncate">{item.name}</h3>
 
                   {/* Price */}
-                  <p className="text-[#FFD369] font-medium mt-2">₹{item.price}</p>
+                  <p className="text-black font-medium mt-2">₹{item.price}</p>
 
                   {/* Add to Cart Button */}
                   <div className="mt-4">
                     <button
                       className="w-full px-4 py-2 bg-[#FFD369] text-[#222831] rounded-lg text-sm font-medium hover:bg-[#e6be5c] transition cursor-pointer"
+                      
                       onClick={() =>
                         addToCart({
                           user_id: user.id,
@@ -163,6 +166,7 @@ function Products() {
             ))}
           </div>
         </div>
+        
 
       </div>
 
