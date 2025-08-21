@@ -7,7 +7,7 @@ function Banner () {
   const navigate=useNavigate()
   return (
      <section
-      className="relative h-[90vh] flex items-center justify-center bg-cover bg-center"
+      className="relative h-[90vh] flex items-center justify-center bg-cover bg-center mt-17"
       style={{
         backgroundImage: `url(${BannerBg})`,
       }}

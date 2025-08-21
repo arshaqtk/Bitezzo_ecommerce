@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
         toast.error("Email id Already Exists")
       } else {
         
-        const userData={...newuser,cart:[],wishlist:[],orders:[]}
+        const userData={...newuser,cart:[],wishlist:[],shippingAddress:[],orders:[]}
 
         const Postresponse = await Axios_instance.post('/users', userData)
 
@@ -60,14 +60,19 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  //   const logout = () => {
-  //   setUser("")
-  //   localStorage.removeItem("user")
-  // }
+
+    const logout = () => {
+        const log_out=confirm("Are You Sure !")
+        if(log_out){
+              setUser(null)
+        localStorage.removeItem("user")
+        navigate('/')
+        }
+      
+    }
 
 
-
-  return (<AuthContext.Provider value={{ user, signup, login }}>
+  return (<AuthContext.Provider value={{ user, signup, login,logout }}>
     {children}
   </AuthContext.Provider>)
 }

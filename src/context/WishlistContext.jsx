@@ -16,14 +16,12 @@ export  const WishlistProvider=({ children }) => {
    useEffect(() => {
        
         if(user.id){
-            
             async function fetchData() {
             try {
-                console.log(user.id)
                 const { data } = await Axios_instance.get(`/users?id=${user.id}`)
                 const wishListData = data[0].wishlist
                 setWishListItems(wishListData)
-                console.log(wishListData)
+               
             } catch (e) {
                 console.log(e)
             }
@@ -31,7 +29,7 @@ export  const WishlistProvider=({ children }) => {
         fetchData()
         }
         
-    }, [wishlistItems])
+    }, [])
 
  const addToWishlist = async ({ productId, name, price, image }) => {
     setWishListToggle(!wishlistToggle)
@@ -47,13 +45,14 @@ export  const WishlistProvider=({ children }) => {
                 const updatedWishlist = userData.wishlist.filter(item => item.productId !== productId);
 
                 const wishlistRemoved =   await Axios_instance.patch(`/users/${user.id}`, { wishlist: updatedWishlist })
-                console.log("removed",updatedWishlist)
+               
                 toast.success("removed")
 
             }else{
                 const wishlist = [...userData.wishlist, { productId: productId, productName: name, productPrice: price, productImage: image }]
                 const userUpdated = { ...userData, wishlist }
                 const wishlistUpdated = await Axios_instance.put(`/users/${user.id}`, userUpdated)
+                setWishListItems(wishlist)
                 toast.success("Wishlist Added")
             }
                 

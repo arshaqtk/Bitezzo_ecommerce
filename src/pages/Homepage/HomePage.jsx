@@ -32,7 +32,7 @@ function HomePage() {
     <> 
     <Nav/>
     <Banner/>
-    <div className=" bg-white/50">
+    <div className=" bg-[#FAF1E6]">
     <h2 className="text-3xl font-bold text-center text-black p-5 underline ">Top Selling Dishes</h2>
     <div className='flex justify-center items-center'>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-6 w-[90vw]">
@@ -58,13 +58,13 @@ function HomePage() {
         </div>
 
         {/* Content */}
-        <div className="p-3">
+        <div className="p-3 bg-white/50">
           <h3 className="text-lg font-semibold text-black truncate">
             {item.name}
           </h3>
 
           {/* Price */}
-          <p className="text-[#FFD369] font-medium mt-2">₹{item.price}</p>
+          <p className="text-black font-medium mt-2">₹{item.price}</p>
 
           {/* Add to Cart Button */}
           <div className="mt-4">

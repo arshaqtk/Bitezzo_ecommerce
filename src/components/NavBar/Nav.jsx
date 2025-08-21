@@ -1,8 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Axios_instance from '../../api/axiosConfig';
-import { Sun, Moon } from "lucide-react"; 
+import { Sun, Moon } from "lucide-react";
 import { CartContext } from '../../context/CartContext';
+import { AuthContext } from '../../context/AuthContext';
+import { WishListContext } from '../../context/WishlistContext';
+import { SearchContext } from '../../context/SearchContext';
 
 // import { AuthContext } from '../../context/AuthContext'
 
@@ -14,33 +17,33 @@ function Nav() {
     const [cartItemCount, setCartItemsCount] = useState()
     const [wishlistCount, setWishlistCount] = useState()
     const [showAccountMenu, setShowAccountMenu] = useState(false)
-    const [user, setUser] = useState("")
-      const { cartItems } =useContext(CartContext);
-    
-    //  const [isDark, setIsDark] = useState(false);
+    const [searchValue, setSearchValue] = useState("")
+
+    const { user, logout } = useContext(AuthContext)
+    const { cartItems } = useContext(CartContext);
+    const { wishlistItems } = useContext(WishListContext);
+    const { acceptSearchValue } = useContext(SearchContext);
+
 
 
     const navigate = useNavigate()
 
     function toggleAccountMenu() {
         setShowAccountMenu((prev) => !prev)
-        console.log(user.username)
+       
     }
-    useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-        setUser(storedUser ? JSON.parse(storedUser) : "");
-    }, []);
+
 
     useEffect(() => {
         if (!user) return;
         async function fetchData() {
             try {
                 const user_id = user.id
-                console.log(user_id)
+               
                 const userResponse = await Axios_instance.get(`users/${user_id}`)
                 const userData = userResponse.data
 
-                const cartLength = userData.cart.length
+                const cartLength = cartItems.length
                 setCartItemsCount(cartLength)
 
                 const wishlistLength = userData.wishlist.length
@@ -52,25 +55,20 @@ function Nav() {
         }
         fetchData()
 
-    }, [cartItems])
+    }, [cartItems, wishlistItems])
 
-    const logout = () => {
-        const log_out=confirm("Are You Sure !")
-        if(log_out){
-              setUser("")
-        localStorage.removeItem("user")
-        navigate('/')
-        }
-      
+
+
+    const handleSearchInput = (e) => {
+        setSearchValue(e.target.value)
+        console.log(e.target.value)
     }
-
-//      const toggleTheme = () => {
-//     setIsDark(!isDark);
-//     localStorage.setItem("DarkTheme",isDark)
-//   };
-
+    const handleSearchSubmit=(e)=>{
+      e.preventDefault();
+        acceptSearchValue(searchValue)
+    }
     return (
-        <nav className={`${localStorage.getItem("DarkTheme")=="true"?"bg-[#222831]":"bg-white"}  shadow-md`}>
+        <nav className="bg-[#222831]   shadow-md fixed top-0 w-full z-10">
             <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-18 items-center">
                     {/* Logo */}
@@ -98,11 +96,16 @@ function Nav() {
                     <div className="flex items-center space-x-4">
                         {/* Search input (hidden on mobile) */}
                         <div className="hidden sm:block">
-                            <input
+                            <form action="" onSubmit={handleSearchSubmit}> <input
+                                 onChange={handleSearchInput}
                                 type="text"
+                                
                                 placeholder="Search products..."
                                 className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 text-white focus:ring-red-500 cursor-pointer"
                             />
+                            <button type='button'></button>
+                            </form>
+                           
                         </div>
 
                         {/* Cart */}
@@ -131,6 +134,34 @@ function Nav() {
                                 </span>
                             )}
                         </button>
+                        {/* Orders */}
+                        <button
+                            className="relative text-white hover:text-red-500 cursor-pointer"
+                            onClick={() => navigate('/order')}
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-6 w-6"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={2}
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M5 7h14l-1.5 12a2 2 0 01-2 2H8.5a2 2 0 01-2-2L5 7z"
+                                />
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M9 7V5a3 3 0 016 0v2"
+                                />
+                            </svg>
+
+
+                        </button>
+
                         <button className="relative text-white hover:text-red-500 cursor-pointer"
                             onClick={() => navigate('/wishlist')}
                         >
@@ -179,7 +210,7 @@ function Nav() {
                                     />
                                 </svg>
                             </button>
-                            {user.isAuthenticated ?
+                            {user ?
                                 (showAccountMenu && (
                                     <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden z-50">
                                         <ul className="py-1">
@@ -264,7 +295,7 @@ function Nav() {
                         Home
                     </button>
                     <button
-                    onClick={() => navigate('/products')}
+                        onClick={() => navigate('/products')}
                         className="block px-4 py-3 text-white hover:bg-indigo-50 hover:text-red-500"
                     >
                         Shop

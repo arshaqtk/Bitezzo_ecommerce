@@ -27,12 +27,12 @@ function ProductDetailView() {
 
   return (
     <><Nav />
-      <div className="bg-[FAF6E9] min-h-screen py-10">
-        <div className="max-w-6xl mx-auto p-6 space-y-8">
+      <div className="bg-[#FAF1E6] ] min-h-screen py-10  mt-17">
+        <div className="max-w-6xl mx-auto p-6 space-y-8 ">
           {product.map((product) => (
             <div
               key={product.id}
-              className=" rounded-2xl shadow-xl flex flex-col md:flex-row gap-6 items-center p-4 md:p-6 transition-transform transform hover:-translate-y-1 hover:shadow-2xl min-h-[300px]"
+              className=" rounded-2xl shadow-xl flex flex-col md:flex-row gap-6 items-center p-4 md:p-6 transition-transform transform hover:-translate-y-1 hover:shadow-2xl min-h-[300px] bg-white/50"
             >
               {/* Product Image */}
               <div className="flex-1 flex items-center justify-center min-h-[500px]">

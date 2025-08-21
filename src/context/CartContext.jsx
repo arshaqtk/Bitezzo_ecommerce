@@ -13,11 +13,11 @@ export const CartProvider = ({ children }) => {
     const [cartItems, setCartItems] = useState([])
     const [cartItemCount, setCartItemsCount] = useState([{ id: "", count: 1, productPrice: 0 }])
     const [subTotal, setSubTotal] = useState(0)
-  
+
     const { user } = useContext(AuthContext)
 
-//_________Data____Fetching_______________
-    
+    //_________Data____Fetching_______________
+
     useEffect(() => {
         if (user.id) {
 
@@ -43,43 +43,34 @@ export const CartProvider = ({ children }) => {
             fetchData()
         }
 
-    }, [cartItems])
+    }, [])
 
 
 
 
-//________Add_To_Cart__________
+    //________Add_To_Cart__________
 
 
     const addToCart = async ({ productId, name, price, image }) => {
 
 
         try {
-            
+
             if (user.id) {
                 const userResponse = await Axios_instance.get(`users/${user.id}`)
                 const userData = userResponse.data
+                
+                const cart = [...userData.cart, { productId: productId, productName: name, productPrice: price, productImage: image, productQuantity: 1 }]
+                setCartItems(cart)
+                const userUpdated = { ...userData, cart }
+
+                
+                const cartUpdated = await Axios_instance.put(`/users/${user.id}`, userUpdated)
+                const subtotal = cart.reduce((sum, item) => sum + item.productPrice * item.productQuantity, 0);
+                setSubTotal(subtotal);
+                toast.success("Added to cart!");
 
 
-                if (userData.cart.find((item) => item.productId == productId)) {
-                 const updatedItemQuantity=userData.cart.map((item)=>{
-                        return {...item,productQuantity:item.productQuantity+1}     
-                    })
-                     const UpdatedCart = await Axios_instance.patch(`/users/${user.id}`, { cart: updatedItemQuantity })
-                     toast.success("Quantity Updated")
-                     
-                    } else {
-                        
-                        const cart = [...userData.cart, { productId: productId, productName: name, productPrice: price, productImage: image, productQuantity: 1 }]
-                        setCartItems(cart)
-                        const userUpdated = { ...userData, cart }
-
-                    console.log(userUpdated)
-                    const cartUpdated = await Axios_instance.put(`/users/${user.id}`, userUpdated)
-                    
-                    toast.success("Added to cart!");
-                    
-                }
             } else {
                 toast.error("Login First")
                 navigate('/login')
@@ -95,7 +86,7 @@ export const CartProvider = ({ children }) => {
 
 
 
-//________UpdateQuantity_____________
+    //________UpdateQuantity_____________
 
 
     const updateQuantity = async (id, type) => {
@@ -135,7 +126,7 @@ export const CartProvider = ({ children }) => {
 
 
 
-//______Remove_Item_From_Cart___________
+    //______Remove_Item_From_Cart___________
 
 
 
@@ -150,7 +141,10 @@ export const CartProvider = ({ children }) => {
             const filteredCart = cartData.filter((item) => item.productId != id)
             setCartItems(filteredCart)
             const updatedCart = await Axios_instance.patch(`/users/${user.id}`, { cart: filteredCart })
+
             toast.success("Item Removed ")
+            const subtotal = filteredCart.reduce((sum, item) => sum + item.productPrice * item.productQuantity, 0);
+            setSubTotal(subtotal);
         }
         catch (e) { }
 
@@ -160,8 +154,8 @@ export const CartProvider = ({ children }) => {
 
 
 
- return (<CartContext.Provider value={{  addToCart, removeItem, updateQuantity, cartItems, cartItemCount, subTotal }}>
-    {children}
-  </CartContext.Provider>)
-   
+    return (<CartContext.Provider value={{ addToCart, removeItem, updateQuantity, cartItems, cartItemCount, subTotal }}>
+        {children}
+    </CartContext.Provider>)
+
 }

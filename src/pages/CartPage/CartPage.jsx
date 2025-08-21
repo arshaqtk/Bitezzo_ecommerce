@@ -13,7 +13,7 @@ function Cartpage() {
     return (
         <>
             <Nav />
-            <div className="bg-gray-100 min-h-screen p-6">
+            <div className="bg-gray-100 min-h-screen p-6  mt-17 bg-[#FAF1E6]">
                 <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-lg p-6">
                     <h1 className="text-2xl font-bold mb-6">Shopping Cart</h1>
 
@@ -76,7 +76,7 @@ function Cartpage() {
                                     Subtotal: <span className="text-green-600">₹{subTotal}</span>
                                 </div>
                                 <button className="mt-4 md:mt-0 bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg"
-                                onClick={()=>navigate("/order")}>
+                                onClick={()=>navigate("/checkout")}>
                                     Proceed to Checkout
                                 </button>
                             </div>

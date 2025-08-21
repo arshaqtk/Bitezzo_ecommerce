@@ -2,7 +2,7 @@ import { lazy, Suspense } from 'react';
 import Nav from '../../components/NavBar/Nav';
 const Products = lazy(() => import('../../components/Products/Products'));
 
-import { LottieAnimation } from '../../components/Animation/LottieAnimation';
+import { LottieAnimation } from '../../components/Animation/Loading';
 
 
 function ProductPage() {
