@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react'
-import Nav from '../../components/NavBar/Nav'
-import Banner from '../../components/Banner/Banner'
+import Nav from '../components/NavBar/Nav'
+import Banner from '../components/Banner/Banner'
 import { useNavigate } from 'react-router-dom'
-import Axios_instance from '../../api/axiosConfig'
-import Footer from '../../components/Footer/Footer'
-import { CartContext} from '../../context/CartContext'
-import { AuthContext } from '../../context/AuthContext'
+import Axios_instance from '../api/axiosConfig'
+import Footer from '../components/Footer/Footer'
+import { CartContext} from '../context/CartContext'
+import { AuthContext } from '../context/AuthContext'
 
 function HomePage() {
     const navigate=useNavigate()

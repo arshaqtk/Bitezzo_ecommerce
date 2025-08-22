@@ -1,8 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
-import Axios_instance from '../../api/axiosConfig'
-import { AuthContext } from '../../context/AuthContext'
-import Nav from '../../components/NavBar/Nav'
-import { CartContext } from '../../context/CartContext'
+import Nav from '../components/NavBar/Nav'
+import { CartContext } from '../context/CartContext'
 import { useNavigate } from 'react-router-dom'
 
 function Cartpage() {
@@ -13,7 +11,7 @@ function Cartpage() {
     return (
         <>
             <Nav />
-            <div className="bg-gray-100 min-h-screen p-6  mt-17 bg-[#FAF1E6]">
+            <div className="bg-gray-100 min-h-screen p-6  mt-17 ">
                 <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-lg p-6">
                     <h1 className="text-2xl font-bold mb-6">Shopping Cart</h1>
 

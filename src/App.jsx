@@ -1,15 +1,18 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 
-import ProductDetailView from "./components/Products/ProductDetailView";
-import Cartpage from "./pages/CartPage/CartPage";
-import HomePage from "./pages/Homepage/HomePage";
-import LoginPage from "./pages/Login/LoginPage";
 
-import CheckoutPage from "./pages/CheckoutPage/CheckoutPage";
-import ProductPage from "./pages/Products/ProductPage";
-import SignupPage from "./pages/Signup/SignupPage";
-import WishlistPage from "./pages/WishListPage/WishlistPage";
-import PaymentPage from "./pages/PaymentPage/PaymentPage";
+import ProductDetailView from "./components/Products/ProductDetailView";
+import Cartpage from "./pages/CartPage";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+
+import CheckoutPage from "./pages/CheckoutPage";
+import ProductPage from "./pages/ProductPage";
+import SignupPage from "./pages/SignupPage";
+import WishlistPage from "./pages/WishlistPage";
+import PaymentPage from "./pages/PaymentPage";
+import SearchPage from "./pages/SearchPage";
+
 
 import { ProtectedRoute } from "./components/Routes/ProtectedRoutes";
 import { AuthProvider } from "./context/AuthContext"
@@ -20,9 +23,9 @@ import { OrderProvider } from "./context/OrderContext"
 
 import { Toaster } from "react-hot-toast";
 import { PublicRoute } from "./components/Routes/PublicRoutes";
-import OrderPage from "./pages/OrderPage/OrderPage";
 import { SearchProvider } from "./context/SearchContext";
-import SearchPage from "./pages/SearchPage/SearchPage";
+import OrderPage from "./pages/OrderPage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
 
@@ -45,8 +48,7 @@ function App() {
                   <Route path="/payment" element={<PaymentPage/>}/>
                   <Route path="/order" element={<OrderPage/>}/>
                   <Route path="/search" element={<SearchPage/>}/>
-
-
+                  <Route path="/profile" element={<ProfilePage/>}/>
                 </Route>
 
                 <Route element={<PublicRoute />}>

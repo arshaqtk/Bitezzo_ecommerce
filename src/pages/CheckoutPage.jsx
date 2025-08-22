@@ -1,46 +1,52 @@
 
-import Nav from '../../components/NavBar/Nav'
+import Nav from '../components/NavBar/Nav'
 import  { useState, useMemo, useContext, useEffect } from "react";
-import { OrderContext } from "../../context/OrderContext";
-import Axios_instance from '../../api/axiosConfig';
-import { AuthContext } from '../../context/AuthContext';
-import { CartContext } from '../../context/CartContext';
-import { useNavigate } from 'react-router-dom';
+import { OrderContext } from "../context/OrderContext";
+import Axios_instance from '../api/axiosConfig';
+import { AuthContext } from '../context/AuthContext';
+import { CartContext } from '../context/CartContext';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function CheckoutPage() {
 
     
   const { user } = useContext(AuthContext)
   const {subTotal}=useContext(CartContext);
-  const {addShippingAddress}=useContext(OrderContext)
+  const {shippingDetails,moveToPaymentPage,addShippingAddress}=useContext(OrderContext)
+  const location = useLocation();
+  const navigate=useNavigate()
 
-
-  const [name, setName] = useState(user.username);
-  const [phone,setPhone]=useState("")
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [pincode, setPincode] = useState("");
+  
+  const [username, setName] = useState(user.username);
+  const [phone,setPhone]=useState(shippingDetails.phone||"")
+  const [address, setAddress] = useState(shippingDetails.address||"");
+  const [city, setCity] = useState(shippingDetails.city||"");
+  const [pincode, setPincode] = useState(shippingDetails.pincode||"");
   const [method, setMethod] = useState("regular");
 
+  const { productId,price,fromBuyNow } = location.state || {};
 
-  const [totalAmount,setTotalAmount]=useState(subTotal)
+ let finalTotal = subTotal;
+ if (location.state?.fromBuyNow) {
+    finalTotal = location.state.price;
+  }
+  const [totalAmount,setTotalAmount]=useState(finalTotal)
 
 
   const [cartProductsId,setCartProductsId]=useState([])
-
 
   
   const deliveryFee = useMemo(() => {
 
     if (method === "express") {
-      setTotalAmount(subTotal+40)
+      setTotalAmount(finalTotal+40)
       return 40;}
       
       if (method === "fastest")  {
-        setTotalAmount(subTotal+70)
+        setTotalAmount(finalTotal+70)
         return 70;}
 
-        setTotalAmount(subTotal+20)
+        setTotalAmount(finalTotal+20)
         return 20; 
 
       }, [method]);
@@ -58,7 +64,7 @@ function CheckoutPage() {
         fetchProduct()
       },[method])
       
-      const shippingData={name:name,
+      const shippingData={name:username,
         address:address,
         city:city,
         pincode:pincode,
@@ -68,8 +74,7 @@ function CheckoutPage() {
 const handleSubmit=(e)=>{
   alert("button clicked")
   e.preventDefault();
-  addShippingAddress(shippingData,totalAmount)
-
+  addShippingAddress(shippingData,totalAmount,{ fromBuyNow,productId })
 }
 
   return (
@@ -86,7 +91,7 @@ const handleSubmit=(e)=>{
           required
             type="text"
             placeholder="Full Name"
-            value={name}
+            value={username}
             onChange={(e) => setName(e.target.value)}
             className="w-full border rounded-md p-2"
           />
@@ -146,7 +151,7 @@ const handleSubmit=(e)=>{
             <span>₹{deliveryFee}</span>
           </div>
           <div className="text-lg font-semibold">
-                                    Subtotal: <span className="text-green-600">₹{subTotal}+{deliveryFee}={totalAmount}</span>
+                                    Subtotal: <span className="text-green-600">₹{finalTotal}+{deliveryFee}={totalAmount}</span>
                                 </div>
           <button className="w-full bg-orange-600 text-white p-2 rounded-md" type="submit">
             Proceed to Checkout

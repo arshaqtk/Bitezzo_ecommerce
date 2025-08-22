@@ -4,12 +4,14 @@ import Axios_instance from "../../api/axiosConfig"
 import Nav from "../NavBar/Nav"
 import { CartContext } from "../../context/CartContext"
 import { AuthContext } from "../../context/AuthContext"
+import { OrderContext } from "../../context/OrderContext"
 
 function ProductDetailView() {
   let { id } = useParams()
   const [product, setProduct] = useState([])
   const navigate = useNavigate()
   const { addToCart } = useContext(CartContext);
+  const { buyNow } = useContext(OrderContext)
   const { user } = useContext(AuthContext)
 
 
@@ -75,9 +77,20 @@ function ProductDetailView() {
                   </button>
                   <button
                     className="bg-gray-700 text-gray-200 px-5 py-2 rounded-lg shadow-md hover:bg-gray-600 transition cursor-pointer"
-                    onClick={() => navigate("/products")}
+                    onClick={() =>
+                      navigate("/checkout", {
+                        state: {
+                          fromBuyNow: true,
+                          user_id: user.id,
+                          productId: product.id,
+                          name: product.name,
+                          price: product.price,
+                          image: product.image,
+                        },
+                      })
+                    }
                   >
-                    Back to Shop
+                    Buy Now
                   </button>
                 </div>
               </div>

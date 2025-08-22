@@ -1,27 +1,37 @@
 import React, { useContext } from 'react'
-import { OrderContext } from '../../context/OrderContext'
-import { CartContext } from '../../context/CartContext';
-import { AuthContext } from '../../context/AuthContext';
+import { OrderContext } from '../context/OrderContext'
+import { CartContext } from '../context/CartContext';
+import { AuthContext } from '../context/AuthContext';
+import { useLocation } from 'react-router-dom';
 
 function PaymentPage() {
 
-const {shippingDetails,addPayment}=useContext(OrderContext)
+const {shippingDetails,addCartPayment,addBuyNowPayment}=useContext(OrderContext)
   const { user } = useContext(AuthContext)
-  const {subTotal,cartItems}=useContext(CartContext);
+ const {totalAmount}=useContext(OrderContext)
   console.log(shippingDetails)
+    const location = useLocation();
+  
 
+
+    const { productId,fromBuyNow } = location.state || {};
 
   const openRazorpay = () => {
     const options = {
       key: "rzp_test_edrzdb8Gbx5U5M", // Dummy Test Key
-      amount: subTotal*100, // = 500.00 INR
+      amount: totalAmount*100, // = 500.00 INR
       currency: "INR",
       name: "My Shop",
       description: "Test Transaction",
       image: "https://yourlogo.png",
       handler: function (response) {
         alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
-        addPayment(response.razorpay_payment_id,subTotal)
+        if(fromBuyNow){
+          addBuyNowPayment(response.razorpay_payment_id,totalAmount,productId)
+        }else{
+           addCartPayment(response.razorpay_payment_id,totalAmount)
+        }
+       
         // here you would call json-server and update order
         // fetch("http://localhost:3000/orders", {method:"POST", body: JSON.stringify({...})})
       },
@@ -68,7 +78,7 @@ const {shippingDetails,addPayment}=useContext(OrderContext)
           </div>
           <div className="flex justify-between items-center">
             <span className="text-gray-600 font-bold">Amount:</span>
-            <span className="font-semibold text-green-600">{subTotal}</span>
+            <span className="font-semibold text-green-600">{totalAmount}</span>
           </div>
         </div>
 

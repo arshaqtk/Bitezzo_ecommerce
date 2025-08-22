@@ -1,15 +1,16 @@
 
 import React, { useEffect, useState } from 'react'
-import Nav from '../../components/NavBar/Nav'
+import Nav from '../components/NavBar/Nav'
 
 import { useContext } from "react"
-import Axios_instance from '../../api/axiosConfig'
+import Axios_instance from '../api/axiosConfig'
 import { useNavigate } from 'react-router-dom'
-import { CartContext } from '../../context/CartContext'
-import { WishListContext } from '../../context/WishlistContext'
+import { CartContext } from '../context/CartContext'
+import { WishListContext } from '../context/WishlistContext'
 
-import { AuthContext } from '../../context/AuthContext'
-import { SearchContext } from '../../context/SearchContext'
+import { AuthContext } from '../context/AuthContext'
+import { SearchContext } from '../context/SearchContext'
+import { SearchNotFound } from '../components/Animation/SearchNotFound'
 
 
 function SearchPage() {
@@ -50,8 +51,9 @@ function SearchPage() {
   return (
     <>
     <Nav/>
-    <div className=" bg-[#FAF1E6]  mt-17 h-[100vh]">
+    <div className=" bg-[#FAF1E6]  mt-17 h-screen">
       <h2 className='font-semibold text-center text-2xl pt-7'>Showing {product.length}  Results For "{searchValue}"</h2>
+      {product.length==0?<div className="flex justify-center items-center h-screen"><SearchNotFound/></div>:
         <div className='flex justify-center items-center bg-[#FAF1E6]  '>
           <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-6 p-6 w-[90vw] bg-[#FAF1E6]">
             {product.map((item, index) => (
@@ -153,7 +155,7 @@ function SearchPage() {
           </div>
         </div>
 
-
+}
       </div>
     </>
     

@@ -17,33 +17,33 @@ export const CartProvider = ({ children }) => {
     const { user } = useContext(AuthContext)
 
     //_________Data____Fetching_______________
+    async function fetchData() {
+        try {
+            const { data } = await Axios_instance.get(`/users?id=${user.id}`)
+            const cartData = data[0].cart
+            setCartItems(cartData)
+            setCartItemsCount(
+                cartData.map((item) => ({
+                    id: item.productId,
+                    count: item.productQuantity,
+                    productPrice: item.productPrice
+                }))
+            );
+            setSubTotal(cartData.reduce((sum, item) => sum += item.productPrice * item.productQuantity, 0))
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
 
     useEffect(() => {
         if (user.id) {
 
-            async function fetchData() {
-                try {
-                    console.log(user.id)
-                    const { data } = await Axios_instance.get(`/users?id=${user.id}`)
-                    const cartData = data[0].cart
-                    setCartItems(cartData)
-                    setCartItemsCount(
-                        cartData.map((item) => ({
-                            id: item.productId,
-                            count: item.productQuantity,
-                            productPrice: item.productPrice
-                        }))
-                    );
-                    setSubTotal(cartData.reduce((sum, item) => sum += item.productPrice * item.productQuantity, 0))
-                    console.log(cartData)
-                } catch (e) {
-                    console.log(e)
-                }
-            }
+
             fetchData()
         }
 
-    }, [])
+    }, [subTotal])
 
 
 
@@ -59,12 +59,12 @@ export const CartProvider = ({ children }) => {
             if (user.id) {
                 const userResponse = await Axios_instance.get(`users/${user.id}`)
                 const userData = userResponse.data
-                
+
                 const cart = [...userData.cart, { productId: productId, productName: name, productPrice: price, productImage: image, productQuantity: 1 }]
                 setCartItems(cart)
                 const userUpdated = { ...userData, cart }
 
-                
+
                 const cartUpdated = await Axios_instance.put(`/users/${user.id}`, userUpdated)
                 const subtotal = cart.reduce((sum, item) => sum + item.productPrice * item.productQuantity, 0);
                 setSubTotal(subtotal);
@@ -90,6 +90,7 @@ export const CartProvider = ({ children }) => {
 
 
     const updateQuantity = async (id, type) => {
+       
         const updatedCartItemsCount = cartItemCount.map((item) =>
             item.id === id
                 ? { ...item, count: type === "increase" ? item.count + 1 : Math.max(1, item.count - 1) }

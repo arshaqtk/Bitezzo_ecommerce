@@ -1,7 +1,7 @@
 import Lottie from "lottie-react";
 import loading from "../../assets/loading.json";
 
-export const LottieAnimation = () => {
+export const LoadingAnimation = () => {
   return (
     <Lottie
       animationData={loading}

@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
         const Postresponse = await Axios_instance.post('/users', userData)
 
         setUser(userData)
-        localStorage.setItem("user", JSON.stringify(Postresponse.data))
+        // localStorage.setItem("user", JSON.stringify(Postresponse.data))
         toast.success("Signup SuccessFull")
         navigate('/login')
       }
@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
       } else {
         setUser(response.data[0])
         
-        const localStorageLoginData={isAuthenticated:true,id:response.data[0].id,username:response.data[0].username}
+        const localStorageLoginData={isAuthenticated:true,id:response.data[0].id,username:response.data[0].username,email:response.data[0].email}
         
         localStorage.setItem("user", JSON.stringify(localStorageLoginData))
         toast.success("Logined Successfully")
