@@ -16,7 +16,7 @@ export  const WishlistProvider=({ children }) => {
    useEffect(() => {
        
         if(user.id){
-            async function fetchData() {
+            async function fetchWishListData() {
             try {
                 const { data } = await Axios_instance.get(`/users?id=${user.id}`)
                 const wishListData = data[0].wishlist
@@ -26,7 +26,7 @@ export  const WishlistProvider=({ children }) => {
                 console.log(e)
             }
         }
-        fetchData()
+        fetchWishListData()
         }
         
     }, [])

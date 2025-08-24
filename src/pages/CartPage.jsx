@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
-import Nav from '../components/NavBar/Nav'
+import Nav from '../components/user/NavBar/Nav'
+
 import { CartContext } from '../context/CartContext'
 import { useNavigate } from 'react-router-dom'
 

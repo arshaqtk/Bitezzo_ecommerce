@@ -1,7 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Axios_instance from "../api/axiosConfig";
-import Nav from "../components/NavBar/Nav";
+
+import Nav from '../components/user/NavBar/Nav'
+
 import { WishListContext } from "../context/WishlistContext";
 
 function WishlistPage() {

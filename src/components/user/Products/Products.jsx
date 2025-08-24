@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useContext } from "react"
-import Axios_instance from '../../api/axiosConfig'
+import Axios_instance from '../../../api/axiosConfig'
 import { useNavigate } from 'react-router-dom'
-import { CartContext } from '../../context/CartContext'
-import { WishListContext } from '../../context/WishlistContext'
+import { CartContext } from '../../../context/CartContext'
+import { WishListContext } from '../../../context/WishlistContext'
 
-import { AuthContext } from '../../context/AuthContext'
-import { SearchContext } from '../../context/SearchContext'
+import { AuthContext } from '../../../context/AuthContext'
+import { SearchContext } from '../../../context/SearchContext'
 
 
 

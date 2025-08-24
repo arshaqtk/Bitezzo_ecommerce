@@ -1,8 +1,9 @@
 import { lazy, Suspense } from 'react';
-import Nav from '../components/NavBar/Nav';
-const Products = lazy(() => import('../components/Products/Products'));
+import Nav from '../components/user/NavBar/Nav'
 
-import { LoadingAnimation } from '../components/Animation/Loading';
+const Products = lazy(() => import('../components/user/Products/Products'));
+
+import { LoadingAnimation } from '../components/user/Animation/Loading';
 
 
 function ProductPage() {

@@ -15,9 +15,10 @@ export const CartProvider = ({ children }) => {
     const [subTotal, setSubTotal] = useState(0)
 
     const { user } = useContext(AuthContext)
+    
 
     //_________Data____Fetching_______________
-    async function fetchData() {
+    async function fetchCartData() {
         try {
             const { data } = await Axios_instance.get(`/users?id=${user.id}`)
             const cartData = data[0].cart
@@ -38,9 +39,7 @@ export const CartProvider = ({ children }) => {
 
     useEffect(() => {
         if (user.id) {
-
-
-            fetchData()
+            fetchCartData()
         }
 
     }, [subTotal])
@@ -155,7 +154,7 @@ export const CartProvider = ({ children }) => {
 
 
 
-    return (<CartContext.Provider value={{ addToCart, removeItem, updateQuantity, cartItems, cartItemCount, subTotal }}>
+    return (<CartContext.Provider value={{ addToCart, removeItem, updateQuantity,fetchCartData, cartItems, cartItemCount, subTotal }}>
         {children}
     </CartContext.Provider>)
 

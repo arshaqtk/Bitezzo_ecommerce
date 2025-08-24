@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react'
-import Nav from '../components/NavBar/Nav'
-import Banner from '../components/Banner/Banner'
+import Nav from '../components/user/NavBar/Nav'
+
+import Banner from '../components/user/Banner/Banner'
 import { useNavigate } from 'react-router-dom'
 import Axios_instance from '../api/axiosConfig'
-import Footer from '../components/Footer/Footer'
+import Footer from '../components/user/Footer/Footer'
 import { CartContext} from '../context/CartContext'
 import { AuthContext } from '../context/AuthContext'
 

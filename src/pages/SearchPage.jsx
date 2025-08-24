@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from 'react'
-import Nav from '../components/NavBar/Nav'
+import Nav from '../components/user/NavBar/Nav'
+
 
 import { useContext } from "react"
 import Axios_instance from '../api/axiosConfig'
@@ -10,7 +11,7 @@ import { WishListContext } from '../context/WishlistContext'
 
 import { AuthContext } from '../context/AuthContext'
 import { SearchContext } from '../context/SearchContext'
-import { SearchNotFound } from '../components/Animation/SearchNotFound'
+import { SearchNotFound } from '../components/user/Animation/SearchNotFound'
 
 
 function SearchPage() {

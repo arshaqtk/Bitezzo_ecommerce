@@ -1,5 +1,6 @@
 
-import Nav from '../components/NavBar/Nav'
+import Nav from '../components/user/NavBar/Nav'
+
 import  { useState, useMemo, useContext, useEffect } from "react";
 import { OrderContext } from "../context/OrderContext";
 import Axios_instance from '../api/axiosConfig';
@@ -55,11 +56,14 @@ function CheckoutPage() {
 
       useEffect(()=>{
         const fetchProduct=async()=>{
-          const {data}=await Axios_instance(`/users?_id=${user.id}`)
+          try{ const {data}=await Axios_instance(`/users?_id=${user.id}`)
           
           const products=data.map((users)=>users.cart.map((item)=>{return {productId:item.productId,totalPrice:item.productPrice*item.productQuantity}}) )
           
-          setCartProductsId(products)
+          setCartProductsId(products)}catch (error) {
+         console.error(error);
+      }
+         
         }
         fetchProduct()
       },[method])

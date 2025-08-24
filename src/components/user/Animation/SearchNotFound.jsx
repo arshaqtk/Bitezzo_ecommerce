@@ -1,10 +1,10 @@
 import Lottie from "lottie-react";
-import loading from "../../assets/loading.json";
+import searchnotfound from "../../../assets/NO RESULTS.json";
 
-export const LoadingAnimation = () => {
+export const SearchNotFound = () => {
   return (
     <Lottie
-      animationData={loading}
+      animationData={searchnotfound}
       loop={true}
       autoplay={true}
       style={{ width: 200, height: 200 }}

@@ -13,69 +13,92 @@ export const OrderProvider = ({ children }) => {
 
    const navigate = useNavigate();
    const { user } = useContext(AuthContext)
-   const { cartItems, subTotal } = useContext(CartContext);
+   const { cartItems, subTotal,fetchCartData } = useContext(CartContext);
 
 
 
-   const fetchData = async () => {
+   const fetchOrderData = async () => {
+      try {
+         const userResponse = await Axios_instance.get(`users/${user.id}`)
+         const userResponseData = userResponse.data
+         setShippingDetails(userResponseData.shippingAddress)
+         setOrderDetails(userResponseData.orders)
+      } catch (error) {
+         console.error(error);
+      }
 
-      const userResponse = await Axios_instance.get(`users/${user.id}`)
-      const userResponseData = userResponse.data
-      setShippingDetails(userResponseData.shippingAddress)
-      setOrderDetails(userResponseData.orders)
 
    }
 
 
    useEffect(() => {
-      fetchData()
+      fetchOrderData()
    }, [])
 
 
 
 
    const addShippingAddress = async (shippingData, TotalAmount, { fromBuyNow, productId }) => {
-
-      setTotalAmount(TotalAmount)
-      setShippingDetails(shippingData)
-      await Axios_instance.patch(`users/${user.id}`, { shippingAddress: shippingData })
-      if (fromBuyNow) {
-         navigate("/payment", { state: { fromBuyNow, productId } })
-      } else {
-         navigate
-            ("/payment")
+      try {
+         setTotalAmount(TotalAmount)
+         setShippingDetails(shippingData)
+         await Axios_instance.patch(`users/${user.id}`, { shippingAddress: shippingData })
+         if (fromBuyNow) {
+            navigate("/payment", { state: { fromBuyNow, productId } })
+         } else {
+            navigate
+               ("/payment")
+         }
+      } catch (error) {
+         console.error( error);
       }
+
+
    }
 
    const addCartPayment = async (paymentId, subtotal) => {
+      try {
+         const userResponse = await Axios_instance.get(`users/${user.id}`)
+         const userResponseData = userResponse.data
+         const order = [...userResponseData.orders, { id: Date.now(), products: cartItems, status:"pending",payment: paymentId, subTotal: subtotal, Date: new Date().toISOString().split("T")[0], shippingAddress: shippingDetails }]
 
-      const userResponse = await Axios_instance.get(`users/${user.id}`)
-      const userResponseData = userResponse.data
-      const order = [...userResponseData.orders, { id: Date.now(), products: cartItems, payment: paymentId, subTotal: subtotal, Date: new Date().toISOString().split("T")[0], shippingAddress: shippingDetails }]
-
-      setOrderDetails(order)
-      const response = await Axios_instance.patch(`users/${user.id}`, { orders: order })
-      navigate("/products")
-      if (response.data) {
-         await Axios_instance.patch(`users/${user.id}`, { cart: [] })
+         setOrderDetails(order)
+         const response = await Axios_instance.patch(`users/${user.id}`, { orders: order })
+         navigate("/products")
+         if (response.data) {
+            await Axios_instance.patch(`users/${user.id}`, { cart: [] })
+            fetchCartData()
+         }
+      } catch (error) {
+         console.error( error);
       }
+
+
+
    }
 
    const addBuyNowPayment = async (paymentId, subtotal, productId) => {
 
-      const product = await Axios_instance.get(`products/${productId}`)
-      const ProductData = { productId: product.data.id, productName: product.data.name, productPrice: product.data.price, productImage: product.data.image, productQuantity: 1 }
-  
-      const userResponse = await Axios_instance.get(`users/${user.id}`)
-      const userResponseData = userResponse.data
-      const order = [...userResponseData.orders, { id: Date.now(), products: [ProductData], payment: paymentId, subTotal: subtotal, Date: new Date().toISOString().split("T")[0], shippingAddress: shippingDetails }]
- 
-      setOrderDetails(order)
-      const response = await Axios_instance.patch(`users/${user.id}`, { orders: order })
-      navigate("/products")
+      try {
+         const product = await Axios_instance.get(`products/${productId}`)
+         const ProductData = { productId: product.data.id, productName: product.data.name, productPrice: product.data.price, productImage: product.data.image, productQuantity: 1 }
+
+         const userResponse = await Axios_instance.get(`users/${user.id}`)
+         const userResponseData = userResponse.data
+         const order = [...userResponseData.orders, { id: Date.now(), products: [ProductData], status:"pending",payment: paymentId, subTotal: subtotal, Date: new Date().toISOString().split("T")[0], shippingAddress: shippingDetails }]
+
+         setOrderDetails(order)
+         const response = await Axios_instance.patch(`users/${user.id}`, { orders: order })
+         navigate("/products")
+      } catch (error) {
+         console.error( error);
+      }
+
    }
 
-   return (<OrderContext.Provider value={{ addShippingAddress, shippingDetails, addCartPayment, orderDetails, addBuyNowPayment, totalAmount }}>
+   
+
+   return (<OrderContext.Provider value={{ addShippingAddress, shippingDetails, addCartPayment, orderDetails, addBuyNowPayment, totalAmount,fetchOrderData}}>
       {children}
    </OrderContext.Provider>)
 }

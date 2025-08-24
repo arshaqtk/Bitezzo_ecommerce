@@ -1,5 +1,5 @@
 import React from 'react'
-import BannerBg from "../../assets/images/Banner-bg.png";
+import BannerBg from "../../../assets/images/Banner-bg.png";
 import { useNavigate } from 'react-router-dom';
 
 
