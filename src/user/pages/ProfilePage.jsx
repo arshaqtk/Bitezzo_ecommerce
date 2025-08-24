@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
-import { AuthContext } from "../context/AuthContext";
-import Nav from "../components/user/NavBar/Nav";
-import Axios_instance from "../api/axiosConfig";
+import { AuthContext } from "../../context/AuthContext";
+import Nav from "../components/NavBar/Nav";
+import Axios_instance from "../../api/axiosConfig";
 import toast from "react-hot-toast";
 
 function ProfilePage() {
@@ -74,7 +74,7 @@ const handleInputImage=()=>{
 
 return (
   <>
-    <Nav />
+    
     {editPassword ? (
        //User__EditPassword_____Section
       <div className="flex justify-center items-center h-screen bg-gray-100">

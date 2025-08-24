@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react'
-import Nav from '../components/user/NavBar/Nav'
-import { OrderContext } from '../context/OrderContext';
+import Nav from '../components/NavBar/Nav'
+import { OrderContext } from '../../context/OrderContext';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
-import Axios_instance from '../api/axiosConfig';
+import { AuthContext } from '../../context/AuthContext';
+import Axios_instance from '../../api/axiosConfig';
 
 
 
@@ -29,7 +29,7 @@ const res = await Axios_instance.get(`/users/${user.id}`);
     }
 
     return (
-        <> <Nav />
+        <> 
             <div className="bg-gray-100 min-h-screen p-6 mt-17 ">
 
                 <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-lg p-6">

@@ -1,11 +1,11 @@
 
-import Nav from '../components/user/NavBar/Nav'
+import Nav from '../components/NavBar/Nav'
 
 import  { useState, useMemo, useContext, useEffect } from "react";
-import { OrderContext } from "../context/OrderContext";
-import Axios_instance from '../api/axiosConfig';
-import { AuthContext } from '../context/AuthContext';
-import { CartContext } from '../context/CartContext';
+import { OrderContext } from "../../context/OrderContext";
+import Axios_instance from '../../api/axiosConfig';
+import { AuthContext } from '../../context/AuthContext';
+import { CartContext } from '../../context/CartContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 function CheckoutPage() {
@@ -40,14 +40,14 @@ function CheckoutPage() {
   const deliveryFee = useMemo(() => {
 
     if (method === "express") {
-      setTotalAmount(finalTotal+40)
+      setTotalAmount(Number(finalTotal)+40)
       return 40;}
       
       if (method === "fastest")  {
-        setTotalAmount(finalTotal+70)
+        setTotalAmount(Number(finalTotal)+70)
         return 70;}
 
-        setTotalAmount(finalTotal+20)
+        setTotalAmount(Number(finalTotal)+20)
         return 20; 
 
       }, [method]);

@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react'
-import Nav from '../components/user/NavBar/Nav'
+import Nav from '../components/NavBar/Nav'
 
-import Banner from '../components/user/Banner/Banner'
+import Banner from '../components/Banner/Banner'
 import { useNavigate } from 'react-router-dom'
-import Axios_instance from '../api/axiosConfig'
-import Footer from '../components/user/Footer/Footer'
-import { CartContext} from '../context/CartContext'
-import { AuthContext } from '../context/AuthContext'
+import Axios_instance from '../../api/axiosConfig'
+import Footer from '../components/Footer/Footer'
+import { CartContext} from '../../context/CartContext'
+import { AuthContext } from '../../context/AuthContext'
 
 function HomePage() {
     const navigate=useNavigate()
@@ -31,7 +31,7 @@ function HomePage() {
 
   return (
     <> 
-    <Nav/>
+
     <Banner/>
     <div className=" bg-[#FAF1E6]">
     <h2 className="text-3xl font-bold text-center text-black p-5 underline ">Top Selling Dishes</h2>
@@ -83,7 +83,7 @@ function HomePage() {
     </div>
   
 </div>
-     <Footer/>
+     
     </>
    
   )

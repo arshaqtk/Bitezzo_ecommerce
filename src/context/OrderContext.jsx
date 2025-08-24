@@ -10,6 +10,8 @@ export const OrderProvider = ({ children }) => {
    const [shippingDetails, setShippingDetails] = useState({})
    const [totalAmount, setTotalAmount] = useState(0)
    const [orderDetails, setOrderDetails] = useState([])
+   const [allOrder, setAllOrderDetails] = useState([])
+
 
    const navigate = useNavigate();
    const { user } = useContext(AuthContext)
@@ -19,10 +21,13 @@ export const OrderProvider = ({ children }) => {
 
    const fetchOrderData = async () => {
       try {
-         const userResponse = await Axios_instance.get(`users/${user.id}`)
+         if(user.id){
+             const userResponse = await Axios_instance.get(`users/${user.id}`)
          const userResponseData = userResponse.data
-         setShippingDetails(userResponseData.shippingAddress)
-         setOrderDetails(userResponseData.orders)
+         setShippingDetails(userResponseData.shippingAddress||{})
+         setOrderDetails(userResponseData.orders||[])
+         }
+        
       } catch (error) {
          console.error(error);
       }
@@ -60,11 +65,12 @@ export const OrderProvider = ({ children }) => {
       try {
          const userResponse = await Axios_instance.get(`users/${user.id}`)
          const userResponseData = userResponse.data
-         const order = [...userResponseData.orders, { id: Date.now(), products: cartItems, status:"pending",payment: paymentId, subTotal: subtotal, Date: new Date().toISOString().split("T")[0], shippingAddress: shippingDetails }]
+         const order = [...userResponseData.orders, { id: Date.now(),userId:user.id,products: cartItems, status:"pending",payment: paymentId, subTotal: subtotal, Date: new Date().toISOString().split("T")[0], shippingAddress: shippingDetails }]
 
          setOrderDetails(order)
          const response = await Axios_instance.patch(`users/${user.id}`, { orders: order })
          navigate("/products")
+         fetchAllOrderData()
          if (response.data) {
             await Axios_instance.patch(`users/${user.id}`, { cart: [] })
             fetchCartData()
@@ -85,20 +91,56 @@ export const OrderProvider = ({ children }) => {
 
          const userResponse = await Axios_instance.get(`users/${user.id}`)
          const userResponseData = userResponse.data
-         const order = [...userResponseData.orders, { id: Date.now(), products: [ProductData], status:"pending",payment: paymentId, subTotal: subtotal, Date: new Date().toISOString().split("T")[0], shippingAddress: shippingDetails }]
+         const order = [...userResponseData.orders, { id: Date.now(), products: [ProductData],userId:user.id, status:"pending",payment: paymentId, subTotal: subtotal, Date: new Date().toISOString().split("T")[0], shippingAddress: shippingDetails }]
 
          setOrderDetails(order)
-         const response = await Axios_instance.patch(`users/${user.id}`, { orders: order })
+         await Axios_instance.patch(`users/${user.id}`, { orders: order })
+         fetchAllOrderData()
          navigate("/products")
       } catch (error) {
          console.error( error);
       }
 
    }
+//______Admin__________
+   const fetchAllOrderData=async()=>{
+      try{
+         const response=await Axios_instance.get('/users?role=user')
+      const users=response.data
+      
+      const orderData=users.flatMap(user => user.orders);
+      console.log(orderData)
+      setAllOrderDetails(orderData)
+      }catch(e){
+         console.log(e)
+      }
+   }
+const editOrderStatus = async (orderId, newStatus,userId) => {
+  try {
+   console.log("now",orderId,newStatus)
+    const userResponse = await Axios_instance.get(`users/${userId}`);
+    const userResponseData = userResponse.data;
+
+    
+    const updatedOrders = userResponseData.orders.map(order =>
+      order.id === orderId ? { ...order, status: newStatus } : order
+    );
+
+    console.log("updated",updatedOrders)
+    
+    await Axios_instance.patch(`users/${userId}`, { orders: updatedOrders });
+
+   
+    fetchAllOrderData();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 
    
 
-   return (<OrderContext.Provider value={{ addShippingAddress, shippingDetails, addCartPayment, orderDetails, addBuyNowPayment, totalAmount,fetchOrderData}}>
+   return (<OrderContext.Provider value={{ addShippingAddress, shippingDetails, addCartPayment, orderDetails, addBuyNowPayment, totalAmount,fetchOrderData,fetchAllOrderData,allOrder,editOrderStatus}}>
       {children}
    </OrderContext.Provider>)
 }

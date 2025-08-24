@@ -1,9 +1,9 @@
 import { lazy, Suspense } from 'react';
-import Nav from '../components/user/NavBar/Nav'
+import Nav from '../components/NavBar/Nav'
 
-const Products = lazy(() => import('../components/user/Products/Products'));
+const Products = lazy(() => import('../components/Products/Products'));
 
-import { LoadingAnimation } from '../components/user/Animation/Loading';
+import { LoadingAnimation } from '../components/Animation/Loading';
 
 
 function ProductPage() {
@@ -12,7 +12,7 @@ function ProductPage() {
       
       <Suspense
         fallback={<div className="flex justify-center items-center h-screen"><LoadingAnimation/></div>}>
-        <Nav />
+      
         <Products />
       </Suspense>
     </div>

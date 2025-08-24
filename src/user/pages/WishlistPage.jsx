@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import Nav from '../components/user/NavBar/Nav'
+import Nav from '../components/NavBar/Nav'
 
-import { WishListContext } from "../context/WishlistContext";
+import { WishListContext } from "../../context/WishlistContext";
 
 function WishlistPage() {
 
@@ -15,7 +15,7 @@ function WishlistPage() {
 
 
   return (<>
-  <Nav/>
+  
     <div className="min-h-screen bg-gray-100 p-6  mt-17">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">My Wishlist</h1>
 

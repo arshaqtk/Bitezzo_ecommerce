@@ -1,97 +1,60 @@
+
 import React, { useEffect, useState } from 'react'
+import Nav from '../components/NavBar/Nav'
+
+
 import { useContext } from "react"
-import Axios_instance from '../../../api/axiosConfig'
+import Axios_instance from '../../api/axiosConfig'
 import { useNavigate } from 'react-router-dom'
-import { CartContext } from '../../../context/CartContext'
-import { WishListContext } from '../../../context/WishlistContext'
+import { CartContext } from '../../context/CartContext'
+import { WishListContext } from '../../context/WishlistContext'
 
-import { AuthContext } from '../../../context/AuthContext'
-import { SearchContext } from '../../../context/SearchContext'
-
-
-
-function Products() {
-
-  const [allProducts, setAllProducts] = useState([]);
-  const [product, setProduct] = useState([]);
-  const [isWishlisted, setIsWishlisted] = useState(false);
-  const navigate = useNavigate()
+import { AuthContext } from '../../context/AuthContext'
+import { SearchContext } from '../../context/SearchContext'
+import { SearchNotFound } from '../components/Animation/SearchNotFound'
 
 
-  const { user } = useContext(AuthContext)
-  const { addToCart, cartQuantity, cartItems } = useContext(CartContext);
-  const { addToWishlist, wishlistItems } = useContext(WishListContext);
-  const { searchValue } = useContext(SearchContext);
+function SearchPage() {
 
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await Axios_instance.get('/products')
-        const responseData = response.data
-        const filteredData = responseData.map(({ id, name, price, image, category }) => ({ id, name, price, image, category }))
-        setAllProducts(filteredData);
-        setProduct(filteredData);
-        console.log(wishlistItems)
-      } catch (e) {
-        console.log(e)
-      }
-    }
-    fetchData()
-  }, [])
-  
-  function filterProduct(category) {
-    if (category === "all") {
-      setProduct(allProducts);
-    } else {
-      const filtered = allProducts.filter((item) => item.category === category);
-      setProduct(filtered);
-    }
-  }
-
-
-
+      const [allProducts, setAllProducts] = useState([]);
+      const [product, setProduct] = useState([]);
+      const [isWishlisted, setIsWishlisted] = useState(false);
+      const navigate = useNavigate()
+    
+    
+      const { user } = useContext(AuthContext)
+      const { addToCart, cartQuantity, cartItems } = useContext(CartContext);
+      const { addToWishlist, wishlistItems } = useContext(WishListContext);
+      const { searchValue } = useContext(SearchContext);
+    
+    
+      useEffect(() => {
+        async function fetchData(searchValue) {
+          try {
+            const response = await Axios_instance.get('/products')
+            const responseData = response.data
+             const results = responseData.filter(item =>
+               item.name.toLowerCase().includes(searchValue.toLowerCase())||
+             item.category.toLowerCase().includes(searchValue.toLowerCase()));
+           
+            setAllProducts(responseData);
+            setProduct(results);
+          } catch (e) {
+            console.log(e)
+          }
+        }
+        fetchData(searchValue)
+      }, [searchValue])
+      
+     
+    
+    
   return (
-
     <>
-
-      <div className=" bg-[#FAF1E6]  mt-17">
-        <div className="bg-[#FAF1E6] p-8 rounded-xl shadow-md">
-          <div className="flex flex-wrap gap-4 justify-center">
-            <button className="px-6 py-3 bg-white/70 border border-gray-200 text-gray-800 font-medium rounded-lg shadow-sm hover:bg-gray-100 transition cursor-pointer"
-              onClick={() => filterProduct("all")}
-            >
-              All
-            </button>
-            <button className="px-6 py-3 bg-white/70 border border-gray-200 text-gray-800 font-medium rounded-lg shadow-sm hover:bg-gray-100 transition cursor-pointer"
-              onClick={() => filterProduct("drinks")}
-            >
-              Drinks & Beverages
-            </button>
-            <button className="px-6 py-3 bg-white/70 border border-gray-200 text-gray-800 font-medium rounded-lg shadow-sm hover:bg-gray-100 transition cursor-pointer"
-              onClick={() => filterProduct("fastFood")}
-            >
-              Fast Food
-            </button>
-            <button className="px-6 py-3 bg-white/70 border border-gray-200 text-gray-800 font-medium rounded-lg shadow-sm hover:bg-gray-100 transition cursor-pointer"
-              onClick={() => filterProduct("gravy")}
-            >
-              Gravy & Curry Dishes
-            </button>
-            <button className="px-6 py-3 bg-white/70 border border-gray-200 text-gray-800 font-medium rounded-lg shadow-sm hover:bg-gray-100 transition cursor-pointer"
-              onClick={() => filterProduct("snacks")}
-            >
-              Snacks & Sides
-            </button>
-            <button className="px-6 py-3 bg-white/70 border border-gray-200 text-gray-800 font-medium rounded-lg shadow-sm hover:bg-gray-100 transition cursor-pointer"
-              onClick={() => filterProduct("desserts")}
-            >
-              Desserts & Sweets
-            </button>
-          </div>
-        </div>
-
-
+   
+    <div className=" bg-[#FAF1E6]  mt-17 h-screen">
+      <h2 className='font-semibold text-center text-2xl pt-7'>Showing {product.length}  Results For "{searchValue}"</h2>
+      {product.length==0?<div className="flex justify-center items-center h-screen"><SearchNotFound/></div>:
         <div className='flex justify-center items-center bg-[#FAF1E6]  '>
           <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-6 p-6 w-[90vw] bg-[#FAF1E6]">
             {product.map((item, index) => (
@@ -193,12 +156,11 @@ function Products() {
           </div>
         </div>
 
-
+}
       </div>
-
-
     </>
+    
   )
 }
 
-export default Products
+export default SearchPage

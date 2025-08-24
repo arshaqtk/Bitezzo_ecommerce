@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
-import { OrderContext } from '../context/OrderContext'
-import { CartContext } from '../context/CartContext';
-import { AuthContext } from '../context/AuthContext';
+import { OrderContext } from '../../context/OrderContext'
+import { AuthContext } from '../../context/AuthContext';
 import { useLocation } from 'react-router-dom';
 
 function PaymentPage() {

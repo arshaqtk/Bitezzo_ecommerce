@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { AuthContext } from '../context/AuthContext'
+import { AuthContext } from '../../context/AuthContext'
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import toast from 'react-hot-toast';
 

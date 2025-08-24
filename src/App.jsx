@@ -2,19 +2,19 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 
 
 
-import Cartpage from "./pages/CartPage";
-import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
+import Cartpage from "./user/pages/CartPage";
+import HomePage from "./user/pages/HomePage";
+import LoginPage from "./user/pages/LoginPage";
 
-import CheckoutPage from "./pages/CheckoutPage";
-import ProductPage from "./pages/ProductPage";
-import SignupPage from "./pages/SignupPage";
-import WishlistPage from "./pages/WishlistPage";
-import PaymentPage from "./pages/PaymentPage";
-import SearchPage from "./pages/SearchPage";
-import OrderPage from "./pages/OrderPage";
-import ProfilePage from "./pages/ProfilePage";
-import ProductDetailView from "./pages/ProductDetailviewPage";
+import CheckoutPage from "./user/pages/CheckoutPage";
+import ProductPage from "./user/pages/ProductPage";
+import SignupPage from "./user/pages/SignupPage";
+import WishlistPage from "./user/pages/WishlistPage";
+import PaymentPage from "./user/pages/PaymentPage";
+import SearchPage from "./user/pages/SearchPage";
+import OrderPage from "./user/pages/OrderPage";
+import ProfilePage from "./user/pages/ProfilePage";
+import ProductDetailView from "./user/pages/ProductDetailviewPage";
 
 
 
@@ -25,7 +25,7 @@ import EditProduct from "./admin/Pages/EditProduct";
 import AddProduct from "./admin/Pages/AddProduct";
 
 
-import { ProtectedRoute } from "./components/Routes/ProtectedRoutes";
+import { ProtectedRoute } from "./user/components/Routes/ProtectedRoutes";
 import { AuthProvider } from "./context/AuthContext"
 import { CartProvider } from "./context/CartContext"
 import { WishlistProvider } from "./context/WishlistContext"
@@ -33,11 +33,14 @@ import { OrderProvider } from "./context/OrderContext"
 
 
 import { Toaster } from "react-hot-toast";
-import { PublicRoute } from "./components/Routes/PublicRoutes";
+import { PublicRoute } from "./user/components/Routes/PublicRoutes";
 import { SearchProvider } from "./context/SearchContext";
 import { ProductProvider } from "./context/ProductContext";
 import AdminInterface from "./admin/Layout/AdminInterFace";
 import UsersDetailView from "./admin/Pages/UsersDetailView";
+import UserLayout from "./user/components/Layout/UserLayout";
+import AdminViewOrder from "./admin/Pages/AdminViewOrder";
+import AdminOrderDetailView from "./admin/Pages/AdminOrderDetailView";
 
 
 function App() {
@@ -56,6 +59,7 @@ function App() {
 
 
                     <Route element={<ProtectedRoute />}>
+                    <Route element={<UserLayout />}>
                       <Route path="/cart" element={<Cartpage />} />
                       <Route path="/wishlist" element={<WishlistPage />} />
                       <Route path="/checkout" element={<CheckoutPage />} />
@@ -63,6 +67,7 @@ function App() {
                       <Route path="/order" element={<OrderPage />} />
                       <Route path="/search" element={<SearchPage />} />
                       <Route path="/profile" element={<ProfilePage />} />
+                      </Route>
                     </Route>
 
                     <Route element={<PublicRoute />}>
@@ -70,10 +75,11 @@ function App() {
                       <Route path="/login" element={<LoginPage />} />
                     </Route>
 
+                    <Route element={<UserLayout />}>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/products" element={<ProductPage />} />
                     <Route path="/productview/:id" element={<ProductDetailView />} />
-
+                    </Route>
 
 
                     <Route path="/admin" element={<AdminInterface />}>
@@ -83,6 +89,10 @@ function App() {
                       <Route path="/admin/products" element={<ProductTable />} />
                       <Route path="/admin/edit-product/:id" element={<EditProduct />} />
                       <Route path="/admin/add-product" element={<AddProduct />} />
+                      <Route path="/admin/orders" element={<AdminViewOrder />} />
+                      <Route path="/admin/order-detailview/:id" element={<AdminOrderDetailView />} />
+
+
                     </Route>
 
                   </Routes>
