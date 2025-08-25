@@ -47,7 +47,7 @@ const res = await Axios_instance.get(`/users/${user.id}`);
                                     > <div className='flex justify-between'><div>
                                         <h2 className="text-lg font-semibold">id:#{item.id}</h2>
                                         <p className="text-gray-600">₹{item.subTotal}</p>
-                                        <p className="text-gray-600">Order Date:{item.Date}</p>
+                                        <p className="text-gray-600">Order Date:{item.date}</p>
                                         <p className="text-gray-600">Status:{item.status}</p>
                                         {item.status == "pending" ? <button className='bg-[#c61010] hover:bg-[#152027]py-2 px-1 text-white text-sm  rounded-lg h-5 cursor-pointer'
                                             onClick={() => cancelOrder(item.id)}

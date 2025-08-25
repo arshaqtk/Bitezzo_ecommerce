@@ -14,7 +14,7 @@ function AdminViewOrder() {
 
     return (
        <div className="min-h-screen bg-[#F5F7FA] p-8">
-  <h1 className="text-2xl font-bold text-gray-800 mb-6">
+  <h1 className="text-2xl font-bold text-violet-900 mb-6">
     Orders Overview
   </h1>
 
@@ -26,16 +26,7 @@ function AdminViewOrder() {
         className="bg-white rounded-2xl shadow-md hover:shadow-lg transition p-6 cursor-pointer"
       >
        
-        {/* <img
-          src={order.products[0].productImage}
-          alt={order.products[0].productName}
-          className="w-full h-40 object-cover rounded-lg mb-4"
-        />
-
-        
-        <h2 className="text-lg font-semibold text-gray-800 mb-2">
-          {order.products[0].productName}
-        </h2> */}
+       
         <p className="text-sm text-gray-700 mb-1">
           <span className="font-medium">Item count :</span> {order.products.length}
         </p>
@@ -47,7 +38,7 @@ function AdminViewOrder() {
 
         {/* Date */}
         <p className="text-sm text-gray-500 mb-1">
-          <span className="font-medium">Date:</span> {order.Date}
+          <span className="font-medium">Date:</span> {order.date}
         </p>
 
         {/* Amount */}

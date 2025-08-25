@@ -27,7 +27,7 @@ export default function UsersTable() {
 
   return (
 <div className="flex">
-  <div className="w-full p-6 bg-white">
+  <div className="w-full p-6 bg-[#F5F7FA]">
     <h2 className="text-xl font-bold text-violet-900 px-6 py-4">Users List</h2>
 
     {/* Stats Section */}
@@ -51,15 +51,16 @@ export default function UsersTable() {
     <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       {users.map((user) => (
         <div
-        onClick={()=>navigate(`/admin/users-detailview/${user.id}`)}
+        
           key={user.id}
           className="bg-white shadow-lg rounded-xl border border-violet-200 p-4 flex flex-col items-center text-center hover:shadow-xl transition"
         >
           {/* Profile Image */}
           <img
+            onClick={() => navigate(`/admin/users-detailview/${user.id}`)}
             src={user.image}
             alt={user.username}
-            className="w-16 h-16 rounded-full ring-4 ring-violet-300 mb-4"
+            className="w-16 h-16 rounded-full ring-4 ring-violet-300 mb-4 cursor-pointer"
           />
 
           {/* Username */}
@@ -82,7 +83,7 @@ export default function UsersTable() {
           {/* Action Button */}
           <button
             onClick={() => toggleBlock(user.id, user.isAuthenticated)}
-            className={`px-7 py-1 rounded-lg font-semibold shadow-md transition ${
+            className={`px-7 py-1 rounded-lg font-semibold shadow-md transition cursor-pointer ${
               user.isAuthenticated
                 ? "bg-violet-600 hover:bg-violet-700 text-white"
                 : "bg-green-500 hover:bg-green-600 text-white"
