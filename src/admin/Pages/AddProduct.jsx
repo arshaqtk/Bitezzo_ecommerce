@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import Axios_instance from "../../api/axiosConfig";
-import toast from "react-hot-toast";
+import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ProductContext } from "../../context/ProductContext";
 
 function AddProduct() {
   
+  const navigate=useNavigate()
+  const { addProduct } = useContext(ProductContext);
+
 
   const [formData, setFormData] = useState({});
-  const navigate=useNavigate()
 
 
 
@@ -19,13 +20,7 @@ function AddProduct() {
 
   const handleSubmit =async (e) => {
     e.preventDefault();
-   try {
-  const res = await Axios_instance.post("/products", formData);
-  toast.success("Product added:", res.data.name);
-  navigate("/admin/products")
-} catch (error) {
-  console.error("Error adding product:", error);
-}
+   addProduct(formData )
    }
     
   const onCancel=()=>{
@@ -36,76 +31,88 @@ function AddProduct() {
   }
 
   return (
-    <div className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md mt-6">
-      <h2 className="text-xl font-bold mb-4 text-violet-900">Add New Product</h2>
+    <div className="max-w-lg mx-auto bg-[#0B192C]  p-6 rounded-lg shadow-md mt-6">
+      <h2 className="text-xl font-bold mb-4 text-violet-400">Add New Product</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Name */}
         <div>
-          <label className="block text-sm font-medium text-gray-600">Name</label>
+          <label className="block text-sm font-medium text-white/80">Name</label>
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
-            className="mt-1 w-full border rounded-md p-2 outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 text-white/80 w-full border rounded-md p-2 outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
         </div>
 
         {/* Description */}
         <div>
-          <label className="block text-sm font-medium text-gray-600">Description</label>
+          <label className="block text-sm font-medium text-white/80">Description</label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
             rows="3"
-            className="mt-1 w-full border rounded-md p-2 outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 text-white/80 w-full border rounded-md p-2 outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
         </div>
 
         {/* Price */}
         <div>
-          <label className="block text-sm font-medium text-gray-600">Price (₹)</label>
+          <label className="block text-sm font-medium text-white/80">Price (₹)</label>
           <input
             type="number"
             name="price"
             value={formData.price}
             onChange={handleChange}
-            className="mt-1 w-full border rounded-md p-2 outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 text-white/80 w-full border rounded-md p-2 outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+
+         <div>
+          <label className="block text-sm font-medium text-white/80">Quantity </label>
+          <input
+            type="number"
+            name="quantity"
+            value={formData.quantity}
+            onChange={handleChange}
+            className="mt-1 text-white/80 w-full border rounded-md p-2 outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
         </div>
 
         {/* Image */}
         <div>
-          <label className="block text-sm font-medium text-gray-600">Image URL</label>
+          <label className="block text-sm font-medium text-white/80">Image URL</label>
           <input
             type="text"
             name="image"
             value={formData.image}
             onChange={handleChange}
-            className="mt-1 w-full border rounded-md p-2 outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 text-white/80 w-full border rounded-md p-2 outline-none focus:ring-2 focus:ring-blue-500"
           />
           {formData.image && (
             <img
               src={formData.image}
               alt="Preview"
-              className="mt-2 w-24 h-24 object-cover rounded-md border"
+              className="mt-2 w-24 h-24 object-cover rounded-md border text-white/80"
             />
           )}
         </div>
 
         {/* Category */}
         <div>
-          <label className="block text-sm font-medium text-gray-600">Category</label>
+          <label className="block text-sm font-medium text-white/80">Category</label>
           <select
             name="category"
             value={formData.category}
             onChange={handleChange}
-            className="mt-1 w-full border rounded-md p-2 outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 text-white/80 w-full border rounded-md p-2 outline-none focus:ring-2 focus:ring-blue-500  text-white bg-[#0B192C]"
             required
           >
             <option value="">-- Select Category --</option>

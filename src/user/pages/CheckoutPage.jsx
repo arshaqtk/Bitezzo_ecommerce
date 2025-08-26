@@ -1,171 +1,190 @@
-
 import Nav from '../components/NavBar/Nav'
-
-import  { useState, useMemo, useContext, useEffect } from "react";
+import { useState, useMemo, useContext } from "react";
 import { OrderContext } from "../../context/OrderContext";
-import Axios_instance from '../../api/axiosConfig';
 import { AuthContext } from '../../context/AuthContext';
 import { CartContext } from '../../context/CartContext';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { ProductContext } from '../../context/ProductContext';
 
 function CheckoutPage() {
-
-    
-  const { user } = useContext(AuthContext)
-  const {subTotal}=useContext(CartContext);
-  const {shippingDetails,moveToPaymentPage,addShippingAddress}=useContext(OrderContext)
   const location = useLocation();
-  const navigate=useNavigate()
+  const { user } = useContext(AuthContext)
+  const { subTotal, cartItems } = useContext(CartContext);
+  const { shippingDetails, addShippingAddress } = useContext(OrderContext)
+  const { products } = useContext(ProductContext)
 
-  
+  const { productId, price, fromBuyNow } = location.state || {};
+
   const [username, setName] = useState(user.username);
-  const [phone,setPhone]=useState(shippingDetails.phone||"")
-  const [address, setAddress] = useState(shippingDetails.address||"");
-  const [city, setCity] = useState(shippingDetails.city||"");
-  const [pincode, setPincode] = useState(shippingDetails.pincode||"");
+  const [phone, setPhone] = useState(shippingDetails.phone || "")
+  const [address, setAddress] = useState(shippingDetails.address || "");
+  const [city, setCity] = useState(shippingDetails.city || "");
+  const [pincode, setPincode] = useState(shippingDetails.pincode || "");
   const [method, setMethod] = useState("regular");
 
-  const { productId,price,fromBuyNow } = location.state || {};
 
- let finalTotal = subTotal;
- if (location.state?.fromBuyNow) {
-    finalTotal = location.state.price;
-  }
-  const [totalAmount,setTotalAmount]=useState(finalTotal)
+  const productDetail = useMemo(
+    () => products.find((item) => item.id == productId),
+    [products, productId]
+  );
 
+  let finalTotal = fromBuyNow ? price : subTotal;
+  const [totalAmount, setTotalAmount] = useState(finalTotal)
 
-  const [cartProductsId,setCartProductsId]=useState([])
-
-  
   const deliveryFee = useMemo(() => {
-
     if (method === "express") {
-      setTotalAmount(Number(finalTotal)+40)
-      return 40;}
-      
-      if (method === "fastest")  {
-        setTotalAmount(Number(finalTotal)+70)
-        return 70;}
+      setTotalAmount(Number(finalTotal) + 40)
+      return 40;
+    }
+    if (method === "fastest") {
+      setTotalAmount(Number(finalTotal) + 70)
+      return 70;
+    }
+    setTotalAmount(Number(finalTotal) + 20)
+    return 20;
+  }, [method, finalTotal]);
 
-        setTotalAmount(Number(finalTotal)+20)
-        return 20; 
+  const shippingData = { name: username, address, city, pincode, phone }
 
-      }, [method]);
-      
-      
-
-      useEffect(()=>{
-        const fetchProduct=async()=>{
-          try{ const {data}=await Axios_instance(`/users?_id=${user.id}`)
-          
-          const products=data.map((users)=>users.cart.map((item)=>{return {productId:item.productId,totalPrice:item.productPrice*item.productQuantity}}) )
-          
-          setCartProductsId(products)}catch (error) {
-         console.error(error);
-      }
-         
-        }
-        fetchProduct()
-      },[method])
-      
-      const shippingData={name:username,
-        address:address,
-        city:city,
-        pincode:pincode,
-        phone:phone}
-
-
-const handleSubmit=(e)=>{
-  alert("button clicked")
-  e.preventDefault();
-  addShippingAddress(shippingData,totalAmount,{ fromBuyNow,productId })
-}
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    addShippingAddress(shippingData, totalAmount, { fromBuyNow, productId })
+  }
 
   return (
     <>
-    <Nav/>
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6  mt-17">
-      <div className="bg-white w-full max-w-lg rounded-xl shadow p-6 space-y-6">
-        <h2 className="text-2xl font-bold text-center text-orange-600">Food Delivery Details</h2>
+      <Nav />
+      <div className="min-h-screen bg-gray-100 p-4 mt-17">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-4">
+          
+          {/* LEFT: Shipping Form */}
+          <div className="bg-white rounded-xl shadow p-6 space-y-6">
+            <h2 className="text-2xl font-bold text-center text-red-600">
+              Food Delivery Details
+            </h2>
 
-        <form action="" onSubmit={handleSubmit}>
-        <div className="space-y-6">
-            
-          <input
-          required
-            type="text"
-            placeholder="Full Name"
-            value={username}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full border rounded-md p-2"
-          />
-          <textarea
-           required
-            type="text"
-            placeholder="Delivery Address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            className="w-full border rounded-md p-2"
-          />
-          <input
-           required
-            type="text"
-            placeholder="City"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            className="w-full border rounded-md p-2"
-          />
-          <input
-           required
-            type="text"
-            placeholder="Pincode"
-            value={pincode}
-            onChange={(e) => setPincode(e.target.value)}
-            className="w-full border rounded-md p-2"
-          />
-          <input
-           required
-            type="text"
-            placeholder="Mobile No"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            className="w-full border rounded-md p-2"
-          />
-        </div>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <input
+                required
+                type="text"
+                placeholder="Full Name"
+                value={username}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full border rounded-md p-2"
+              />
+              <textarea
+                required
+                placeholder="Delivery Address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                className="w-full border rounded-md p-2"
+              />
+              <input
+                required
+                type="text"
+                placeholder="City"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                className="w-full border rounded-md p-2"
+              />
+              <input
+                required
+                type="text"
+                placeholder="Pincode"
+                value={pincode}
+                onChange={(e) => setPincode(e.target.value)}
+                className="w-full border rounded-md p-2"
+              />
+              <input
+                required
+                type="text"
+                placeholder="Mobile No"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="w-full border rounded-md p-2"
+              />
 
-        {/* Delivery Method */}
-        <div className="space-y-4">
-          <h3 className="font-semibold">Delivery Speed</h3>
-          <select
-           required
-            value={method}
-            onChange={(e) => setMethod(e.target.value)}
-            className="w-full border rounded-md p-2"
-          >
-            <option value="regular">Regular (₹20) – 40-50 min</option>
-            <option value="express">Express (₹40) – 25-30 min</option>
-            <option value="fastest">Fastest (₹70) – 15-20 min</option>
-          </select>
-        </div>
+              {/* Delivery Method */}
+              <div className="space-y-4">
+                <h3 className="font-semibold">Delivery Speed</h3>
+                <select
+                  required
+                  value={method}
+                  onChange={(e) => setMethod(e.target.value)}
+                  className="w-full border rounded-md p-2"
+                >
+                  <option value="regular">Regular (₹20) – 40-50 min</option>
+                  <option value="express">Express (₹40) – 25-30 min</option>
+                  <option value="fastest">Fastest (₹70) – 15-20 min</option>
+                </select>
+              </div>
 
-        {/* Summary */}
-        <div className="border-t pt-4 space-y-2">
-          <div className="flex justify-between">
-            <span>Delivery Fee:</span>
-            <span>₹{deliveryFee}</span>
+              {/* Summary */}
+              <div className="border-t pt-2 space-y-2">
+                <div className="flex justify-between">
+                  <span>Delivery Fee:</span>
+                  <span>₹{deliveryFee}</span>
+                </div>
+                <div className="text-md font-semibold">
+                  Subtotal: <span className="text-green-600">₹{finalTotal}+{deliveryFee}={totalAmount}</span>
+                </div>
+                <button
+                  className="w-full bg-red-600 text-white p-2 rounded-md cursor-pointer"
+                  type="submit"
+                >
+                  Proceed to Checkout
+                </button>
+              </div>
+            </form>
           </div>
-          <div className="text-lg font-semibold">
-                                    Subtotal: <span className="text-green-600">₹{finalTotal}+{deliveryFee}={totalAmount}</span>
-                                </div>
-          <button className="w-full bg-orange-600 text-white p-2 rounded-md" type="submit">
-            Proceed to Checkout
-          </button>
-        </div>
-        </form>
-      </div>
-    </div>
- 
 
+          {/* RIGHT: Product Preview */}
+          <div className="bg-white rounded-xl shadow p-6">
+            <h3 className="text-xl font-bold mb-4">Your Order</h3>
+
+            {fromBuyNow && productDetail ? (
+              // If "Buy Now"
+              <div className="border rounded-md p-4 flex gap-4 items-center">
+                <img
+                  src={productDetail.image || "/placeholder.png"}
+                  alt={productDetail.name}
+                  className="w-16 h-16 rounded-md object-cover"
+                />
+                <div>
+                  <h4 className="font-semibold">{productDetail.name}</h4>
+                  <p className="text-sm text-gray-600">Price: ₹{price}</p>
+                </div>
+              </div>
+            ) : (
+              // If from cart
+              <div className="space-y-4">
+                {cartItems.map((item) => (
+                  <div
+                    key={item.productId}
+                    className="border rounded-md p-4 flex gap-4 items-center"
+                  >
+                    <img
+                      src={item.productImage || "/placeholder.png"}
+                      alt={item.productName}
+                      className="w-16 h-16 rounded-md object-cover"
+                    />
+                    <div>
+                      <h4 className="font-semibold">{item.productName}</h4>
+                      <p className="text-sm text-gray-600">
+                        Qty: {item.productQuantity}
+                      </p>
+                      <p className="text-sm font-medium">
+                        ₹{item.productPrice * item.productQuantity}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+        </div>
+      </div>
     </>
   )
 }

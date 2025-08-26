@@ -57,8 +57,8 @@ const {shippingDetails,addCartPayment,addBuyNowPayment}=useContext(OrderContext)
      <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
         {/* Header */}
-        <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">
-          Checkout
+        <h2 className="text-3xl font-bold text-red-600 text-center mb-6">
+          Pay Now
         </h2>
 
         {/* Product Summary */}
@@ -84,7 +84,7 @@ const {shippingDetails,addCartPayment,addBuyNowPayment}=useContext(OrderContext)
         {/* Payment Button */}
         <button
           onClick={openRazorpay}
-          className="w-full bg-indigo-600 text-white py-3 rounded-lg font-medium text-lg hover:bg-indigo-700 transition"
+          className="w-full bg-red-600 text-white py-3 rounded-lg font-medium text-lg hover:bg-red-700 transition"
         >
           Pay Now
         </button>

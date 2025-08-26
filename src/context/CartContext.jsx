@@ -4,6 +4,7 @@ import Axios_instance from "../api/axiosConfig"
 import { createContext, useContext, useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
 import toast from "react-hot-toast";
+import { ProductContext } from "./ProductContext";
 
 
 export const CartContext = createContext()
@@ -13,7 +14,7 @@ export const CartProvider = ({ children }) => {
     const [cartItems, setCartItems] = useState([])
     const [cartItemCount, setCartItemsCount] = useState([{ id: "", count: 1, productPrice: 0 }])
     const [subTotal, setSubTotal] = useState(0)
-
+  const { products } = useContext(ProductContext);
     const { user } = useContext(AuthContext)
     
 
@@ -54,11 +55,18 @@ export const CartProvider = ({ children }) => {
 
 
         try {
+            
+           
 
             if (user.id) {
                 const userResponse = await Axios_instance.get(`users/${user.id}`)
                 const userData = userResponse.data
 
+                const product = products.find((p) => p.id === productId);
+                if (product.quantity === 0) {
+                    toast.error("Product is out of stock");
+                    return;
+                }
                 const cart = [...userData.cart, { productId: productId, productName: name, productPrice: price, productImage: image, productQuantity: 1 }]
                 setCartItems(cart)
                 const userUpdated = { ...userData, cart }
@@ -95,6 +103,11 @@ export const CartProvider = ({ children }) => {
                 ? { ...item, count: type === "increase" ? item.count + 1 : Math.max(1, item.count - 1) }
                 : item
         );
+
+        if(updatedCartItemsCount.find(item => item.id === id).count > products.find(p => p.id === id).quantity){
+            toast.error("Product quantity exceeds available stock");
+            return;
+        }
         setCartItemsCount(updatedCartItemsCount);
 
         const subtotal = updatedCartItemsCount.reduce((sum, item) => sum + item.productPrice * item.count, 0);

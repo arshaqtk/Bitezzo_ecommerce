@@ -8,13 +8,14 @@ export default function UsersTable() {
   const [users, setUser] = useState([]);
   const {toggleUser}=useContext(AuthContext)
   const navigate=useNavigate()
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await Axios_instance.get("/users?role=user");
       setUser(response.data);
     };
     fetchData();
-  }, []);
+  }, [toggleUser]);
 
   const toggleBlock = async (id, Authenticated) => {
     toggleUser(id, !Authenticated)
@@ -27,20 +28,20 @@ export default function UsersTable() {
 
   return (
 <div className="flex">
-  <div className="w-full p-6 bg-[#F5F7FA]">
-    <h2 className="text-xl font-bold text-violet-900 px-6 py-4">Users List</h2>
+  <div className="w-full p-6 bg-[#0B192C]">
+    <h2 className="text-xl font-bold text-violet-400 px-6 py-4">Users List</h2>
 
     {/* Stats Section */}
     <div className="grid grid-cols-2 gap-4 mb-6">
       {/* Total Users */}
-      <div className="bg-violet-100 p-4 rounded-xl shadow-md flex flex-col items-center text-violet-900 border border-violet-200">
-        <h3 className="text-lg font-semibold">Total Users</h3>
-        <p className="text-2xl font-bold text-violet-700">{users.length}</p>
+      <div className="bg-[#09122C] p-4 rounded-xl shadow-md flex flex-col items-center  border border-violet-200">
+        <h3 className="text-lg font-bold text-green-500">Total Users</h3>
+        <p className="text-2xl font-bold text-violet-500">{users.length}</p>
       </div>
 
       {/* Blocked Users */}
-      <div className="bg-red-100 p-4 rounded-xl shadow-md flex flex-col items-center text-red-900 border border-red-200">
-        <h3 className="text-lg font-semibold">Blocked Users</h3>
+      <div className="bg-[#09122C] p-4 rounded-xl shadow-md flex flex-col items-center text-red-700 border border-red-200">
+        <h3 className="text-lg font-semibold ">Blocked Users</h3>
         <p className="text-2xl font-bold text-red-700">
           {users.filter((user) => !user.isAuthenticated).length}
         </p>
@@ -53,7 +54,7 @@ export default function UsersTable() {
         <div
         
           key={user.id}
-          className="bg-white shadow-lg rounded-xl border border-violet-200 p-4 flex flex-col items-center text-center hover:shadow-xl transition"
+          className="bg-[#09122C] shadow-lg rounded-xl border border-violet-200 p-4 flex flex-col items-center text-center hover:shadow-xl transition"
         >
           {/* Profile Image */}
           <img
@@ -64,10 +65,10 @@ export default function UsersTable() {
           />
 
           {/* Username */}
-          <h3 className="text-lg font-semibold text-violet-900">{user.username}</h3>
+          <h3 className="text-lg font-semibold text-[#d3d3d0]">{user.username}</h3>
 
           {/* Email */}
-          <p className="text-violet-600 text-sm mb-3">{user.email}</p>
+          <p className="text-violet-200 text-sm mb-3">{user.email}</p>
 
           {/* Status */}
           <span

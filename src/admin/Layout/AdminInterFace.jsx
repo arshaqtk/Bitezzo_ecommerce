@@ -10,7 +10,9 @@ function AdminInterface() {
     <div className="flex h-screen ">
       <Sidebar/>
       {/* <TopBar/> */}
-      <div className="flex-1 p-6 bg-white/20 overflow-y-auto">
+      <div className="flex-1 p-6 
+      bg-[#07101e]
+       overflow-y-auto">
         <Outlet /> 
       </div>
     </div>

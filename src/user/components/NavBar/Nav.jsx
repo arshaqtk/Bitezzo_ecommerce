@@ -6,6 +6,12 @@ import { CartContext } from '../../../context/CartContext';
 import { AuthContext } from '../../../context/AuthContext';
 import { WishListContext } from '../../../context/WishlistContext';
 import { SearchContext } from '../../../context/SearchContext';
+import {
+  HomeIcon,
+  UserIcon,
+  CubeIcon,
+  ShoppingBagIcon,
+} from "@heroicons/react/24/outline";
 
 // import { AuthContext } from '../../context/AuthContext'
 
@@ -139,25 +145,7 @@ function Nav() {
                             className="relative text-white hover:text-red-500 cursor-pointer"
                             onClick={() => navigate('/order')}
                         >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-6 w-6"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                strokeWidth={2}
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M5 7h14l-1.5 12a2 2 0 01-2 2H8.5a2 2 0 01-2-2L5 7z"
-                                />
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M9 7V5a3 3 0 016 0v2"
-                                />
-                            </svg>
+                            <ShoppingBagIcon className="h-6 w-6 text-white hover:text-red-500" />
 
 
                         </button>

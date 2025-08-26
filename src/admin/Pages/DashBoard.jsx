@@ -27,7 +27,6 @@ export default function AdminDashboard() {
     let mounted = true;
     (async () => {
       try {
-        // JSON Server: GET /users
         const res = await Axios_instance.get("/users?role=user");
         if (mounted) setUsers(res.data || []);
       } catch (e) {
@@ -61,8 +60,8 @@ export default function AdminDashboard() {
   if (loading) return <div className="p-6">Loading admin dashboard…</div>;
 
   return (
-    <div className="p-6 space-y-6 bg-[#F5F7FA] min-h-screen">
-      <h1 className="text-2xl font-bold text-violet-900">Admin Dashboard</h1>
+    <div className="p-6 space-y-6 bg-[#0B192C] min-h-screen">
+      <h1 className="text-2xl font-bold text-violet-400">Admin Dashboard</h1>
 
       {/* KPI cards */}
       <StatsCards stats={stats} />

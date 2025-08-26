@@ -92,8 +92,6 @@ function App() {
                       <Route path="/admin/add-product" element={<AddProduct />} />
                       <Route path="/admin/orders" element={<AdminViewOrder />} />
                       <Route path="/admin/order-detailview/:id" element={<AdminOrderDetailView />} />
-
-
                     </Route>
 
                   </Routes>

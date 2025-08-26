@@ -85,11 +85,7 @@ export const AuthProvider = ({ children }) => {
 
   //______Editing___user_______
 
-  const editUserPassword = async (id, formData) => {
-    console.log(formData)
-    alert("called")
-    
-  }
+
 
 
 
@@ -111,7 +107,7 @@ export const AuthProvider = ({ children }) => {
 
   const toggleUser = async (id, Authenticated) => {
     if (user.id == id) {
-      setUserAuthenticated(Authenticated)
+      setUserAuthenticated(Authenticated)//toggled value
       setUser(null)
       localStorage.removeItem("user")
       localStorage.removeItem("role")
@@ -122,7 +118,7 @@ export const AuthProvider = ({ children }) => {
 
 
 
-  return (<AuthContext.Provider value={{ user, signup, login, logout, toggleUser, editUserPassword }}>
+  return (<AuthContext.Provider value={{ user, signup, login, logout, toggleUser,  }}>
     {children}
   </AuthContext.Provider>)
 }

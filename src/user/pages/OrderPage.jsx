@@ -30,9 +30,9 @@ const res = await Axios_instance.get(`/users/${user.id}`);
 
     return (
         <> 
-            <div className="bg-gray-100 min-h-screen p-6 mt-17 ">
+            <div className="bg-gray-100 min-h-screen p-6 mt-17  ">
 
-                <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-lg p-6">
+                <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-lg p-6 md:my-12">
                     <h1 className="text-2xl font-bold mb-6 text-center">MY ORDERS</h1>
 
                     {orderDetails.length === 0 ? (

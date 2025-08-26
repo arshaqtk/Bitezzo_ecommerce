@@ -5,8 +5,8 @@ const PALETTE = ["#6366F1","#22C55E","#F59E0B","#EF4444","#06B6D4","#8B5CF6","#F
 export default function OrdersStatusPie({ data }) {
   // data: [{ status, count }]
   return (
-    <div className="rounded-2xl border border-gray-200 p-4 shadow-sm bg-white">
-      <h3 className="font-semibold mb-2">Orders by Status</h3>
+    <div className="rounded-2xl border border-gray-200 p-4 shadow-sm bg-[#09122C]">
+      <h3 className="font-semibold mb-2 text-yellow-500">Orders by Status</h3>
       <div style={{ width: "100%", height: 300 }}>
         <ResponsiveContainer>
           <PieChart>

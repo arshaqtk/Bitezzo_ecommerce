@@ -6,13 +6,13 @@ import { CartContext } from "../../context/CartContext"
 import { AuthContext } from "../../context/AuthContext"
 import { OrderContext } from "../../context/OrderContext"
 import Axios_instance from "../../api/axiosConfig"
+import toast from "react-hot-toast"
 
 function ProductDetailView() {
   let { id } = useParams()
   const [product, setProduct] = useState([])
   const navigate = useNavigate()
-  const { addToCart } = useContext(CartContext);
-  const { buyNow } = useContext(OrderContext)
+  const { addToCart, cartItems } = useContext(CartContext)
   const { user } = useContext(AuthContext)
 
 
@@ -22,11 +22,15 @@ function ProductDetailView() {
       const { data } = await Axios_instance.get(`/products?id=${id}`)
       console.log(data)
 
-      const filteredData = data.map(({ id, name, price, image, category, description }) => ({ id, name, price, image, description, category }))
+      const filteredData = data.map(({ id, name, price, image, category, description, quantity }) => ({ id, name, price, image, description, category, quantity }))
       setProduct(filteredData)
     }
     fetchData()
   }, [])
+
+  if (product.length === 0) {
+    return <div className="bg-[#FAF1E6] min-h-screen py-10 mt-17"><h2 className="text-center">No Product Found</h2></div>
+  }
 
   return (
     <>
@@ -59,37 +63,58 @@ function ProductDetailView() {
             Category:{" "}
             <span className="font-medium text-blue-400">{product.category}</span>
           </p>
+          <p className="font-semibold text-red-600">{(product.quantity === 0) ? "Product is out of stock": ""}</p>
+          <p className="font-semibold text-red-600">{(product.quantity < 5 && product.quantity > 0) ? `Only ${product.quantity} Left`: ""}</p>
 
           {/* Buttons */}
           <div className="mt-4 flex gap-3">
-            <button
-              className="bg-[#FFD369] text-black font-medium px-5 py-2 rounded-lg shadow-md hover:bg-[#e6be5c] transition cursor-pointer"
-              onClick={() =>
-                addToCart({
-                  user_id: user.id,
-                  productId: product.id,
-                  name: product.name,
-                  price: product.price,
-                  image: product.image,
-                })
-              }
-            >
-              Add to Cart
-            </button>
+            {cartItems.some((cart) => cart.productId == product.id) ? (
+                      <button
+                        className="bg-[#FFD369] text-black font-medium px-4 py-2 rounded-lg shadow-md hover:bg-[#e6be5c] transition cursor-pointer"
+                        onClick={() => {
+                          navigate("/cart")
+                        }}
+                      >
+                        Go To Cart
+                      </button>
+                    ) : (
+                      <button
+                        className="px-4  py-2 bg-[#FFD369] text-[#222831] rounded-lg text-sm font-medium hover:bg-[#e6be5c] transition cursor-pointer"
+                        onClick={() =>{ if (product.quantity === 0) {
+                    toast.error("Product is out of stock");
+                    return;
+                  }  addToCart({
+                            user_id: user.id,
+                            productId: product.id,
+                            name: product.name,
+                            price: product.price,
+                            image: product.image,
+                          })
+                        }}
+                        
+                      >
+                        Add to Cart
+                      </button>
+                    )}
             <button
               className="bg-gray-700 text-gray-200 px-5 py-2 rounded-lg shadow-md hover:bg-gray-600 transition cursor-pointer"
-              onClick={() =>
-                navigate("/checkout", {
-                  state: {
-                    fromBuyNow: true,
-                    user_id: user.id,
-                    productId: product.id,
+              onClick={
+                () => {
+                  if (product.quantity === 0) {
+                    toast.error("Product is out of stock");
+                    return;
+                  }
+                  navigate("/checkout", {
+                    state: {
+                      fromBuyNow: true,
+                      user_id: user.id,
+                      productId: product.id,
                     name: product.name,
                     price: product.price,
                     image: product.image,
                   },
                 })
-              }
+              }}
             >
               Buy Now
             </button>

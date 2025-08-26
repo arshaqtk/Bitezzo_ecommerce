@@ -15,10 +15,10 @@ export default function StatsCards({ stats }) {
   {items.map((it) => (
     <div
       key={it.label}
-      className="rounded-2xl border border-violet-200 p-4 shadow-sm bg-white hover:shadow-md transition"
+      className="rounded-2xl border border-violet-200 p-4 shadow-sm bg-[#09122C] hover:shadow-md transition"
     >
-      <div className="text-sm text-violet-600 font-medium">{it.label}</div>
-      <div className="text-2xl font-bold mt-1 text-violet-800">{it.value}</div>
+      <div className="text-lg  text-yellow-500 font-medium">{it.label}</div>
+      <div className="text-2xl font-bold mt-1 text-[#13cd0d]">{it.value}</div>
     </div>
   ))}
 </div>

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useContext } from "react"
-import Axios_instance from '../../../api/axiosConfig'
 import { useNavigate } from 'react-router-dom'
 import { CartContext } from '../../../context/CartContext'
 import { WishListContext } from '../../../context/WishlistContext'
 
 import { AuthContext } from '../../../context/AuthContext'
 import { SearchContext } from '../../../context/SearchContext'
+import { ProductContext } from '../../../context/ProductContext'
 
 
 
@@ -22,24 +22,24 @@ function Products() {
   const { addToCart, cartQuantity, cartItems } = useContext(CartContext);
   const { addToWishlist, wishlistItems } = useContext(WishListContext);
   const { searchValue } = useContext(SearchContext);
+  const { products } = useContext(ProductContext);
 
-
-  useEffect(() => {
-    async function fetchData() {
+  function fetchData() {
       try {
-        const response = await Axios_instance.get('/products')
-        const responseData = response.data
-        const filteredData = responseData.map(({ id, name, price, image, category }) => ({ id, name, price, image, category }))
-        setAllProducts(filteredData);
-        setProduct(filteredData);
-        console.log(wishlistItems)
+        setAllProducts(products);
+        setProduct(products);
       } catch (e) {
         console.log(e)
       }
     }
+
+    
+
+  useEffect(() => {
     fetchData()
-  }, [])
+  }, [products])
   
+
   function filterProduct(category) {
     if (category === "all") {
       setProduct(allProducts);

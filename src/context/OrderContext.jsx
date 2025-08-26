@@ -70,6 +70,15 @@ export const OrderProvider = ({ children }) => {
          setOrderDetails(order)
          const response = await Axios_instance.patch(`users/${user.id}`, { orders: order })
          navigate("/products")
+
+         
+         for (const item of cartItems) {
+            const {data} = await Axios_instance.get(`products/${item.productId}`)
+            data.quantity = data.quantity - item.productQuantity;
+            console.log("Updated product quantity:", data.quantity);
+            await Axios_instance.patch(`products/${item.productId}`, { quantity: data.quantity })
+         }
+
          fetchAllOrderData()
          if (response.data) {
             await Axios_instance.patch(`users/${user.id}`, { cart: [] })

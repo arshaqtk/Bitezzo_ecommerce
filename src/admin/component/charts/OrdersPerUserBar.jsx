@@ -3,8 +3,8 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 export default function OrdersPerUserBar({ data }) {
   // data: [{ name, orders }]
   return (
-<div className="rounded-2xl border border-gray-200 p-4 shadow-sm bg-white">
-  <h3 className="font-semibold mb-2 text-violet-700">Orders per User</h3>
+<div className="rounded-2xl border border-gray-200 p-4 shadow-sm bg-[#09122C]">
+  <h3 className="font-semibold mb-2 text-yellow-500">Orders per User</h3>
   <div style={{ width: "100%", height: 320 }}>
     <ResponsiveContainer>
       <BarChart data={data}>

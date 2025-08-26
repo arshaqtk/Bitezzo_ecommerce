@@ -26,12 +26,12 @@ function Banner() {
       }}
     >
       
-      <div className="absolute inset-0 bg-black/40"></div>
+      <div className="absolute inset-0 bg-black/20"></div>
 
       
       <div className="relative z-10 text-center text-white max-w-2xl px-4">
-        <h1 className="text-4xl md:text-6xl font-bold mb-4">
-          Welcome to Bitezzo
+        <h1 className="text-3xl md:text-5xl font-bold mb-4">
+         Where Every Bite Tells a Story 
         </h1>
         <p className="text-lg md:text-xl mb-6 text-yellow-500 font-medium">
           Great Dish @ Great Price
