@@ -90,7 +90,7 @@ function Nav() {
                         <button className="text-white hover:text-red-500 font-medium cursor-pointer" onClick={() => navigate('/products')}>
                             Shop
                         </button>
-                        <button className="text-white hover:text-red-500 font-medium cursor-pointer" onClick={() => navigate('/')}>
+                        <button className="text-white hover:text-red-500 font-medium cursor-pointer" onClick={() => navigate('/about')}>
                             About
                         </button>
                         <button className="text-white hover:text-red-500 font-medium cursor-pointer" onClick={() => navigate('/')}>

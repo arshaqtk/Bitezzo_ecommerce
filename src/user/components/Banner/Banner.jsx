@@ -30,7 +30,7 @@ function Banner() {
 
       
       <div className="relative z-10 text-center text-white max-w-2xl px-4">
-        <h1 className="text-3xl md:text-5xl font-bold mb-4">
+        <h1 className="text-3xl md:text-5xl font-bolder mb-4 edu-nsw">
          Where Every Bite Tells a Story 
         </h1>
         <p className="text-lg md:text-xl mb-6 text-yellow-500 font-medium">

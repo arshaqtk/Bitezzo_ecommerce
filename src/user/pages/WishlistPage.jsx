@@ -67,7 +67,7 @@ function WishlistPage() {
                 <h3 className="text-lg font-semibold text-gray-800 truncate">
                   {item.productName}
                 </h3>
-                <p className="text-[#FFD369] font-medium mt-2">₹{item.productPrice}</p>
+                <p className="text-gray-800 font-medium mt-2">₹{item.productPrice}</p>
 
                 <button
                   className="w-full mt-4 px-4 py-2 bg-[#FFD369] text-[#222831] rounded-lg font-medium hover:bg-[#e6be5c] transition"

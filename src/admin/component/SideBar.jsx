@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   HomeIcon,
   UserIcon,
@@ -9,6 +9,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 export default function Sidebar() {
+  const navigate=useNavigate()
   const menu = [
     { to: "/admin/dashboard", label: "Dashboard", icon: HomeIcon },
     { to: "/admin/users", label: "Users", icon: UserIcon },
@@ -60,7 +61,7 @@ export default function Sidebar() {
         className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-gray-200"
       >
         <ArrowRightOnRectangleIcon className="h-6 w-6 text-gray-600" />
-        <span className="hidden group-hover:inline">Logout</span>
+        <span className="hidden group-hover:inline" onClick={()=>navigate("/login")}>Logout</span>
       </button>
     </aside>
   );

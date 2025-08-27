@@ -42,6 +42,7 @@ import UserLayout from "./user/components/Layout/UserLayout";
 import AdminViewOrder from "./admin/Pages/AdminViewOrder";
 import AdminOrderDetailView from "./admin/Pages/AdminOrderDetailView";
 import AdminDashboard from "./admin/Pages/DashBoard";
+import About from "./user/pages/About";
 
 
 function App() {
@@ -80,6 +81,8 @@ function App() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/products" element={<ProductPage />} />
                     <Route path="/productview/:id" element={<ProductDetailView />} />
+                    <Route path="/about" element={<About />} />
+
                     </Route>
 
 

@@ -16,7 +16,7 @@ const ProductTable = () => {
   const outOfStock = products.filter((p) => p.quantity === 0).length;
 
   return (
-  <div className="p-6 bg-[#0B192C] rounded-xl shadow-md border border-violet-800 space-y-6">
+  <div className="p-6 bg-[#0B192C] rounded-xl shadow-md border  space-y-6">
   {/* Header with stats + Add Button */}
   <div className="flex justify-between items-center">
     <h2 className="text-xl font-bold text-violet-200">Product List</h2>
@@ -30,7 +30,7 @@ const ProductTable = () => {
 
   {/* Stats Row */}
   <div className="flex gap-6">
-    <div className="flex items-center gap-3 bg-[#13223C] px-4 py-3 rounded-lg border border-violet-800">
+    <div className="flex items-center gap-3 bg-[#13223C] px-4 py-3 rounded-lg border border-violet-200">
       <Package className="text-violet-300 h-6 w-6" />
       <span className="text-violet-200 font-medium">
         Total Products: {totalProducts}
@@ -45,7 +45,7 @@ const ProductTable = () => {
   </div>
 
   {/* Table */}
-  <div className="overflow-x-auto rounded-lg border border-violet-800">
+  <div className="overflow-x-auto rounded-lg border border-violet-200">
     <table className="w-full border-collapse">
       <thead className="bg-[#13223C]">
         <tr>
@@ -85,7 +85,7 @@ const ProductTable = () => {
             </td>
             <td className="px-6 py-3">
               {product.quantity === 0 ? (
-                <span className="px-3 py-1 text-sm font-medium text-red-300 border border-red-600 rounded-full">
+                <span className=" py-1 text-sm font-medium text-red-500 rounded-full">
                   Out Of Stock
                 </span>
               ) : (
