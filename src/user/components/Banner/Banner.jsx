@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import BannerBg from "../../../assets/images/Banner-bg.png";
-import Slide2 from "../../../assets/images/Slide2-bg.jpg";
+import BannerBg from "../../../assets/images/slide1.png";
+import Slide2 from "../../../assets/images/slide2.jpg";
 import { useNavigate } from "react-router-dom";
 
 function Banner() {
