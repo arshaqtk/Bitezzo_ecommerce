@@ -118,7 +118,7 @@ function Products() {
 
 
         <div className='flex justify-center items-center bg-[#FAF1E6]  '>
-          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-6 p-6 w-[90vw] bg-[#FAF1E6]">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 p-6 w-[90vw] bg-[#FAF1E6]">
             {product.map((item, index) => (
 
               <div
