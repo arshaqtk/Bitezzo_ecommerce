@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Axios_instance from '../../../api/axiosConfig';
 
 import { CartContext } from '../../../context/CartContext';
@@ -33,6 +33,7 @@ function Nav() {
 
 
     const navigate = useNavigate()
+     const location = useLocation()
 
     function toggleAccountMenu() {
         setShowAccountMenu((prev) => !prev)
@@ -64,6 +65,11 @@ function Nav() {
     }, [cartItems, wishlistItems])
 
 
+        useEffect(() => {
+        setMobileMenuOpen(false);
+    }, [location.pathname]);
+
+
 
     const handleSearchInput = (e) => {
         setSearchValue(e.target.value)
@@ -71,6 +77,7 @@ function Nav() {
     }
     const handleSearchSubmit=(e)=>{
       e.preventDefault();
+      setMobileMenuOpen(false);
         acceptSearchValue(searchValue)
     }
     return (
@@ -277,7 +284,7 @@ function Nav() {
             {mobileMenuOpen && (
                 <div className="md:hidden bg-gray-700 border-t border-gray-200">
                     <button
-
+ onClick={() => navigate('/')}
                         className="block px-4 py-3 text-white hover:bg-indigo-50 hover:text-red-500"
                     >
                         Home
@@ -289,23 +296,27 @@ function Nav() {
                         Shop
                     </button>
                     <button
-
+                    onClick={() => navigate('/about')}
                         className="block px-4 py-3 text-white hover:bg-indigo-50 hover:text-red-500"
                     >
                         About
                     </button>
                     <button
-
+onClick={() => navigate('')}
                         className="block px-4 py-3 text-white hover:bg-indigo-50 hover:text-red-500"
                     >
                         Contact
                     </button>
                     <div className="px-4 py-3 border-t border-gray-200">
-                        <input
-                            type="text"
-                            placeholder="Search products..."
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        />
+                         <form action="" onSubmit={handleSearchSubmit}> <input
+                                 onChange={handleSearchInput}
+                                type="text"
+                                
+                                placeholder="Search products..."
+                                className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 text-white focus:ring-red-500 cursor-pointer"
+                            />
+                            <button type='button'></button>
+                            </form>
                     </div>
                 </div>
             )}

@@ -43,6 +43,7 @@ import AdminViewOrder from "./admin/Pages/AdminViewOrder";
 import AdminOrderDetailView from "./admin/Pages/AdminOrderDetailView";
 import AdminDashboard from "./admin/Pages/DashBoard";
 import About from "./user/pages/About";
+import ScrollToTop from "./user/components/ScrollToTop";
 
 
 function App() {
@@ -51,6 +52,7 @@ function App() {
 
     <Router>
       <Toaster position="top-right" reverseOrder={false} />
+      <ScrollToTop/>
       <AuthProvider>
         <ProductProvider>
           <SearchProvider>
