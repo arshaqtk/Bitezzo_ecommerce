@@ -1,92 +1,121 @@
-import React, { useContext, useEffect, useState } from 'react'
-import Nav from '../components/NavBar/Nav'
-
-import Banner from '../components/Banner/Banner'
-import { useNavigate } from 'react-router-dom'
-import Axios_instance from '../../api/axiosConfig'
-import Footer from '../components/Footer/Footer'
-import { CartContext} from '../../context/CartContext'
-import { AuthContext } from '../../context/AuthContext'
+import React, { useContext, useEffect, useState } from 'react';
+import Nav from '../components/NavBar/Nav';
+import Banner from '../components/Banner/Banner';
+import { useNavigate } from 'react-router-dom';
+import Axios_instance from '../../api/axiosConfig';
+import Footer from '../components/Footer/Footer';
+import { CartContext } from '../../context/CartContext';
+import { AuthContext } from '../../context/AuthContext';
+import { WishListContext } from '../../context/WishlistContext'; // Import WishListContext
 
 function HomePage() {
-    const navigate=useNavigate()
-    const [product,setProduct]=useState([])
-     const {user}=useContext(AuthContext)
- const { addToCart } = useContext(CartContext);
+  const navigate = useNavigate();
+  const [product, setProduct] = useState([]);
+  const { user } = useContext(AuthContext);
+  const { addToCart } = useContext(CartContext);
+  const { addToWishlist, wishlistItems } = useContext(WishListContext); // Get addToWishlist and wishlistItems
 
-     useEffect(()=>{
-        async function fetchData(){
-            try{
-                const response=await Axios_instance.get('/products?_limit=4')
-        const responseData=response.data
-        const Products=responseData.map(({id,name,price,image})=>({id,name,price,image}))
-        setProduct(Products)
-            }catch(e){
-                console.log(e)
-            }    
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await Axios_instance.get('/products?_limit=4');
+        const responseData = response.data;
+        const Products = responseData.map(({ id, name, price, image }) => ({ id, name, price, image }));
+        setProduct(Products);
+      } catch (e) {
+        console.log(e);
+      }
     }
-    fetchData()
-    
-    },[])
+    fetchData();
+  }, []);
 
   return (
-    <> 
+    <>
+      <Banner />
+      <div className="bg-gray-100 py-12">
+        <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-10">
+          Top Selling Dishes
+        </h2>
+        <div className='flex justify-center items-center'>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8 px-4 md:px-8 max-w-screen-xl w-full">
+            {product.map((item, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group"
+              >
+                {/* Image Section */}
+                <div
+                  className="relative overflow-hidden cursor-pointer"
+                  onClick={() => navigate(`/productview/${item.id}`)}
+                >
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110 rounded-t-xl"
+                  />
+                  <div className="absolute inset-0 bg-black/50 flex flex-col justify-center items-center text-center p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span className="text-white text-lg font-semibold">View Product</span>
+                    <span className="text-gray-300 text-sm mt-1">Click for more details</span>
+                  </div>
 
-    <Banner/>
-    <div className=" bg-[#FAF1E6]">
-    <h2 className="text-3xl font-bold text-center text-black p-5 underline ">Top Selling Dishes</h2>
-    <div className='flex justify-center items-center'>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-6 w-[90vw]">
-    {product.map((item, index) => (
-      <div
-        key={index}
-        className=" rounded-xl shadow-md overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl group"
-        
-        >
-        {/* Image */}
-        <div className="relative overflow-hidden cursor-pointer" onClick={()=>navigate(`/productview/${item.id}`)}>
-          <img
-            src={item.image}
-            alt={item.name}
-            className="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110"
-          />
-          {/* Hover message */}
-          <div className="absolute inset-0 bg-black/30 flex justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <span className="text-white text-sm font-medium">
-              Click to view details
-            </span>
-          </div>
-        </div>
+                  {/* Wishlist Icon */}
+                  <button
+                    className="absolute top-4 right-4 p-2 rounded-full bg-white/70 backdrop-blur-sm text-gray-600 transition-colors duration-200 hover:bg-red-500 hover:text-white"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addToWishlist({
+                        user_id: user.id,
+                        productId: item.id,
+                        name: item.name,
+                        price: item.price,
+                        image: item.image,
+                      });
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill={wishlistItems.some((wishlist) => wishlist.productId === item.id) ? "red" : "none"}
+                      stroke="currentColor"
+                      strokeWidth={1.5}
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                    </svg>
+                  </button>
+                </div>
 
-        {/* Content */}
-        <div className="p-3 bg-white/50">
-          <h3 className="text-lg font-semibold text-black truncate">
-            {item.name}
-          </h3>
+                {/* Content Section */}
+                <div className="p-4 sm:p-6">
+                  <h3 className="text-xl font-bold text-gray-800 truncate">{item.name}</h3>
+                  <p className="text-2xl font-extrabold text-gray-900 mt-1">₹{item.price}</p>
 
-          {/* Price */}
-          <p className="text-black font-medium mt-2">₹{item.price}</p>
-
-          {/* Add to Cart Button */}
-          <div className="mt-4">
-            <button className="w-full px-4 py-2 bg-[#FFD369] text-[#222831] rounded-lg text-sm font-medium hover:bg-[#e6be5c] transition cursor-pointer" 
-            onClick={()=>addToCart({user_id:user.id,productId:item.id,name:item.name,price:item.price,image:item.image})}
-                       
-            >
-              Add to Cart
-            </button>
+                  {/* Action Button */}
+                  <div className="mt-4">
+                    <button
+                      className="w-full py-2 bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        addToCart({
+                          user_id: user.id,
+                          productId: item.id,
+                          name: item.name,
+                          price: item.price,
+                          image: item.image,
+                        });
+                      }}
+                    >
+                      Add to Basket
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
-    ))}
-  </div>
-    </div>
-  
-</div>
-     
     </>
-   
-  )
+  );
 }
 
-export default HomePage
+export default HomePage;
