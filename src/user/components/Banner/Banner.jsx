@@ -1,63 +1,82 @@
 import React, { useEffect, useState } from "react";
 import BannerBg from "../../../assets/images/slide1.png";
 import Slide2 from "../../../assets/images/slide2.jpg";
+import mobileslide1 from "../../../assets/images/mobileimg1.jpg";
+import mobileslide2 from "../../../assets/images/mobileimg2.jpg";
+
+
 import { useNavigate } from "react-router-dom";
 
 function Banner() {
-  const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Add multiple slides here
-  const slides = [BannerBg, Slide2];
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const desktopSlides = [BannerBg, Slide2];
+  const mobileSlides = [mobileslide1, mobileslide2];
 
-  
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [slides.length]);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-  return (
-    <section
-      className="relative mt-18 h-[90vh] flex items-center justify-center bg-cover bg-center transition-all duration-1000"
-      style={{
-        backgroundImage: `url(${slides[currentSlide]})`,
-      }}
-    >
-      
-      <div className="absolute inset-0 bg-black/20"></div>
+  // This effect updates the isMobile state on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
 
-      
-      <div className="relative z-10 text-center text-white max-w-2xl px-4">
-        <h1 className="text-3xl md:text-5xl font-bolder mb-4 edu-nsw">
-         Where Every Bite Tells a Story 
-        </h1>
-        <p className="text-lg md:text-xl mb-6 text-yellow-500 font-medium">
-          Great Dish @ Great Price
-        </p>
-        <button
-          className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg text-lg font-semibold shadow-lg"
-          onClick={() => navigate("/products")}
-        >
-          Shop Now
-        </button>
-      </div>
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-      {/* Slide indicators */}
-      <div className="absolute bottom-6 flex gap-2">
-        {slides.map((_, index) => (
-          <div
-            key={index}
-            className={`w-3 h-3 rounded-full cursor-pointer transition-all ${
-              currentSlide === index ? "bg-white scale-125" : "bg-gray-400"
-            }`}
-            onClick={() => setCurrentSlide(index)}
-          ></div>
-        ))}
-      </div>
-    </section>
-  );
+
+  useEffect(() => {
+    const slides = isMobile ? mobileSlides : desktopSlides;
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [isMobile, desktopSlides, mobileSlides]);
+
+  const slides = isMobile ? mobileSlides : desktopSlides;
+  
+  return (
+    <section
+      className="relative mt-18 h-[90vh] flex items-center justify-center bg-cover bg-center transition-all duration-1000"
+      style={{
+        backgroundImage: `url(${slides[currentSlide]})`,
+      }}
+    >
+      
+      <div className="absolute inset-0 bg-black/20"></div>
+
+      
+      <div className="relative z-10 text-center text-white max-w-2xl px-4">
+        <h1 className="text-3xl md:text-5xl font-bolder mb-4 edu-nsw">
+         Where Every Bite Tells a Story 
+        </h1>
+        <p className="text-lg md:text-xl mb-6 text-yellow-500 font-medium">
+          Great Dish @ Great Price
+        </p>
+        <button
+          className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg text-lg font-semibold shadow-lg"
+          onClick={() => navigate("/products")}
+        >
+          Shop Now
+        </button>
+      </div>
+
+      {/* Slide indicators */}
+      <div className="absolute bottom-6 flex gap-2">
+        {slides.map((_, index) => (
+          <div
+            key={index}
+            className={`w-3 h-3 rounded-full cursor-pointer transition-all ${
+              currentSlide === index ? "bg-white scale-125" : "bg-gray-400"
+            }`}
+            onClick={() => setCurrentSlide(index)}
+          ></div>
+        ))}
+      </div>
+    </section>
+  );
 }
 
 export default Banner;

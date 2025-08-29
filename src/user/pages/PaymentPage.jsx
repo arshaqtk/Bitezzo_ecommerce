@@ -20,8 +20,8 @@ const {shippingDetails,addCartPayment,addBuyNowPayment}=useContext(OrderContext)
       key: "rzp_test_edrzdb8Gbx5U5M", // Dummy Test Key
       amount: totalAmount*100, // = 500.00 INR
       currency: "INR",
-      name: "My Shop",
-      description: "Test Transaction",
+      name: "Bitezzo",
+      description: "Paying....",
       image: "https://yourlogo.png",
       handler: function (response) {
         alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
@@ -35,8 +35,8 @@ const {shippingDetails,addCartPayment,addBuyNowPayment}=useContext(OrderContext)
         // fetch("http://localhost:3000/orders", {method:"POST", body: JSON.stringify({...})})
       },
       prefill: {
-        name: "John Doe",
-        email: "johndoe@example.com",
+        name: "Arshaq Tk",
+        email: "arshaq@example.com",
         contact: "9876543210",
       },
       notes: {
