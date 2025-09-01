@@ -39,7 +39,7 @@ function Products() {
 
   return (
     loading ? (
-      <div className='flex items-center justify-center'><Mosaic color="#c8c8c8" size="medium"  /></div>
+      <div className='bg-gray-100 min-h-screen flex items-center justify-center'><Mosaic color="#c8c8c8" size="medium"  /></div>
       
     ) : <div className="bg-gray-100 min-h-screen py-12 mt-10">
       {/* Category Filter Dropdown */}
