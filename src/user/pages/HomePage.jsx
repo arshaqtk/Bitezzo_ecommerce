@@ -150,17 +150,10 @@ function HomePage() {
         </div>
       </div>
 
-      {/* About Section */}
-      <section className="py-16 bg-white text-center">
-        <h2 className="text-3xl font-bold mb-6">About Us</h2>
-        <p className="max-w-3xl mx-auto text-gray-600">
-          We’re passionate about serving delicious food with the freshest ingredients.
-          Our mission is to bring joy to your dining experience, one meal at a time.
-        </p>
-      </section>
+      
 
-      {/* Footer */}
-      <Footer />
+      
+      
     </>
   );
 }
