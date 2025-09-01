@@ -1,44 +1,79 @@
 import React, { useContext, useEffect, useState } from 'react';
-import Nav from '../components/NavBar/Nav';
 import Banner from '../components/Banner/Banner';
 import { useNavigate } from 'react-router-dom';
 import Axios_instance from '../../api/axiosConfig';
 import Footer from '../components/Footer/Footer';
 import { CartContext } from '../../context/CartContext';
 import { AuthContext } from '../../context/AuthContext';
-import { WishListContext } from '../../context/WishlistContext'; // Import WishListContext
+import { WishListContext } from '../../context/WishlistContext';
 
 function HomePage() {
   const navigate = useNavigate();
-  const [product, setProduct] = useState([]);
+  const [topProducts, setTopProducts] = useState([]);
   const { user } = useContext(AuthContext);
   const { addToCart } = useContext(CartContext);
-  const { addToWishlist, wishlistItems } = useContext(WishListContext); // Get addToWishlist and wishlistItems
+  const { addToWishlist, wishlistItems } = useContext(WishListContext);
 
+  // ✅ Fetch Top Selling Products
   useEffect(() => {
-    async function fetchData() {
+    const fetchTopSelling = async () => {
       try {
-        const response = await Axios_instance.get('/products?_limit=4');
-        const responseData = response.data;
-        const Products = responseData.map(({ id, name, price, image }) => ({ id, name, price, image }));
-        setProduct(Products);
-      } catch (e) {
-        console.log(e);
+        const { data } = await Axios_instance.get("/TopSellingProducts");
+        const sorted = data.sort((a, b) => b.count - a.count).slice(0, 4);
+        setTopProducts(sorted);
+      } catch (error) {
+        console.error("Error fetching top selling products:", error);
       }
-    }
-    fetchData();
+    };
+
+    fetchTopSelling();
   }, []);
 
   return (
     <>
-      <Banner />
+      <Banner/>
+      <section className="bg-gradient-to-r from-amber-500 to-orange-600 text-white text-center py-20">
+  <h1 className="text-5xl font-extrabold mb-4">Delicious Meals, Anytime 🍽️</h1>
+  <p className="text-lg mb-6 max-w-xl mx-auto">
+    Explore our top-selling dishes and satisfy your cravings with the best food in town.
+  </p>
+  <button
+    onClick={() => navigate("/products")}
+    className="px-6 py-3 bg-white text-orange-600 font-semibold rounded-lg shadow-md hover:bg-gray-100 transition"
+  >
+    Order Now
+  </button>
+</section>
+
+
+
+      {/* Features Section */}
+      <section className="py-16 bg-gray-50">
+        <h2 className="text-3xl font-bold text-center mb-10">Why Choose Us?</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-6xl mx-auto px-6">
+          <div className="p-6 bg-white shadow-lg rounded-xl text-center">
+            <h3 className="text-xl font-semibold mb-2">⚡ Fast Delivery</h3>
+            <p>Get your meals delivered hot and fresh within minutes.</p>
+          </div>
+          <div className="p-6 bg-white shadow-lg rounded-xl text-center">
+            <h3 className="text-xl font-semibold mb-2">🥗 Fresh Ingredients</h3>
+            <p>We only use high-quality, fresh, and healthy ingredients.</p>
+          </div>
+          <div className="p-6 bg-white shadow-lg rounded-xl text-center">
+            <h3 className="text-xl font-semibold mb-2">⭐ Customer Love</h3>
+            <p>Loved by thousands of happy customers every single day.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Top Selling Section (your code kept as-is) */}
       <div className="bg-gray-100 py-12">
         <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-10">
           Top Selling Dishes
         </h2>
-        <div className='flex justify-center items-center'>
+        <div className="flex justify-center items-center">
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8 px-4 md:px-8 max-w-screen-xl w-full">
-            {product.map((item, index) => (
+            {topProducts.map((item, index) => (
               <div
                 key={index}
                 className="bg-white rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group"
@@ -46,7 +81,7 @@ function HomePage() {
                 {/* Image Section */}
                 <div
                   className="relative overflow-hidden cursor-pointer"
-                  onClick={() => navigate(`/productview/${item.id}`)}
+                  onClick={() => navigate(`/productview/${item.productId}`)}
                 >
                   <img
                     src={item.image}
@@ -65,7 +100,7 @@ function HomePage() {
                       e.stopPropagation();
                       addToWishlist({
                         user_id: user.id,
-                        productId: item.id,
+                        productId: item.productId,
                         name: item.name,
                         price: item.price,
                         image: item.image,
@@ -75,7 +110,7 @@ function HomePage() {
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-6 w-6"
-                      fill={wishlistItems.some((wishlist) => wishlist.productId === item.id) ? "red" : "none"}
+                      fill={wishlistItems.some((wishlist) => wishlist.productId === item.productId) ? "red" : "none"}
                       stroke="currentColor"
                       strokeWidth={1.5}
                       viewBox="0 0 24 24"
@@ -98,7 +133,7 @@ function HomePage() {
                         e.stopPropagation();
                         addToCart({
                           user_id: user.id,
-                          productId: item.id,
+                          productId: item.productId,
                           name: item.name,
                           price: item.price,
                           image: item.image,
@@ -114,6 +149,18 @@ function HomePage() {
           </div>
         </div>
       </div>
+
+      {/* About Section */}
+      <section className="py-16 bg-white text-center">
+        <h2 className="text-3xl font-bold mb-6">About Us</h2>
+        <p className="max-w-3xl mx-auto text-gray-600">
+          We’re passionate about serving delicious food with the freshest ingredients.
+          Our mission is to bring joy to your dining experience, one meal at a time.
+        </p>
+      </section>
+
+      {/* Footer */}
+      <Footer />
     </>
   );
 }

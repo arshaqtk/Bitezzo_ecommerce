@@ -32,7 +32,7 @@ function OrderPage() {
     return (
         <>
             <div className="bg-gray-100 min-h-screen py-12 px-4 md:px-8">
-                <div className="max-w-6xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-12">
+                <div className="max-w-6xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-12 mt-10">
                     <h1 className="text-3xl font-extrabold text-gray-900 mb-8 text-center">MY ORDERS</h1>
 
                     {orderDetails.length === 0 ? (

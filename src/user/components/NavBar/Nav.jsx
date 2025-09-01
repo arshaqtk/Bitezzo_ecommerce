@@ -6,322 +6,343 @@ import { CartContext } from '../../../context/CartContext';
 import { AuthContext } from '../../../context/AuthContext';
 import { WishListContext } from '../../../context/WishlistContext';
 import { SearchContext } from '../../../context/SearchContext';
-import {
-  HomeIcon,
-  UserIcon,
-  CubeIcon,
-  ShoppingBagIcon,
-} from "@heroicons/react/24/outline";
-
-// import { AuthContext } from '../../context/AuthContext'
 
 function Nav() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [cartItemCount, setCartItemsCount] = useState();
+  const [wishlistCount, setWishlistCount] = useState();
+  const [showAccountMenu, setShowAccountMenu] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false); // NEW
 
+  const { user, logout } = useContext(AuthContext);
+  const { cartItems } = useContext(CartContext);
+  const { wishlistItems } = useContext(WishListContext);
+  const { acceptSearchValue } = useContext(SearchContext);
 
+  const navigate = useNavigate();
+  const location = useLocation();
 
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [cartItemCount, setCartItemsCount] = useState()
-    const [wishlistCount, setWishlistCount] = useState()
-    const [showAccountMenu, setShowAccountMenu] = useState(false)
-    const [searchValue, setSearchValue] = useState("")
+  function toggleAccountMenu() {
+    setShowAccountMenu((prev) => !prev);
+  }
 
-    const { user, logout } = useContext(AuthContext)
-    const { cartItems } = useContext(CartContext);
-    const { wishlistItems } = useContext(WishListContext);
-    const { acceptSearchValue } = useContext(SearchContext);
+  useEffect(() => {
+    if (!user) return;
+    async function fetchData() {
+      try {
+        const user_id = user.id;
+        const userResponse = await Axios_instance.get(`users/${user_id}`);
+        const userData = userResponse.data;
 
+        const cartLength = cartItems.length;
+        setCartItemsCount(cartLength);
 
-
-    const navigate = useNavigate()
-     const location = useLocation()
-
-    function toggleAccountMenu() {
-        setShowAccountMenu((prev) => !prev)
-       
+        const wishlistLength = userData.wishlist.length;
+        setWishlistCount(wishlistLength);
+      } catch (e) {
+        console.error(e);
+      }
     }
+    fetchData();
+  }, [cartItems, wishlistItems]);
 
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
 
-    useEffect(() => {
-        if (!user) return;
-        async function fetchData() {
-            try {
-                const user_id = user.id
-               
-                const userResponse = await Axios_instance.get(`users/${user_id}`)
-                const userData = userResponse.data
+  const handleSearchInput = (e) => {
+    setSearchValue(e.target.value);
+  };
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    setMobileMenuOpen(false);
+    setMobileSearchOpen(false); // close search after submit
+    acceptSearchValue(searchValue);
+  };
 
-                const cartLength = cartItems.length
-                setCartItemsCount(cartLength)
+  return (
+    <nav className="bg-[#222831] shadow-md fixed top-0 w-full z-100">
+      <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-18 items-center">
+          {/* Logo */}
+          <button
+            onClick={() => navigate("/")}
+            className="text-2xl font-bold text-red-500 cursor-pointer"
+          >
+            Bitezzo
+          </button>
 
-                const wishlistLength = userData.wishlist.length
-                setWishlistCount(wishlistLength)
-            } catch (e) {
-                console.error(e);
-            }
+          {/* Desktop Menu */}
+          <div className="hidden md:flex space-x-8">
+            <button
+              className="text-white hover:text-red-500 font-medium cursor-pointer"
+              onClick={() => navigate("/")}
+            >
+              Home
+            </button>
+            <button
+              className="text-white hover:text-red-500 font-medium cursor-pointer"
+              onClick={() => navigate("/products")}
+            >
+              Shop
+            </button>
+            <button
+              className="text-white hover:text-red-500 font-medium cursor-pointer"
+              onClick={() => navigate("/about")}
+            >
+              About
+            </button>
+            <button
+              className="text-white hover:text-red-500 font-medium cursor-pointer"
+              onClick={() => navigate("/")}
+            >
+              Contact
+            </button>
+          </div>
 
-        }
-        fetchData()
-
-    }, [cartItems, wishlistItems])
-
-
-        useEffect(() => {
-        setMobileMenuOpen(false);
-    }, [location.pathname]);
-
-
-
-    const handleSearchInput = (e) => {
-        setSearchValue(e.target.value)
-        console.log(e.target.value)
-    }
-    const handleSearchSubmit=(e)=>{
-      e.preventDefault();
-      setMobileMenuOpen(false);
-        acceptSearchValue(searchValue)
-    }
-    return (
-        <nav className="bg-[#222831]   shadow-md fixed top-0 w-full z-10">
-            <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between h-18 items-center">
-                    {/* Logo */}
-                    <button onClick={() => navigate("/")} className="text-2xl font-bold text-red-500 cursor-pointer">
-                        Bitezzo
-                    </button>
-
-                    {/* Desktop Menu */}
-                    <div className="hidden md:flex space-x-8">
-                        <button className="text-white hover:text-red-500 font-medium cursor-pointer" onClick={() => navigate('/')}>
-                            Home
-                        </button>
-                        <button className="text-white hover:text-red-500 font-medium cursor-pointer" onClick={() => navigate('/products')}>
-                            Shop
-                        </button>
-                        <button className="text-white hover:text-red-500 font-medium cursor-pointer" onClick={() => navigate('/about')}>
-                            About
-                        </button>
-                        <button className="text-white hover:text-red-500 font-medium cursor-pointer" onClick={() => navigate('/')}>
-                            Contact
-                        </button>
-                    </div>
-
-                    {/* Search & Cart */}
-                    <div className="flex items-center space-x-4">
-                        {/* Search input (hidden on mobile) */}
-                        <div className="hidden sm:block">
-                            <form action="" onSubmit={handleSearchSubmit}> <input
-                                 onChange={handleSearchInput}
-                                type="text"
-                                
-                                placeholder="Search products..."
-                                className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 text-white focus:ring-red-500 cursor-pointer"
-                            />
-                            <button type='button'></button>
-                            </form>
-                           
-                        </div>
-
-                        {/* Cart */}
-                        <button className="relative text-white hover:text-red-500 cursor-pointer"
-                            onClick={() => navigate('/cart')}
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-6 w-6"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                strokeWidth={2}
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M3 3h2l.4 2M7 13h10l4-8H5.4"
-                                />
-                                <circle cx="7" cy="21" r="1" />
-                                <circle cx="17" cy="21" r="1" />
-                            </svg>
-                            {cartItemCount > 0 && (
-                                <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
-                                    {cartItemCount}
-                                </span>
-                            )}
-                        </button>
-                        {/* Orders */}
-                        <button
-                            className="relative text-white hover:text-red-500 cursor-pointer"
-                            onClick={() => navigate('/order')}
-                        >
-                            <ShoppingBagIcon className="h-6 w-6 text-white hover:text-red-500" />
-
-
-                        </button>
-
-                        <button className="relative text-white hover:text-red-500 cursor-pointer"
-                            onClick={() => navigate('/wishlist')}
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-6 w-6"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                strokeWidth={2}
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 
-      6.364L12 21.364l-7.682-7.682a4.5 4.5 0 010-6.364z"
-                                />
-                            </svg>
-                            {wishlistCount > 0 && (
-                                <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
-                                    {wishlistCount}
-                                </span>
-                            )}
-                        </button>
-
-
-                        <div className="relative inline-block">
-                            {/* Profile Icon Button */}
-                            <button
-                                onClick={toggleAccountMenu}
-                                className="relative text-white hover:text-blue-500 transition-colors duration-200 p-2 rounded-full hover:bg-gray-100 focus:outline-none cursor-pointer"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="h-6 w-6"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    strokeWidth={2}
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 
-            1.79-4 4 1.79 4 4 4zm0 2c-3.33 0-6 2.67-6 6h12c0-3.33-2.67-6-6-6z"
-                                    />
-                                </svg>
-                            </button>
-                            {user ?
-                                (showAccountMenu && (
-                                    <div className="absolute right-0 mt-2 w-[300px] bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden z-50">
-                                        <ul className="py-1">
-                                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={()=>navigate("/profile")}>
-                                                {user.username}
-                                            </li>
-                                            <li className="px-4 py-2 text-red-500 hover:bg-red-50 cursor-pointer" onClick={logout}>
-                                                Logout
-                                            </li>
-                                        </ul>
-                                    </div>
-                                ))
-                                : (showAccountMenu && (
-                                    <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden z-50">
-                                        <ul className="py-1">
-                                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => navigate('/login')}>
-                                                Login
-                                            </li>
-                                            <li className="px-4 py-2 text-red-500 hover:bg-red-50 cursor-pointer" onClick={() => navigate('/signup')}>
-                                                Sign-up
-                                            </li>
-                                        </ul>
-                                    </div>
-                                ))}
-                        </div>
-                        {/* <div>
-                            <button
-                                onClick={toggleTheme}
-                                className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 transition-colors duration-300 shadow-md hover:scale-105"
-                            >
-                                {isDark ? (
-                                    <Sun className="h-5 w-5 text-yellow-400" />
-                                ) : (
-                                    <Moon className="h-5 w-5 text-gray-800" />
-                                )}
-                            </button>
-                        </div> */}
-
-                        {/* Mobile menu button */}
-                        <div className="md:hidden">
-                            <button
-                                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                                type="button"
-                                className="text-white hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                aria-label="Toggle menu"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="h-6 w-6"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    strokeWidth={2}
-                                >
-                                    {mobileMenuOpen ? (
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            d="M6 18L18 6M6 6l12 12"
-                                        />
-                                    ) : (
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            d="M4 6h16M4 12h16M4 18h16"
-                                        />
-                                    )}
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+          {/* Search & Cart */}
+          <div className="flex items-center space-x-4">
+            {/* Desktop Search */}
+            <div className="hidden sm:block">
+              <form onSubmit={handleSearchSubmit}>
+                <input
+                  onChange={handleSearchInput}
+                  type="text"
+                  placeholder="Search products..."
+                  className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 text-white focus:ring-red-500 cursor-pointer"
+                />
+              </form>
             </div>
 
-            {/* Mobile Menu */}
-            {mobileMenuOpen && (
-                <div className="md:hidden bg-gray-700 border-t border-gray-200">
-                    <button
- onClick={() => navigate('/')}
-                        className="block px-4 py-3 text-white hover:bg-indigo-50 hover:text-red-500"
-                    >
-                        Home
-                    </button>
-                    <button
-                        onClick={() => navigate('/products')}
-                        className="block px-4 py-3 text-white hover:bg-indigo-50 hover:text-red-500"
-                    >
-                        Shop
-                    </button>
-                    <button
-                    onClick={() => navigate('/about')}
-                        className="block px-4 py-3 text-white hover:bg-indigo-50 hover:text-red-500"
-                    >
-                        About
-                    </button>
-                    <button
-onClick={() => navigate('')}
-                        className="block px-4 py-3 text-white hover:bg-indigo-50 hover:text-red-500"
-                    >
-                        Contact
-                    </button>
-                    <div className="px-4 py-3 border-t border-gray-200">
-                         <form action="" onSubmit={handleSearchSubmit}> <input
-                                 onChange={handleSearchInput}
-                                type="text"
-                                
-                                placeholder="Search products..."
-                                className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 text-white focus:ring-red-500 cursor-pointer"
-                            />
-                            <button type='button'></button>
-                            </form>
-                    </div>
-                </div>
-            )}
-        </nav>
-    )
+            {/* Mobile Search Icon */}
+            <div className="sm:hidden">
+              <button
+                onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
+                className="text-white hover:text-red-500 cursor-pointer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21 21l-4.35-4.35M16 10a6 6 0 11-12 0 6 6 0 0112 0z"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            {/* Cart */}
+            <button
+              className="relative text-white hover:text-red-500 cursor-pointer"
+              onClick={() => navigate("/cart")}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4"
+                />
+                <circle cx="7" cy="21" r="1" />
+                <circle cx="17" cy="21" r="1" />
+              </svg>
+              {cartItemCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
+            </button>
+
+            {/* Wishlist */}
+            <button
+              className="relative text-white hover:text-red-500 cursor-pointer"
+              onClick={() => navigate("/wishlist")}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 
+                6.364L12 21.364l-7.682-7.682a4.5 4.5 0 010-6.364z"
+                />
+              </svg>
+              {wishlistCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+                  {wishlistCount}
+                </span>
+              )}
+            </button>
+
+            {/* Account Dropdown */}
+            <div className="relative inline-block">
+              <button
+                onClick={toggleAccountMenu}
+                className="relative text-white hover:text-blue-500 transition-colors duration-200 p-2 rounded-full hover:bg-gray-100 focus:outline-none cursor-pointer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 
+                      1.79-4 4 1.79 4 4 4zm0 2c-3.33 0-6 2.67-6 6h12c0-3.33-2.67-6-6-6z"
+                  />
+                </svg>
+              </button>
+              {user ? (
+                showAccountMenu && (
+                  <div className="absolute right-0 mt-2 w-[200px] bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden z-50">
+                    <ul className="py-1">
+                      <li
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                        onClick={() => navigate("/profile")}
+                      >
+                        {user.username}
+                      </li>
+                      <li
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                        onClick={() => navigate("/order")}
+                      >
+                        Orders
+                      </li>
+                      <li
+                        className="px-4 py-2 text-red-500 hover:bg-red-50 cursor-pointer"
+                        onClick={logout}
+                      >
+                        Logout
+                      </li>
+                    </ul>
+                  </div>
+                )
+              ) : (
+                showAccountMenu && (
+                  <div className="absolute right-0 mt-2 w-[180px] bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden z-50">
+                    <ul className="py-1">
+                      <li
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                        onClick={() => navigate("/login")}
+                      >
+                        Login
+                      </li>
+                      <li
+                        className="px-4 py-2 text-red-500 hover:bg-red-50 cursor-pointer"
+                        onClick={() => navigate("/signup")}
+                      >
+                        Sign-up
+                      </li>
+                    </ul>
+                  </div>
+                )
+              )}
+            </div>
+
+            {/* Mobile Menu Button */}
+            <div className="md:hidden">
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                type="button"
+                className="text-white hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                aria-label="Toggle menu"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  {mobileMenuOpen ? (
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  ) : (
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                  )}
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Search Input */}
+      {mobileSearchOpen && (
+        <div className="sm:hidden px-4 py-2 bg-gray-800 border-t border-gray-600">
+          <form onSubmit={handleSearchSubmit}>
+            <input
+              onChange={handleSearchInput}
+              type="text"
+              placeholder="Search products..."
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 text-white focus:ring-red-500 cursor-pointer"
+            />
+          </form>
+        </div>
+      )}
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-gray-700 border-t border-gray-200">
+          <button
+            onClick={() => navigate("/")}
+            className="block px-4 py-3 text-white hover:bg-indigo-50 hover:text-red-500"
+          >
+            Home
+          </button>
+          <button
+            onClick={() => navigate("/products")}
+            className="block px-4 py-3 text-white hover:bg-indigo-50 hover:text-red-500"
+          >
+            Shop
+          </button>
+          <button
+            onClick={() => navigate("/about")}
+            className="block px-4 py-3 text-white hover:bg-indigo-50 hover:text-red-500"
+          >
+            About
+          </button>
+          <button
+            onClick={() => navigate("")}
+            className="block px-4 py-3 text-white hover:bg-indigo-50 hover:text-red-500"
+          >
+            Contact
+          </button>
+        </div>
+      )}
+    </nav>
+  );
 }
 
-export default Nav
+export default Nav;

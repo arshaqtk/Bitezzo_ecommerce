@@ -5,16 +5,25 @@ import toast from "react-hot-toast"
 
 export const ProductContext = createContext()
 export const ProductProvider = ({ children }) => {
-    const [products,setProducts]=useState([])
+    const [products, setProducts] = useState([])
     // const [refresh, setRefresh] = useState(false);
-    const navigate=useNavigate()
+    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate()
 
 
-      const fetchProductData = async () => {
+    const fetchProductData = async () => {
+        setLoading(true);
+        try {
             const response = await Axios_instance.get("/products")
             const Products = response.data
             setProducts(Products)
+            setLoading(false);
+        } catch (e) {
+            console.log(e)
+            setLoading(false);
         }
+
+    }
 
     useEffect(() => {
         fetchProductData()
@@ -54,20 +63,20 @@ export const ProductProvider = ({ children }) => {
         }
     };
 
-    const editProduct=async(id,formData)=>{
-          try {
-      const res = await Axios_instance.put(`/products/${id}`, formData);
-      toast.success("Product Edited:", res.data.name);
-      navigate('/admin/products')
-      fetchProductData()
+    const editProduct = async (id, formData) => {
+        try {
+            const res = await Axios_instance.put(`/products/${id}`, formData);
+            toast.success("Product Edited:", res.data.name);
+            navigate('/admin/products')
+            fetchProductData()
 
-    } catch (error) {
-      console.error("Error editing product:", error);
-    }
+        } catch (error) {
+            console.error("Error editing product:", error);
+        }
     }
 
-    return (<ProductContext.Provider value={{ products, addProduct, deleteProduct ,editProduct}}>
+    return (<ProductContext.Provider value={{ products,loading, addProduct, deleteProduct, editProduct }}>
         {children}
     </ProductContext.Provider>)
 
-    }
+}

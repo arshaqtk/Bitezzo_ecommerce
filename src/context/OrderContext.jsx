@@ -81,8 +81,14 @@ export const OrderProvider = ({ children }) => {
 
          fetchAllOrderData()
          if (response.data) {
-            await Axios_instance.patch(`users/${user.id}`, { cart: [] })
+            try{
+                await Axios_instance.patch(`users/${user.id}`, { cart: [] })
             fetchCartData()
+            await updateTopSellingProducts(cartItems);
+            }catch(e){
+               console.log(e)
+            }
+           
          }
       } catch (error) {
          console.error( error);
@@ -105,12 +111,43 @@ export const OrderProvider = ({ children }) => {
          setOrderDetails(order)
          await Axios_instance.patch(`users/${user.id}`, { orders: order })
          fetchAllOrderData()
+         await updateTopSellingProducts([ProductData]);
          navigate("/products")
       } catch (error) {
          console.error( error);
       }
 
    }
+
+
+   const updateTopSellingProducts = async (products) => {
+  try {
+    for (const item of products) {
+      // Check if product already exists in TopSellingProducts
+      const { data: existingProducts } = await Axios_instance.get(`/TopSellingProducts?productId=${item.productId}`);
+      
+      if (existingProducts.length > 0) {
+        const existing = existingProducts[0];
+        await Axios_instance.patch(`/TopSellingProducts/${existing.id}`, {
+          count: existing.count + item.productQuantity
+        });
+      } else {
+        await Axios_instance.post(`/TopSellingProducts`, {
+          productId: item.productId,
+          name: item.name || item.productName,
+          image: item.image || item.productImage,
+          price: item.price || item.productPrice,
+          count: item.productQuantity
+        });
+      }
+    }
+  } catch (error) {
+    console.error("Error updating TopSellingProducts:", error);
+  }
+};
+
+
+
 //______Admin__________
    const fetchAllOrderData=async()=>{
       try{

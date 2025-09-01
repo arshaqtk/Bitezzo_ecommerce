@@ -132,7 +132,7 @@ function CheckoutPage() {
                   className="w-full bg-red-600 text-white p-2 rounded-md cursor-pointer"
                   type="submit"
                 >
-                  Proceed to Checkout
+                  Proceed to Payment
                 </button>
               </div>
             </form>

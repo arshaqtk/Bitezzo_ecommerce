@@ -1,5 +1,7 @@
+import { useNavigate } from "react-router-dom";
 
 function Footer() {
+  const navigate=useNavigate()
   return (
    
     <footer className="bg-[#222831] text-gray-300 py-10">
@@ -17,10 +19,10 @@ function Footer() {
         <div>
           <h2 className="text-lg font-semibold text-white mb-4">Quick Links</h2>
           <ul className="space-y-2">
-            <li><button  className="hover:text-white transition">Home</button></li>
-            <li><button className="hover:text-white transition">Menu</button></li>
-            <li><button  className="hover:text-white transition">About Us</button></li>
-            <li><button  className="hover:text-white transition">Contact</button></li>
+            <li><button  className="hover:text-white transition" onClick={()=>navigate("/")}>Home</button></li>
+            <li><button className="hover:text-white transition" onClick={()=>navigate("/")}>Menu</button></li>
+            <li><button  className="hover:text-white transition" onClick={()=>navigate("/about")}>About Us</button></li>
+            <li><button  className="hover:text-white transition" onClick={()=>navigate("/")}>Contact</button></li>
           </ul>
         </div>
 

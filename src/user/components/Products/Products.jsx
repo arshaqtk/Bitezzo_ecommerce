@@ -4,7 +4,7 @@ import { CartContext } from '../../../context/CartContext';
 import { WishListContext } from '../../../context/WishlistContext';
 import { AuthContext } from '../../../context/AuthContext';
 import { ProductContext } from '../../../context/ProductContext';
-import { SearchContext } from '../../../context/SearchContext';
+import { Mosaic } from 'react-loading-indicators';
 
 function Products() {
   const [allProducts, setAllProducts] = useState([]);
@@ -14,7 +14,7 @@ function Products() {
   const { user } = useContext(AuthContext);
   const { addToCart, cartItems } = useContext(CartContext);
   const { addToWishlist, wishlistItems } = useContext(WishListContext);
-  const { products } = useContext(ProductContext);
+  const { products, loading } = useContext(ProductContext);
 
   useEffect(() => {
     setAllProducts(products);
@@ -38,8 +38,12 @@ function Products() {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen py-12 mt-10">
+    loading ? (
+      <div className='flex items-center justify-center'><Mosaic color="#c8c8c8" size="medium"  /></div>
+      
+    ) : <div className="bg-gray-100 min-h-screen py-12 mt-10">
       {/* Category Filter Dropdown */}
+
       <div className="flex justify-center mb-10">
         <select
           className="w-full max-w-sm px-4 py-3 bg-white border border-gray-300 rounded-full shadow-lg text-gray-700 text-base focus:outline-none focus:ring-2 focus:ring-gray-800"
@@ -109,19 +113,24 @@ function Products() {
                 <div className="p-4 sm:p-6">
                   <h3 className="text-xl font-bold text-gray-800 truncate">{item.name}</h3>
                   <p className="text-2xl font-extrabold text-gray-900 mt-1">₹{item.price}</p>
-                  
+
                   {/* Review Section */}
-                  <div className="flex items-center mt-2 mb-4">
-                    <div className="flex text-yellow-500">
-                      {[...Array(5)].map((_, i) => (
-                        <svg key={i} className="h-5 w-5 fill-current" viewBox="0 0 24 24">
-                          <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 18.896l-7.416 3.871 1.48-8.279L.004 9.306l8.332-1.151L12 .587z"/>
-                        </svg>
-                      ))}
-                    </div>
-                    <span className="text-gray-600 text-sm ml-2">({count} reviews)</span>
+                  <div className="flex text-yellow-500">
+                    {[...Array(5)].map((_, i) => (
+                      <svg
+                        key={i}
+                        className={`h-5 w-5 ${i < Math.round(rating) ? "fill-current" : "text-gray-300"}`}
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 18.896l-7.416 3.871 1.48-8.279L.004 9.306l8.332-1.151L12 .587z" />
+                      </svg>
+                    ))}
                   </div>
-                  
+                  <span className="text-gray-600 text-sm ml-2">
+                    {rating} ★ ({count} reviews)
+                  </span>
+
+
                   {/* Action Button */}
                   <div className="mt-auto"> {/* Use mt-auto to push button to bottom */}
                     {cartItems.some((cart) => cart.productId === item.id) ? (
@@ -158,8 +167,11 @@ function Products() {
           })}
         </div>
       </div>
+
     </div>
   );
 }
+
+
 
 export default Products;
