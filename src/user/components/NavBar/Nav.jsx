@@ -9,11 +9,9 @@ import { SearchContext } from '../../../context/SearchContext';
 
 function Nav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [cartItemCount, setCartItemsCount] = useState();
-  const [wishlistCount, setWishlistCount] = useState();
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [mobileSearchOpen, setMobileSearchOpen] = useState(false); // NEW
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   const { user, logout } = useContext(AuthContext);
   const { cartItems } = useContext(CartContext);
@@ -27,43 +25,32 @@ function Nav() {
     setShowAccountMenu((prev) => !prev);
   }
 
-  useEffect(() => {
-    if (!user) return;
-    async function fetchData() {
-      try {
-        const user_id = user.id;
-        const userResponse = await Axios_instance.get(`users/${user_id}`);
-        const userData = userResponse.data;
-
-        const cartLength = cartItems.length;
-        setCartItemsCount(cartLength);
-
-        const wishlistLength = userData.wishlist.length;
-        setWishlistCount(wishlistLength);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-    fetchData();
-  }, [cartItems, wishlistItems]);
-
+  // Close mobile menu and account menu on route change
   useEffect(() => {
     setMobileMenuOpen(false);
+    setShowAccountMenu(false);
   }, [location.pathname]);
 
   const handleSearchInput = (e) => {
     setSearchValue(e.target.value);
   };
+
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     setMobileMenuOpen(false);
     setMobileSearchOpen(false); // close search after submit
     acceptSearchValue(searchValue);
+    navigate("/products"); // Navigate to products page to show search results
+  };
+
+  const handleLogout = () => {
+    logout();
+    setShowAccountMenu(false);
+    navigate("/");
   };
 
   return (
     // Outer container to handle fixed position and full width
-    // This wrapper is what the browser fixes to the top of the screen
     <div className="fixed top-0 w-full z-50">
       {/* The main navigation "pillow" container, which is centered and has the styling */}
       <nav className="max-w-6xl mx-auto my-4 py-2 px-6 bg-black rounded-full shadow-lg flex justify-between items-center transition-all duration-300">
@@ -105,7 +92,7 @@ function Nav() {
             </button>
           </div>
 
-          {/* Search & Cart */}
+          {/* Search & Cart Icons */}
           <div className="flex items-center space-x-4">
             {/* Desktop Search */}
             <form onSubmit={handleSearchSubmit} className="hidden sm:block">
@@ -114,68 +101,68 @@ function Nav() {
                 type="text"
                 placeholder="Search products..."
                 className="px-3 py-1 border border-gray-300 rounded-full 
-                          focus:outline-none focus:ring-2 text-white 
-                          focus:ring-red-500 cursor-pointer bg-gray-700"
+                            focus:outline-none focus:ring-2 text-white 
+                            focus:ring-red-500 cursor-pointer bg-gray-700"
               />
             </form>
 
             {/* Mobile Search & Mobile Menu (conditionally rendered) */}
             {mobileSearchOpen ? (
-  <form onSubmit={handleSearchSubmit} className="flex-1 flex items-center w-[60vw] ml-2 mr-2">
-    <input
-      onChange={handleSearchInput}
-      type="text"
-      placeholder="Search products..."
-      autoFocus
-      className="flex-grow px-3 py-1 border border-gray-300 rounded-full 
-                 focus:outline-none focus:ring-2 text-black 
-                 focus:ring-red-500 bg-gray-200"
-    />
-    <button
-      onClick={() => setMobileSearchOpen(false)}
-      type="button"
-      className="ml-2 text-white hover:text-red-500 cursor-pointer"
-      aria-label="Close search"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-6 w-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        strokeWidth={2}
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M6 18L18 6M6 6l12 12"
-        />
-      </svg>
-    </button>
-  </form>
-) : (
-  <button
-    onClick={() => setMobileSearchOpen(true)}
-    className="block sm:hidden text-white hover:text-red-500 cursor-pointer"
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-6 w-6"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M21 21l-4.35-4.35M16 10a6 6 0 11-12 0 6 6 0 0112 0z"
-      />
-    </svg>
-  </button>
-)}
+              <form onSubmit={handleSearchSubmit} className="flex-1 flex items-center w-[60vw] ml-2 mr-2">
+                <input
+                  onChange={handleSearchInput}
+                  type="text"
+                  placeholder="Search products..."
+                  autoFocus
+                  className="flex-grow px-3 py-1 border border-gray-300 rounded-full 
+                            focus:outline-none focus:ring-2 text-black 
+                            focus:ring-red-500 bg-gray-200"
+                />
+                <button
+                  onClick={() => setMobileSearchOpen(false)}
+                  type="button"
+                  className="ml-2 text-white hover:text-red-500 cursor-pointer"
+                  aria-label="Close search"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </form>
+            ) : (
+              <button
+                onClick={() => setMobileSearchOpen(true)}
+                className="block sm:hidden text-white hover:text-red-500 cursor-pointer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21 21l-4.35-4.35M16 10a6 6 0 11-12 0 6 6 0 0112 0z"
+                  />
+                </svg>
+              </button>
+            )}
 
-            {/* Cart - simplified for single-file example */}
+            {/* Cart Icon */}
             <button
               className="relative text-white hover:text-red-500 cursor-pointer"
               onClick={() => navigate("/cart")}
@@ -196,9 +183,14 @@ function Nav() {
                 <circle cx="7" cy="21" r="1" />
                 <circle cx="17" cy="21" r="1" />
               </svg>
+              {cartItems?.length > 0 && (
+                <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+                  {cartItems.length}
+                </span>
+              )}
             </button>
 
-            {/* Wishlist - simplified for single-file example */}
+            {/* Wishlist Icon */}
             <button
               className="relative text-white hover:text-red-500 cursor-pointer"
               onClick={() => navigate("/wishlist")}
@@ -218,6 +210,11 @@ function Nav() {
                   6.364L12 21.364l-7.682-7.682a4.5 4.5 0 010-6.364z"
                 />
               </svg>
+              {wishlistItems?.length > 0 && (
+                <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+                  {wishlistItems.length}
+                </span>
+              )}
             </button>
 
             {/* Account Dropdown */}
@@ -245,18 +242,49 @@ function Nav() {
               {showAccountMenu && (
                 <div className="absolute right-0 mt-2 w-[180px] bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden z-50">
                   <ul className="py-1">
-                    <li
-                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                      onClick={() => navigate("/login")}
-                    >
-                      Login
-                    </li>
-                    <li
-                      className="px-4 py-2 text-red-500 hover:bg-red-50 cursor-pointer"
-                      onClick={() => navigate("/signup")}
-                    >
-                      Sign-up
-                    </li>
+                    {user ? (
+                      <>
+                        <li
+                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                          onClick={() => navigate("/profile")}
+                        >
+                          My Profile
+                        </li>
+                        <li
+                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                          onClick={() => navigate("/orders")}
+                        >
+                          My Orders
+                        </li>
+                        <li
+                          className="px-4 py-2 text-red-500 hover:bg-red-50 cursor-pointer"
+                          onClick={handleLogout}
+                        >
+                          Logout
+                        </li>
+                      </>
+                    ) : (
+                      <>
+                        <li
+                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                          onClick={() => {
+                            navigate("/login");
+                            setShowAccountMenu(false);
+                          }}
+                        >
+                          Login
+                        </li>
+                        <li
+                          className="px-4 py-2 text-red-500 hover:bg-red-50 cursor-pointer"
+                          onClick={() => {
+                            navigate("/signup");
+                            setShowAccountMenu(false);
+                          }}
+                        >
+                          Sign-up
+                        </li>
+                      </>
+                    )}
                   </ul>
                 </div>
               )}
@@ -302,25 +330,37 @@ function Nav() {
       {mobileMenuOpen && (
         <div className="md:hidden mt-2 bg-[#222831] shadow-lg rounded-b-lg">
           <button
-            onClick={() => navigate("/")}
+            onClick={() => {
+              navigate("/");
+              setMobileMenuOpen(false);
+            }}
             className="block px-4 py-3 text-white hover:bg-red-500 w-full text-left"
           >
             Home
           </button>
           <button
-            onClick={() => navigate("/products")}
+            onClick={() => {
+              navigate("/products");
+              setMobileMenuOpen(false);
+            }}
             className="block px-4 py-3 text-white hover:bg-red-500 w-full text-left"
           >
             Shop
           </button>
           <button
-            onClick={() => navigate("/about")}
+            onClick={() => {
+              navigate("/about");
+              setMobileMenuOpen(false);
+            }}
             className="block px-4 py-3 text-white hover:bg-red-500 w-full text-left"
           >
             About
           </button>
           <button
-            onClick={() => navigate("/contact")}
+            onClick={() => {
+              navigate("/contact");
+              setMobileMenuOpen(false);
+            }}
             className="block px-4 py-3 text-white hover:bg-red-500 w-full text-left"
           >
             Contact
