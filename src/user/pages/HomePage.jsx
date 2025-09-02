@@ -33,7 +33,7 @@ function HomePage() {
     <>
       <Banner/>
       <section className="bg-gradient-to-r from-amber-500 to-orange-600 text-white text-center py-20">
-  <h1 className="text-5xl font-extrabold mb-4">Delicious Meals, Anytime 🍽️</h1>
+  <h1 className="text-5xl font-extrabold mb-4">Delicious Meals, Anytime</h1>
   <p className="text-lg mb-6 max-w-xl mx-auto">
     Explore our top-selling dishes and satisfy your cravings with the best food in town.
   </p>
@@ -80,69 +80,24 @@ function HomePage() {
               >
                 {/* Image Section */}
                 <div
-                  className="relative overflow-hidden cursor-pointer"
+                  className="relative overflow-hidden cursor-pointer "
                   onClick={() => navigate(`/productview/${item.productId}`)}
                 >
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110 rounded-t-xl"
+                    className="w-100  h-50 object-cover transition-transform duration-500 group-hover:scale-110 rounded-md"
                   />
                   <div className="absolute inset-0 bg-black/50 flex flex-col justify-center items-center text-center p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <span className="text-white text-lg font-semibold">View Product</span>
                     <span className="text-gray-300 text-sm mt-1">Click for more details</span>
                   </div>
-
-                  {/* Wishlist Icon */}
-                  <button
-                    className="absolute top-4 right-4 p-2 rounded-full bg-white/70 backdrop-blur-sm text-gray-600 transition-colors duration-200 hover:bg-red-500 hover:text-white"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      addToWishlist({
-                        user_id: user.id,
-                        productId: item.productId,
-                        name: item.name,
-                        price: item.price,
-                        image: item.image,
-                      });
-                    }}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6"
-                      fill={wishlistItems.some((wishlist) => wishlist.productId === item.productId) ? "red" : "none"}
-                      stroke="currentColor"
-                      strokeWidth={1.5}
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                    </svg>
-                  </button>
                 </div>
 
                 {/* Content Section */}
-                <div className="p-4 sm:p-6">
-                  <h3 className="text-xl font-bold text-gray-800 truncate">{item.name}</h3>
-                  <p className="text-2xl font-extrabold text-gray-900 mt-1">₹{item.price}</p>
-
-                  {/* Action Button */}
-                  <div className="mt-4">
-                    <button
-                      className="w-full py-2 bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        addToCart({
-                          user_id: user.id,
-                          productId: item.productId,
-                          name: item.name,
-                          price: item.price,
-                          image: item.image,
-                        });
-                      }}
-                    >
-                      Add to Basket
-                    </button>
-                  </div>
+                <div className="py-5">
+                  <h3 className="text-xl text-center font-bold text-gray-800 truncate">{item.name}</h3>
+                
                 </div>
               </div>
             ))}

@@ -41,10 +41,10 @@ function Products() {
     loading ? (
       <div className='bg-gray-100 min-h-screen flex items-center justify-center'><Mosaic color="#c8c8c8" size="medium"  /></div>
       
-    ) : <div className="bg-gray-100 min-h-screen py-12 mt-10">
+    ) : <div className="bg-gray-100 min-h-screen py-12">
       {/* Category Filter Dropdown */}
 
-      <div className="flex justify-center mb-10">
+      <div className="flex justify-center my-10">
         <select
           className="w-full max-w-sm px-4 py-3 bg-white border border-gray-300 rounded-full shadow-lg text-gray-700 text-base focus:outline-none focus:ring-2 focus:ring-gray-800"
           onChange={(e) => filterProduct(e.target.value)}
@@ -60,7 +60,7 @@ function Products() {
 
       {/* Products Grid */}
       <div className='flex justify-center'>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4  gap-8 px-4 md:px-8 max-w-screen-xl w-full">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4  gap-3 md:gap-8 px-2 md:px-8 max-w-screen-xl w-full">
           {product.map((item, index) => {
             const { rating, count } = getRandomReviewData(); // Get random review data for each item
             return (

@@ -39,7 +39,7 @@ function Banner() {
   
   return (
     <section
-      className="relative mt-18 h-[90vh] flex items-center justify-center bg-cover bg-center transition-all duration-1000"
+      className="relative  h-[100vh] flex items-center justify-center bg-cover bg-center transition-all duration-1000"
       style={{
         backgroundImage: `url(${slides[currentSlide]})`,
       }}
