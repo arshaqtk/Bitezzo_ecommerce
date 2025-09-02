@@ -40,7 +40,7 @@ function Nav() {
     setMobileMenuOpen(false);
     setMobileSearchOpen(false); // close search after submit
     acceptSearchValue(searchValue);
-    navigate("/products"); // Navigate to products page to show search results
+    navigate("/search"); // Navigate to products page to show search results
   };
 
   const handleLogout = () => {
