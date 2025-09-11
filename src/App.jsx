@@ -44,6 +44,7 @@ import AdminOrderDetailView from "./admin/Pages/AdminOrderDetailView";
 import AdminDashboard from "./admin/Pages/DashBoard";
 import About from "./user/pages/About";
 import ScrollToTop from "./user/components/ScrollToTop";
+import { AdminProtectedRoute } from "./admin/component/AdminProtectedRoutes";
 
 
 function App() {
@@ -88,7 +89,8 @@ function App() {
                     </Route>
 
 
-                    <Route path="/admin" element={<AdminInterface />}>
+                    <Route element={<AdminProtectedRoute><AdminInterface /></AdminProtectedRoute>}>
+                    
                       <Route path="/admin/dashboard" element={<AdminDashboard />} />
                       <Route path="/admin/users" element={<UsersTable />} />
                       <Route path="/admin/users-detailview/:id" element={<UsersDetailView />} />

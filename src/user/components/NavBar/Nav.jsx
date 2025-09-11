@@ -42,6 +42,13 @@ function Nav() {
     acceptSearchValue(searchValue);
   };
 
+  const handleLogout = () => {
+  logout();
+  setShowAccountMenu(false);
+  navigate("/"); // optional redirect after logout
+};
+
+
   return (
     // Outer container to handle fixed position and full width
     <div className="fixed top-0 w-full z-50">
