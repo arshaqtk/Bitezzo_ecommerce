@@ -10,18 +10,17 @@ export default function StatsCards({ stats }) {
     { label: "Total Revenue", value: fmtCurrency(stats.totalRevenue) },
   ];
 
-  return (
-<div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-  {items.map((it) => (
-    <div
-      key={it.label}
-      className="rounded-2xl border border-violet-200 p-4 shadow-sm bg-[#09122C] hover:shadow-md transition"
-    >
-      <div className="text-lg  text-yellow-500 font-medium">{it.label}</div>
-      <div className="text-2xl font-bold mt-1 text-[#13cd0d]">{it.value}</div>
-    </div>
-  ))}
-</div>
-
-  );
+return (
+  <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+    {items.map((it) => (
+      <div
+        key={it.label}
+        className="rounded-2xl border border-gray-200 p-4 shadow-sm bg-white hover:shadow-md transition"
+      >
+        <div className="text-lg text-gray-600 font-medium">{it.label}</div>
+        <div className="text-2xl font-bold mt-1 text-indigo-600">{it.value}</div>
+      </div>
+    ))}
+  </div>
+);
 }

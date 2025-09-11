@@ -8,7 +8,7 @@ export const SearchProvider=({children})=>{
 
     const [searchValue,setSearchValue]=useState()
 
-
+ 
     const acceptSearchValue=(searchValue)=>{
         setSearchValue(searchValue)
         navigate('/search')

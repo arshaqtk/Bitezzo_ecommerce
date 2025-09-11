@@ -64,89 +64,93 @@ function EditProduct() {
   }
 
 
-  return (
-    <div className="max-w-lg mx-auto bg-[#0B192C] p-6 rounded-lg shadow-md mt-6">
-      <h2 className="text-xl font-bold mb-4 text-violet-400">Update Product</h2>
+return (
+  <div className="min-h-screen bg-gray-50 flex justify-center items-start py-10 px-4">
+    <div className="w-full max-w-2xl bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+      <h2 className="text-2xl font-bold mb-6 text-gray-900">Update Product</h2>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-6">
         {/* Name */}
         <div>
-          <label className="block text-sm font-medium text-white/80">Name</label>
+          <label className="block text-sm font-medium text-gray-700">Name</label>
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
-            className="mt-1 text-white/80 w-full border rounded-md p-2 outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 w-full border border-gray-300 rounded-md p-2 text-gray-900 outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             required
           />
         </div>
 
         {/* Description */}
         <div>
-          <label className="block text-sm font-medium text-white/80">Description</label>
+          <label className="block text-sm font-medium text-gray-700">Description</label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
-            rows="3"
-            className="mt-1 text-white/80 w-full border rounded-md p-2 outline-none focus:ring-2 focus:ring-blue-500"
+            rows="4"
+            className="mt-1 w-full border border-gray-300 rounded-md p-2 text-gray-900 outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             required
           />
         </div>
 
-        {/* Price */}
-        <div>
-          <label className="block text-sm font-medium text-white/80">Price (₹)</label>
-          <input
-            type="number"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            className="mt-1 text-white/80 w-full border rounded-md p-2 outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {/* Price */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Price (₹)</label>
+            <input
+              type="number"
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
+              className="mt-1 w-full border border-gray-300 rounded-md p-2 text-gray-900 outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              required
+            />
+          </div>
 
-         <div>
-          <label className="block text-sm font-medium text-white/80">Quantity </label>
-          <input
-            type="number"
-            name="quantity"
-            value={formData.quantity}
-            onChange={handleChange}
-            className="mt-1 text-white/80 w-full border rounded-md p-2 outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
+          {/* Quantity */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Quantity</label>
+            <input
+              type="number"
+              name="quantity"
+              value={formData.quantity}
+              onChange={handleChange}
+              className="mt-1 w-full border border-gray-300 rounded-md p-2 text-gray-900 outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              required
+            />
+          </div>
         </div>
 
         {/* Image */}
         <div>
-          <label className="block text-sm font-medium text-white/80">Image URL</label>
+          <label className="block text-sm font-medium text-gray-700">Image URL</label>
           <input
             type="text"
             name="image"
             value={formData.image}
             onChange={handleChange}
-            className="mt-1 text-white/80 w-full border rounded-md p-2 outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 w-full border border-gray-300 rounded-md p-2 text-gray-900 outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
           />
           {formData.image && (
             <img
               src={formData.image}
               alt="Preview"
-              className="mt-2 w-24 h-24 object-cover rounded-md border"
+              className="mt-2 w-32 h-32 object-cover rounded-md border border-gray-300"
             />
           )}
         </div>
 
         {/* Category */}
         <div>
-          <label className="block text-sm font-medium text-white/80">Category</label>
+          <label className="block text-sm font-medium text-gray-700">Category</label>
           <select
             name="category"
             value={formData.category}
             onChange={handleChange}
-            className="mt-1 text-white/80 w-full border rounded-md p-2 outline-none focus:ring-2 focus:ring-blue-500 bg-[#0B192C]"
+            className="mt-1 w-full border border-gray-300 rounded-md p-2 text-gray-900 outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
             required
           >
             <option value="">-- Select Category --</option>
@@ -159,24 +163,26 @@ function EditProduct() {
         </div>
 
         {/* Buttons */}
-        <div className="flex justify-end gap-3">
+        <div className="flex justify-end gap-4 mt-4">
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
+            className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition"
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            className="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
           >
             Save Changes
           </button>
         </div>
       </form>
     </div>
-  );
+  </div>
+);
+
 }
 
 export default EditProduct

@@ -33,7 +33,10 @@ export  const WishlistProvider=({ children }) => {
 
  const addToWishlist = async ({ productId, name, price, image }) => {
     setWishListToggle(!wishlistToggle)
-
+ if(!user.id) {
+                toast.error("Login First")
+                return
+            }
 
     try {
       
@@ -57,10 +60,7 @@ export  const WishlistProvider=({ children }) => {
             }
                 
             }
-        else {
-            toast.success("Login First")
-            navigate('/login')
-        }
+        
 
 
     } catch (e) {

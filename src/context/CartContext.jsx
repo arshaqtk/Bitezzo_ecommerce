@@ -53,7 +53,10 @@ export const CartProvider = ({ children }) => {
 
     const addToCart = async ({ productId, name, price, image }) => {
 
-
+ if(!user.id) {
+                toast.error("Login First")
+                return
+            }
         try {
             
            
@@ -78,9 +81,6 @@ export const CartProvider = ({ children }) => {
                 toast.success("Added to cart!");
 
 
-            } else {
-                toast.error("Login First")
-                navigate('/login')
             }
 
 

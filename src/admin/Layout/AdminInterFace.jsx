@@ -6,17 +6,20 @@ import Sidebar from "../component/SideBar";
 
 
 function AdminInterface() {
-  return (
-    <div className="flex h-screen ">
-      <Sidebar/>
-      {/* <TopBar/> */}
-      <div className="flex-1 p-6 
-      bg-[#07101e]
-       overflow-y-auto">
-        <Outlet /> 
-      </div>
+return (
+  <div className="flex h-screen">
+    <Sidebar />
+    {/* <TopBar/> */}
+    <div 
+      className="flex-1 p-6 
+      bg-gray-50 
+      overflow-y-auto"
+    >
+      <Outlet /> 
     </div>
-  );
+  </div>
+);
+
 }
 
 export default AdminInterface;

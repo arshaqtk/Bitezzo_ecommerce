@@ -74,7 +74,7 @@ function Cartpage() {
                                 <div className="text-lg font-semibold">
                                     Subtotal: <span className="text-green-600">₹{subTotal}</span>
                                 </div>
-                                <button className="mt-4 md:mt-0 bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg"
+                                <button className="mt-4 md:mt-0 bg-black hover:bg-gray-800 text-white px-6 py-2 rounded-lg"
                                 onClick={()=>navigate("/checkout")}>
                                     Proceed to Checkout
                                 </button>

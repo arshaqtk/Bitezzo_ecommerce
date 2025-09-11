@@ -24,85 +24,87 @@ function AdminOrderDetailView() {
   }
 
   if (!order) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0B192C]">
-        <p className="text-gray-300">Loading order details...</p>
-      </div>
-    )
-  }
-
   return (
-    <div className="min-h-screen bg-[#0B192C] p-8">
-      <h1 className="text-2xl font-bold text-violet-400 mb-6">Order Details</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <p className="text-gray-600">Loading order details...</p>
+    </div>
+  )
+}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        {/* Shipping Address */}
-        <div className="bg-[#1A2B4A] rounded-2xl shadow-md p-6">
-          <h2 className="text-lg font-semibold text-violet-300 mb-4">Shipping Address</h2>
-          <p className="text-sm text-gray-300"><span className="font-medium text-white">Name:</span> {order.shippingAddress.name}</p>
-          <p className="text-sm text-gray-300"><span className="font-medium text-white">Address:</span> {order.shippingAddress.address}</p>
-          <p className="text-sm text-gray-300"><span className="font-medium text-white">City:</span> {order.shippingAddress.city}</p>
-          <p className="text-sm text-gray-300"><span className="font-medium text-white">Pincode:</span> {order.shippingAddress.pincode}</p>
-          <p className="text-sm text-gray-300"><span className="font-medium text-white">Phone:</span> {order.shippingAddress.phone}</p>
-        </div>
+return (
+  <div className="min-h-screen bg-gray-50 p-8">
+    <h1 className="text-2xl font-bold text-gray-900 mb-6">Order Details</h1>
 
-        {/* Order Info */}
-        <div className="bg-[#1A2B4A] rounded-2xl shadow-md p-6">
-          <h2 className="text-lg font-semibold text-violet-300 mb-4">Order Information</h2>
-          <p className="text-sm text-gray-300"><span className="font-medium text-white">Order ID:</span> {order.id}</p>
-          <p className="text-sm text-gray-300"><span className="font-medium text-white">Payment ID:</span> {order.payment}</p>
-          <p className="text-sm text-gray-300"><span className="font-medium text-white">Date:</span> {order.date}</p>
-          <p className="text-sm text-gray-300"><span className="font-medium text-white">Subtotal:</span> ₹{order.subTotal}</p>
-
-          {/* Status Dropdown */}
-          <div className="mt-4">
-            <label htmlFor="status" className="text-sm font-medium text-gray-300">Status:</label>
-            <select
-              id="status"
-              value={order.status}
-              onChange={(e) => handleStatusChange(order.id, e.target.value, order.userId)}
-              className={`ml-2 px-3 py-1 rounded-md text-sm font-medium border bg-[#0B192C]
-                ${order.status === "Pending"
-                  ? "text-yellow-400 border-yellow-400"
-                  : order.status === "Canceled"
-                  ? "text-red-400 border-red-400"
-                  : order.status === "Confirmed"
-                  ? "text-blue-400 border-blue-400"
-                  : "text-green-400 border-green-400"
-                }`}
-            >
-              <option value="Pending">Pending</option>
-              <option value="Confirmed">Confirmed</option>
-              <option value="Delivered">Delivered</option>
-              <option value="Canceled">Canceled</option>
-            </select>
-          </div>
-        </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      {/* Shipping Address */}
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">Shipping Address</h2>
+        <p className="text-sm text-gray-600"><span className="font-medium text-gray-900">Name:</span> {order.shippingAddress.name}</p>
+        <p className="text-sm text-gray-600"><span className="font-medium text-gray-900">Address:</span> {order.shippingAddress.address}</p>
+        <p className="text-sm text-gray-600"><span className="font-medium text-gray-900">City:</span> {order.shippingAddress.city}</p>
+        <p className="text-sm text-gray-600"><span className="font-medium text-gray-900">Pincode:</span> {order.shippingAddress.pincode}</p>
+        <p className="text-sm text-gray-600"><span className="font-medium text-gray-900">Phone:</span> {order.shippingAddress.phone}</p>
       </div>
 
-      {/* Products */}
-      <div className="bg-[#1A2B4A] rounded-2xl shadow-md p-6">
-        <h2 className="text-lg font-semibold text-violet-300 mb-4">Products</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {order.products.map((product) => (
-            <div
-              key={product.productId}
-              className="border border-gray-700 bg-[#0B192C] rounded-xl p-4 hover:shadow-lg transition"
-            >
-              <img
-                src={product.productImage}
-                alt={product.productName}
-                className="w-full h-40 object-cover rounded-lg mb-4"
-              />
-              <h3 className="text-md font-medium text-violet-200">{product.productName}</h3>
-              <p className="text-sm text-gray-300">Price: ₹{product.productPrice}</p>
-              <p className="text-sm text-gray-300">Quantity: {product.productQuantity}</p>
-            </div>
-          ))}
+      {/* Order Info */}
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">Order Information</h2>
+        <p className="text-sm text-gray-600"><span className="font-medium text-gray-900">Order ID:</span> {order.id}</p>
+        <p className="text-sm text-gray-600"><span className="font-medium text-gray-900">Payment ID:</span> {order.payment}</p>
+        <p className="text-sm text-gray-600"><span className="font-medium text-gray-900">Date:</span> {order.date}</p>
+        <p className="text-sm text-gray-600"><span className="font-medium text-gray-900">Subtotal:</span> ₹{order.subTotal}</p>
+
+        {/* Status Dropdown */}
+        <div className="mt-4">
+          <label htmlFor="status" className="text-sm font-medium text-gray-700">Status:</label>
+          <select
+            id="status"
+            value={order.status}
+            onChange={(e) => handleStatusChange(order.id, e.target.value, order.userId)}
+            className={`ml-2 px-3 py-1 rounded-md text-sm font-medium border shadow-sm
+              ${
+                order.status === "Pending"
+                  ? "text-amber-700 border-amber-300 bg-amber-50"
+                  : order.status === "Canceled"
+                  ? "text-rose-700 border-rose-300 bg-rose-50"
+                  : order.status === "Confirmed"
+                  ? "text-emerald-700 border-emerald-300 bg-emerald-50"
+                  : "text-sky-700 border-sky-300 bg-sky-50"
+              }`}
+          >
+            <option value="Pending">Pending</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Canceled">Canceled</option>
+          </select>
         </div>
       </div>
     </div>
-  )
+
+    {/* Products */}
+    <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
+      <h2 className="text-lg font-semibold text-gray-800 mb-4">Products</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {order.products.map((product) => (
+          <div
+            key={product.productId}
+            className="border border-gray-200 bg-white rounded-xl p-4 hover:shadow-md transition"
+          >
+            <img
+              src={product.productImage}
+              alt={product.productName}
+              className="w-full h-40 object-cover rounded-lg mb-4 border border-gray-200"
+            />
+            <h3 className="text-md font-medium text-gray-900">{product.productName}</h3>
+            <p className="text-sm text-gray-600">Price: ₹{product.productPrice}</p>
+            <p className="text-sm text-gray-600">Quantity: {product.productQuantity}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+)
+
 }
 
 export default AdminOrderDetailView

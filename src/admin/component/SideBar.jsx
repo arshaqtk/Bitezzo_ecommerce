@@ -18,51 +18,53 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside
-      className="
-        group
-        h-screen 
-        bg-[#09122C] shadow-md 
-        p-4 
-        w-20 hover:w-64 
-        transition-all duration-300 ease-in-out
-        flex flex-col justify-between
-      "
+  <aside
+    className="
+      group
+      h-screen 
+      bg-white border-r border-gray-200 shadow-sm
+      p-4 
+      w-20 hover:w-64 
+      transition-all duration-300 ease-in-out
+      flex flex-col justify-between
+    "
+  >
+    <div>
+      {/* Logo */}
+      <h1 className="text-xl font-bold text-red-600 mb-6 whitespace-nowrap overflow-hidden">
+        <span className="block group-hover:hidden">Bz</span>
+        <span className="hidden group-hover:block">Bitezzo</span>
+      </h1>
+
+      {/* Nav */}
+      <nav className="flex flex-col gap-2">
+        {menu.map(({ to, label, icon: Icon }) => (
+          <Link
+            key={to}
+            to={to}
+            className="
+              text-gray-700
+              flex items-center gap-3 px-2 py-2 rounded-lg 
+              hover:bg-gray-100 hover:text-gray-900
+              transition-colors
+            "
+          >
+            <Icon className="h-6 w-6 text-gray-600" />
+            <span className="hidden group-hover:inline">{label}</span>
+          </Link>
+        ))}
+      </nav>
+    </div>
+
+    {/* Logout */}
+    <button
+      onClick={() => navigate("/login")}
+      className="flex items-center gap-3 px-2 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
     >
-      <div>
-        {/* Logo */}
-        <h1 className="text-xl font-bold text-red-500 mb-6 whitespace-nowrap overflow-hidden">
-          <span className="block group-hover:hidden">Bz</span>
-          <span className="hidden group-hover:block">Bitezzo</span>
-        </h1>
+      <ArrowRightOnRectangleIcon className="h-6 w-6 text-gray-600" />
+      <span className="hidden group-hover:inline">Logout</span>
+    </button>
+  </aside>
+);
 
-        {/* Nav */}
-        <nav className="flex flex-col gap-4">
-          {menu.map(({ to, label, icon: Icon }) => (
-            <Link
-              key={to}
-              to={to}
-              className="
-              text-white
-                flex items-center gap-3 px-2 py-2 rounded-lg 
-                hover:bg-[#09122C] 
-                transition-colors
-              "
-            >
-              <Icon className="h-6 w-6 text-white" />
-              <span className="hidden group-hover:inline">{label}</span>
-            </Link>
-          ))}
-        </nav>
-      </div>
-
-      {/* Logout */}
-      <button
-        className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-gray-200"
-      >
-        <ArrowRightOnRectangleIcon className="h-6 w-6 text-gray-600" />
-        <span className="hidden group-hover:inline" onClick={()=>navigate("/login")}>Logout</span>
-      </button>
-    </aside>
-  );
 }

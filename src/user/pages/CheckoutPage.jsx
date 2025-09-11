@@ -8,20 +8,19 @@ import { ProductContext } from '../../context/ProductContext';
 
 function CheckoutPage() {
   const location = useLocation();
-  const { user } = useContext(AuthContext)
+  const { user } = useContext(AuthContext);
   const { subTotal, cartItems } = useContext(CartContext);
-  const { shippingDetails, addShippingAddress } = useContext(OrderContext)
-  const { products } = useContext(ProductContext)
+  const { shippingDetails, addShippingAddress } = useContext(OrderContext);
+  const { products } = useContext(ProductContext);
 
   const { productId, price, fromBuyNow } = location.state || {};
 
   const [username, setName] = useState(user.username);
-  const [phone, setPhone] = useState(shippingDetails.phone || "")
+  const [phone, setPhone] = useState(shippingDetails.phone || "");
   const [address, setAddress] = useState(shippingDetails.address || "");
   const [city, setCity] = useState(shippingDetails.city || "");
   const [pincode, setPincode] = useState(shippingDetails.pincode || "");
   const [method, setMethod] = useState("regular");
-
 
   const productDetail = useMemo(
     () => products.find((item) => item.id == productId),
@@ -29,27 +28,27 @@ function CheckoutPage() {
   );
 
   let finalTotal = fromBuyNow ? price : subTotal;
-  const [totalAmount, setTotalAmount] = useState(finalTotal)
+  const [totalAmount, setTotalAmount] = useState(finalTotal);
 
   const deliveryFee = useMemo(() => {
     if (method === "express") {
-      setTotalAmount(Number(finalTotal) + 40)
+      setTotalAmount(Number(finalTotal) + 40);
       return 40;
     }
     if (method === "fastest") {
-      setTotalAmount(Number(finalTotal) + 70)
+      setTotalAmount(Number(finalTotal) + 70);
       return 70;
     }
-    setTotalAmount(Number(finalTotal) + 20)
+    setTotalAmount(Number(finalTotal) + 20);
     return 20;
   }, [method, finalTotal]);
 
-  const shippingData = { name: username, address, city, pincode, phone }
+  const shippingData = { name: username, address, city, pincode, phone };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addShippingAddress(shippingData, totalAmount, { fromBuyNow, productId })
-  }
+    addShippingAddress(shippingData, totalAmount, { fromBuyNow, productId });
+  };
 
   return (
     <>
@@ -79,28 +78,46 @@ function CheckoutPage() {
                 onChange={(e) => setAddress(e.target.value)}
                 className="w-full border rounded-md p-2"
               />
-              <input
+
+              {/* City Dropdown */}
+              <select
                 required
-                type="text"
-                placeholder="City"
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
                 className="w-full border rounded-md p-2"
-              />
+              >
+                <option value="">Select City</option>
+                <option value="Kottakkal">Kottakkal</option>
+                <option value="Perinthalmanna">Perinthalmanna</option>
+                <option value="Vengara">Vengara</option>
+                <option value="Chemmad">Chemmad</option>
+                <option value="Valanjery">Valanjery</option>
+                <option value="Malappuram">Malappuram</option>
+              </select>
+
+              {/* Pincode - Only 6 digits */}
               <input
                 required
                 type="text"
                 placeholder="Pincode"
                 value={pincode}
-                onChange={(e) => setPincode(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/\D/g, ""); // remove non-digits
+                  if (val.length <= 6) setPincode(val);
+                }}
                 className="w-full border rounded-md p-2"
               />
+
+              {/* Phone - Only 10 digits */}
               <input
                 required
                 type="text"
                 placeholder="Mobile No"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/\D/g, ""); // remove non-digits
+                  if (val.length <= 10) setPhone(val);
+                }}
                 className="w-full border rounded-md p-2"
               />
 
@@ -126,10 +143,13 @@ function CheckoutPage() {
                   <span>₹{deliveryFee}</span>
                 </div>
                 <div className="text-md font-semibold">
-                  Subtotal: <span className="text-green-600">₹{finalTotal}+{deliveryFee}={totalAmount}</span>
+                  Subtotal:{" "}
+                  <span className="text-green-600">
+                    ₹{finalTotal}+{deliveryFee}={totalAmount}
+                  </span>
                 </div>
                 <button
-                  className="w-full bg-red-600 text-white p-2 rounded-md cursor-pointer"
+                  className="w-full bg-black text-white p-2 rounded-md cursor-pointer"
                   type="submit"
                 >
                   Proceed to Payment
@@ -182,11 +202,10 @@ function CheckoutPage() {
               </div>
             )}
           </div>
-
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default CheckoutPage
+export default CheckoutPage;

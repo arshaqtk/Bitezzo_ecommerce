@@ -6,6 +6,8 @@ import Footer from '../components/Footer/Footer';
 import { CartContext } from '../../context/CartContext';
 import { AuthContext } from '../../context/AuthContext';
 import { WishListContext } from '../../context/WishlistContext';
+import { Truck, Leaf, Star } from "lucide-react";
+
 
 function HomePage() {
   const navigate = useNavigate();
@@ -48,23 +50,57 @@ function HomePage() {
 
 
       {/* Features Section */}
-      <section className="py-16 bg-gray-50">
-        <h2 className="text-3xl font-bold text-center mb-10">Why Choose Us?</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-6xl mx-auto px-6">
-          <div className="p-6 bg-white shadow-lg rounded-xl text-center">
-            <h3 className="text-xl font-semibold mb-2">⚡ Fast Delivery</h3>
-            <p>Get your meals delivered hot and fresh within minutes.</p>
+      <section className="py-20 bg-gray-50">
+      <h2 className="text-4xl font-bold text-center mb-14 text-gray-900">
+        Why Choose Us?
+      </h2>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 max-w-6xl mx-auto px-6">
+        {/* Card 1 */}
+        <div className="p-8 bg-white shadow-md hover:shadow-xl transition-shadow rounded-2xl text-center">
+          <div className="flex justify-center mb-4">
+            <div className="p-4 bg-blue-100 rounded-full">
+              <Truck className="w-8 h-8 text-blue-600" />
+            </div>
           </div>
-          <div className="p-6 bg-white shadow-lg rounded-xl text-center">
-            <h3 className="text-xl font-semibold mb-2">🥗 Fresh Ingredients</h3>
-            <p>We only use high-quality, fresh, and healthy ingredients.</p>
-          </div>
-          <div className="p-6 bg-white shadow-lg rounded-xl text-center">
-            <h3 className="text-xl font-semibold mb-2">⭐ Customer Love</h3>
-            <p>Loved by thousands of happy customers every single day.</p>
-          </div>
+          <h3 className="text-xl font-semibold mb-2 text-gray-800">
+            Fast Delivery
+          </h3>
+          <p className="text-gray-600">
+            Get your meals delivered hot and fresh within minutes.
+          </p>
         </div>
-      </section>
+
+        {/* Card 2 */}
+        <div className="p-8 bg-white shadow-md hover:shadow-xl transition-shadow rounded-2xl text-center">
+          <div className="flex justify-center mb-4">
+            <div className="p-4 bg-green-100 rounded-full">
+              <Leaf className="w-8 h-8 text-green-600" />
+            </div>
+          </div>
+          <h3 className="text-xl font-semibold mb-2 text-gray-800">
+            Fresh Ingredients
+          </h3>
+          <p className="text-gray-600">
+            We only use high-quality, fresh, and healthy ingredients.
+          </p>
+        </div>
+
+        {/* Card 3 */}
+        <div className="p-8 bg-white shadow-md hover:shadow-xl transition-shadow rounded-2xl text-center">
+          <div className="flex justify-center mb-4">
+            <div className="p-4 bg-yellow-100 rounded-full">
+              <Star className="w-8 h-8 text-yellow-500" />
+            </div>
+          </div>
+          <h3 className="text-xl font-semibold mb-2 text-gray-800">
+            Customer Love
+          </h3>
+          <p className="text-gray-600">
+            Loved by thousands of happy customers every single day.
+          </p>
+        </div>
+      </div>
+    </section>
 
       {/* Top Selling Section (your code kept as-is) */}
       <div className="bg-gray-100 py-12">

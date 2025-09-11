@@ -60,19 +60,20 @@ export default function AdminDashboard() {
   if (loading) return <div className="p-6">Loading admin dashboard…</div>;
 
   return (
-    <div className="p-6 space-y-6 bg-[#0B192C] min-h-screen">
-      <h1 className="text-2xl font-bold text-violet-400">Admin Dashboard</h1>
+  <div className="p-6 space-y-6 bg-white min-h-screen">
+    <h1 className="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
 
-      {/* KPI cards */}
-      <StatsCards stats={stats} />
+    {/* KPI cards */}
+    <StatsCards stats={stats} />
 
-      {/* Charts grid */}
-      <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
-        <OrdersStatusPie data={byStatus} />
-        <OrdersPerUserBar data={perUser} />
-        <RevenueByDateLine data={revByDate} />
-        <TopProductsBar data={topProducts} />
-      </div>
+    {/* Charts grid */}
+    <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
+      <OrdersStatusPie data={byStatus} />
+      <OrdersPerUserBar data={perUser} />
+      <RevenueByDateLine data={revByDate} />
+      <TopProductsBar data={topProducts} />
     </div>
-  );
+  </div>
+);
+
 }
