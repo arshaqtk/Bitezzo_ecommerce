@@ -44,19 +44,42 @@ function Products() {
     ) : <div className="bg-gray-100 min-h-screen py-12">
       {/* Category Filter Dropdown */}
 
-      <div className="flex justify-center my-10">
-        <select
-          className="w-full max-w-sm px-4 py-3 bg-white border border-gray-300 rounded-full shadow-lg text-gray-700 text-base focus:outline-none focus:ring-2 focus:ring-gray-800"
-          onChange={(e) => filterProduct(e.target.value)}
-        >
-          <option value="all">All Items</option>
-          <option value="drinks">Drinks & Beverages</option>
-          <option value="fastFood">Fast Food</option>
-          <option value="gravy">Gravy & Curry Dishes</option>
-          <option value="snacks">Snacks & Sides</option>
-          <option value="desserts">Desserts & Sweets</option>
-        </select>
-      </div>
+    {/* Category Filter */}
+<div className="flex justify-center my-10">
+  {/* Mobile Dropdown (hidden on md and above) */}
+  <select
+    className="w-full max-w-sm px-4 py-3 bg-white border border-gray-300 rounded-full shadow-lg text-gray-700 text-base focus:outline-none focus:ring-2 focus:ring-gray-800 md:hidden"
+    onChange={(e) => filterProduct(e.target.value)}
+  >
+    <option value="all">All Items</option>
+    <option value="drinks">Drinks & Beverages</option>
+    <option value="fastFood">Fast Food</option>
+    <option value="gravy">Gravy & Curry Dishes</option>
+    <option value="snacks">Snacks & Sides</option>
+    <option value="desserts">Desserts & Sweets</option>
+  </select>
+
+  {/* Desktop Buttons (hidden on small screens) */}
+  <div className="hidden md:flex gap-4 flex-wrap">
+    {[
+      { label: "All Items", value: "all" },
+      { label: "Drinks & Beverages", value: "drinks" },
+      { label: "Fast Food", value: "fastFood" },
+      { label: "Gravy & Curry Dishes", value: "gravy" },
+      { label: "Snacks & Sides", value: "snacks" },
+      { label: "Desserts & Sweets", value: "desserts" },
+    ].map((cat) => (
+      <button
+        key={cat.value}
+        onClick={() => filterProduct(cat.value)}
+        className="px-5 py-2 rounded-full border border-gray-300 bg-white shadow-md text-gray-700 hover:bg-gray-900 hover:text-white transition-all"
+      >
+        {cat.label}
+      </button>
+    ))}
+  </div>
+</div>
+
 
       {/* Products Grid */}
       <div className='flex justify-center'>
