@@ -8,7 +8,7 @@ function UserLayout() {
     <div className="min-h-screen flex flex-col">
      
       <Nav />
-      <main className="flex-1 w-full bg-gray-50 ">
+      <main className="flex-1 w-full bg-gray-100">
         <Outlet />
       </main>
       <Footer/>

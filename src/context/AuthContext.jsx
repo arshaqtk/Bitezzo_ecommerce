@@ -7,6 +7,7 @@ import profileIcon from "../assets/images/profile-icon-9.png";
 
 export const AuthContext = createContext()
 
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     try {
@@ -21,7 +22,6 @@ export const AuthProvider = ({ children }) => {
 
 
 
-
   const signup = async (newuser) => {
     try {
       const response = await Axios_instance.get(`/users?email=${newuser.email}`)
@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
         toast.error("Email id Already Exists")
       } else {
 
-        const userData = { ...newuser, image: profileIcon, role: "user", isAuthenticated: true, cart: [], wishlist: [], shippingAddress: [], orders: [] }
+        const userData = { ...newuser,phone:"", image: profileIcon, role: "user", isAuthenticated: true, cart: [], wishlist: [], shippingAddress: [], orders: [] }
 
         const Postresponse = await Axios_instance.post('/users', userData)
 
@@ -66,8 +66,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("role", response.data[0].role)
 
         if (response.data[0].role === "user") {
-
-          const localStorageLoginData = { isAuthenticated: true, id: response.data[0].id, username: response.data[0].username, email: response.data[0].email, image: profileIcon }
+          const localStorageLoginData = { isAuthenticated: true, id: response.data[0].id, username: response.data[0].username, email: response.data[0].email, image: profileIcon,phone:response.data[0].phone }
           localStorage.setItem("user", JSON.stringify(localStorageLoginData))
 
           navigate("/")
@@ -86,7 +85,9 @@ export const AuthProvider = ({ children }) => {
   //______Editing___user_______
 
 
-
+const updateUser=(userData)=>{
+  console.log(userData)
+}
 
 
 
@@ -115,10 +116,17 @@ export const AuthProvider = ({ children }) => {
     await Axios_instance.patch(`/users/${id}`, { isAuthenticated: Authenticated });
   }
 
+  const adminLogout=()=>{
+    toast.success("Log out Successfully")
+    localStorage.removeItem("role")
+    setUser(null)
+    navigate("/login")
+  }
 
 
 
-  return (<AuthContext.Provider value={{ user, signup, login, logout, toggleUser,  }}>
+
+  return (<AuthContext.Provider value={{ user, signup, login, logout, toggleUser,adminLogout,updateUser  }}>
     {children}
   </AuthContext.Provider>)
 }

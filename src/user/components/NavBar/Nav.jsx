@@ -12,18 +12,33 @@ function Nav() {
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const { user, logout } = useContext(AuthContext);
-  const { cartItems } = useContext(CartContext);
-  const { wishlistItems } = useContext(WishListContext);
+  const { cartItems, fetchCartData } = useContext(CartContext);
+  const { wishlistItems, fetchWishListData } = useContext(WishListContext);
   const { acceptSearchValue } = useContext(SearchContext);
 
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   function toggleAccountMenu() {
     setShowAccountMenu((prev) => !prev);
   }
+
+  useEffect(() => {
+    fetchCartData();
+    fetchWishListData();
+  }, []);
 
   // Close mobile menu and account menu on route change
   useEffect(() => {
@@ -38,336 +53,310 @@ function Nav() {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     setMobileMenuOpen(false);
-    setMobileSearchOpen(false); // close search after submit
+    setMobileSearchOpen(false);
     acceptSearchValue(searchValue);
   };
 
   const handleLogout = () => {
-  logout();
-  setShowAccountMenu(false);
-  navigate("/"); // optional redirect after logout
-};
+    logout();
+    setShowAccountMenu(false);
+    navigate("/");
+  };
 
+  const navItems = [
+    { name: 'Home', path: '/' },
+    { name: 'Shop', path: '/products' },
+    { name: 'About', path: '/about' },
+    { name: 'Contact', path: '/contact' }
+  ];
 
   return (
-    // Outer container to handle fixed position and full width
-    <div className="fixed top-0 w-full z-50">
-      {/* The main navigation "pillow" container, which is centered and has the styling */}
-      <nav className="max-w-6xl mx-auto my-4 py-2 px-6 bg-black rounded-full shadow-lg flex justify-between items-center transition-all duration-300">
-        {/* The inner content of the nav bar */}
-        <div className="flex justify-between items-center w-full">
-          {/* Logo */}
-          <button
-            onClick={() => navigate("/")}
-            className="text-2xl font-bold text-red-500 cursor-pointer"
-          >
-            Bitezzo
-          </button>
+    <>
+      {/* Spacer to prevent content from hiding behind fixed nav */}
+      <div className="h-16"></div>
+      
+      {/* Main Navigation */}
+      <div className="fixed top-0 w-full z-50">
+        <nav className={`transition-all duration-300 ${
+          isScrolled 
+            ? 'bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200' 
+            : 'bg-gradient-to-r from-gray-900 via-black to-gray-900'
+        }`}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-16">
+              
+              {/* Logo */}
+              <div className="flex-shrink-0">
+                <button
+                  onClick={() => navigate("/")}
+                  className={`text-2xl font-bold transition-colors duration-300 ${
+                    isScrolled ? 'text-red-600 hover:text-red-700' : 'text-red-500 hover:text-red-400'
+                  }`}
+                >
+                  Bitezzo
+                </button>
+              </div>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-8">
-            <button
-              className="text-white hover:text-red-500 font-medium cursor-pointer"
-              onClick={() => navigate("/")}
-            >
-              Home
-            </button>
-            <button
-              className="text-white hover:text-red-500 font-medium cursor-pointer"
-              onClick={() => navigate("/products")}
-            >
-              Shop
-            </button>
-            <button
-              className="text-white hover:text-red-500 font-medium cursor-pointer"
-              onClick={() => navigate("/about")}
-            >
-              About
-            </button>
-            <button
-              className="text-white hover:text-red-500 font-medium cursor-pointer"
-              onClick={() => navigate("/contact")}
-            >
-              Contact
-            </button>
+              {/* Desktop Navigation */}
+              <div className="hidden md:block">
+                <div className="ml-10 flex items-baseline space-x-8">
+                  {navItems.map((item) => (
+                    <button
+                      key={item.name}
+                      onClick={() => navigate(item.path)}
+                      className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                        location.pathname === item.path
+                          ? (isScrolled 
+                              ? 'text-red-600 bg-red-50 border-b-2 border-red-600' 
+                              : 'text-red-400 bg-red-900/20')
+                          : (isScrolled
+                              ? 'text-gray-700 hover:text-red-600 hover:bg-gray-100'
+                              : 'text-gray-300 hover:text-red-400 hover:bg-white/10')
+                      }`}
+                    >
+                      {item.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Right Side - Search, Cart, Wishlist, Account */}
+              <div className="flex items-center space-x-4">
+                
+                {/* Desktop Search */}
+                <form onSubmit={handleSearchSubmit} className="hidden lg:block">
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <svg className={`h-4 w-4 ${isScrolled ? 'text-gray-400' : 'text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </div>
+                    <input
+                      onChange={handleSearchInput}
+                      type="text"
+                      placeholder="Search products..."
+                      className={`block w-full pl-10 pr-3 py-2 border rounded-lg text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 ${
+                        isScrolled
+                          ? 'bg-white border-gray-300 text-gray-900'
+                          : 'bg-gray-800 border-gray-600 text-white placeholder-gray-400'
+                      }`}
+                    />
+                  </div>
+                </form>
+
+                {/* Mobile Search Toggle */}
+                {!mobileSearchOpen && (
+                  <button
+                    onClick={() => setMobileSearchOpen(true)}
+                    className={`block lg:hidden p-2 rounded-md transition-colors duration-200 ${
+                      isScrolled 
+                        ? 'text-gray-600 hover:text-red-600 hover:bg-gray-100' 
+                        : 'text-gray-300 hover:text-red-400 hover:bg-white/10'
+                    }`}
+                  >
+                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </button>
+                )}
+
+                {/* Cart Icon */}
+                <button
+                  onClick={() => navigate("/cart")}
+                  className={`relative p-2 rounded-md transition-colors duration-200 ${
+                    isScrolled 
+                      ? 'text-gray-600 hover:text-red-600 hover:bg-gray-100' 
+                      : 'text-gray-300 hover:text-red-400 hover:bg-white/10'
+                  }`}
+                >
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H15M17 13v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6" />
+                  </svg>
+                  {cartItems?.length > 0 && (
+                    <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium ">
+                      {cartItems.length > 9 ? '9+' : cartItems.length}
+                    </span>
+                  )}
+                </button>
+
+                {/* Wishlist Icon */}
+                <button
+                  onClick={() => navigate("/wishlist")}
+                  className={`relative p-2 rounded-md transition-colors duration-200 ${
+                    isScrolled 
+                      ? 'text-gray-600 hover:text-red-600 hover:bg-gray-100' 
+                      : 'text-gray-300 hover:text-red-400 hover:bg-white/10'
+                  }`}
+                >
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                  {wishlistItems?.length > 0 && (
+                    <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
+                      {wishlistItems.length > 9 ? '9+' : wishlistItems.length}
+                    </span>
+                  )}
+                </button>
+
+                {/* Account Dropdown */}
+                <div className="relative">
+                  <button
+                    onClick={toggleAccountMenu}
+                    className={`flex items-center p-2 rounded-md transition-colors duration-200 ${
+                      isScrolled 
+                        ? 'text-gray-600 hover:text-red-600 hover:bg-gray-100' 
+                        : 'text-gray-300 hover:text-red-400 hover:bg-white/10'
+                    }`}
+                  >
+                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    {user && (
+                      <span className="ml-2 text-sm font-medium hidden sm:block">
+                        {user.name?.split(' ')[0] || 'User'}
+                      </span>
+                    )}
+                  </button>
+                  
+                  {showAccountMenu && (
+                    <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden z-50 transform transition-all duration-200">
+                      {user ? (
+                        <>
+                          <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
+                            <p className="text-sm font-medium text-gray-900">{user.name}</p>
+                            <p className="text-sm text-gray-500 truncate">{user.email}</p>
+                          </div>
+                          <button
+                            onClick={() => { navigate("/profile"); setShowAccountMenu(false); }}
+                            className="flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                          >
+                            <svg className="h-4 w-4 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            My Profile
+                          </button>
+                          <button
+                            onClick={() => { navigate("/order"); setShowAccountMenu(false); }}
+                            className="flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                          >
+                            <svg className="h-4 w-4 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M8 11v6h8v-6M8 11H6a2 2 0 00-2 2v6a2 2 0 002 2h12a2 2 0 002-2v-6a2 2 0 00-2-2h-2" />
+                            </svg>
+                            My Orders
+                          </button>
+                          <div className="border-t border-gray-200">
+                            <button
+                              onClick={handleLogout}
+                              className="flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors duration-150"
+                            >
+                              <svg className="h-4 w-4 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                              </svg>
+                              Logout
+                            </button>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() => { navigate("/login"); setShowAccountMenu(false); }}
+                            className="flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                          >
+                            <svg className="h-4 w-4 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                            </svg>
+                            Login
+                          </button>
+                          <button
+                            onClick={() => { navigate("/signup"); setShowAccountMenu(false); }}
+                            className="flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors duration-150"
+                          >
+                            <svg className="h-4 w-4 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                            </svg>
+                            Sign Up
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Mobile Menu Button */}
+                <button
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className={`md:hidden p-2 rounded-md transition-colors duration-200 ${
+                    isScrolled 
+                      ? 'text-gray-600 hover:text-red-600 hover:bg-gray-100' 
+                      : 'text-gray-300 hover:text-red-400 hover:bg-white/10'
+                  }`}
+                >
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    {mobileMenuOpen ? (
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    ) : (
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                    )}
+                  </svg>
+                </button>
+              </div>
+            </div>
           </div>
+        </nav>
 
-          {/* Search & Cart Icons */}
-          <div className="flex items-center space-x-4">
-            {/* Desktop Search */}
-            <form onSubmit={handleSearchSubmit} className="hidden sm:block">
-              <input
-                onChange={handleSearchInput}
-                type="text"
-                placeholder="Search products..."
-                className="px-3 py-1 border border-gray-300 rounded-full 
-                            focus:outline-none focus:ring-2 text-white 
-                            focus:ring-red-500 cursor-pointer bg-gray-700"
-              />
-            </form>
-
-            {/* Mobile Search & Mobile Menu (conditionally rendered) */}
-            {mobileSearchOpen ? (
-              <form onSubmit={handleSearchSubmit} className="flex-1 flex items-center w-[60vw] ml-2 mr-2">
+        {/* Mobile Search Bar */}
+        {mobileSearchOpen && (
+          <div className="md:hidden bg-white border-b border-gray-200 px-4 py-3">
+            <form onSubmit={handleSearchSubmit} className="flex items-center space-x-3">
+              <div className="flex-1 relative">
                 <input
                   onChange={handleSearchInput}
                   type="text"
                   placeholder="Search products..."
                   autoFocus
-                  className="flex-grow px-3 py-1 border border-gray-300 rounded-full 
-                            focus:outline-none focus:ring-2 text-black 
-                            focus:ring-red-500 bg-gray-200"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                 />
-                <button
-                  onClick={() => setMobileSearchOpen(false)}
-                  type="button"
-                  className="ml-2 text-white hover:text-red-500 cursor-pointer"
-                  aria-label="Close search"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
-                </button>
-              </form>
-            ) : (
-              <button
-                onClick={() => setMobileSearchOpen(true)}
-                className="block sm:hidden text-white hover:text-red-500 cursor-pointer"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M21 21l-4.35-4.35M16 10a6 6 0 11-12 0 6 6 0 0112 0z"
-                  />
-                </svg>
-              </button>
-            )}
-
-            {/* Cart Icon */}
-            <button
-              className="relative text-white hover:text-red-500 cursor-pointer"
-              onClick={() => navigate("/cart")}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4"
-                />
-                <circle cx="7" cy="21" r="1" />
-                <circle cx="17" cy="21" r="1" />
-              </svg>
-              {cartItems?.length > 0 && (
-                <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
-                  {cartItems.length}
-                </span>
-              )}
-            </button>
-
-            {/* Wishlist Icon */}
-            <button
-              className="relative text-white hover:text-red-500 cursor-pointer"
-              onClick={() => navigate("/wishlist")}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 
-                  6.364L12 21.364l-7.682-7.682a4.5 4.5 0 010-6.364z"
-                />
-              </svg>
-              {wishlistItems?.length > 0 && (
-                <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
-                  {wishlistItems.length}
-                </span>
-              )}
-            </button>
-
-            {/* Account Dropdown */}
-            <div className="relative inline-block">
-              <button
-                onClick={toggleAccountMenu}
-                className="relative text-white hover:text-blue-500 transition-colors duration-200 p-2 rounded-full hover:bg-gray-100 focus:outline-none cursor-pointer"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 
-                    1.79-4 4 1.79 4 4 4zm0 2c-3.33 0-6 2.67-6 6h12c0-3.33-2.67-6-6-6z"
-                  />
-                </svg>
-              </button>
-              {showAccountMenu && (
-                <div className="absolute right-0 mt-2 w-[180px] bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden z-50">
-                  <ul className="py-1">
-                    {user ? (
-                      <>
-                        <li
-                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                          onClick={() => navigate("/profile")}
-                        >
-                          My Profile
-                        </li>
-                        <li
-                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                          onClick={() => navigate("/order")}
-                        >
-                          My Orders
-                        </li>
-                        <li
-                          className="px-4 py-2 text-red-500 hover:bg-red-50 cursor-pointer"
-                          onClick={handleLogout}
-                        >
-                          Logout
-                        </li>
-                      </>
-                    ) : (
-                      <>
-                        <li
-                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                          onClick={() => {
-                            navigate("/login");
-                            setShowAccountMenu(false);
-                          }}
-                        >
-                          Login
-                        </li>
-                        <li
-                          className="px-4 py-2 text-red-500 hover:bg-red-50 cursor-pointer"
-                          onClick={() => {
-                            navigate("/signup");
-                            setShowAccountMenu(false);
-                          }}
-                        >
-                          Sign-up
-                        </li>
-                      </>
-                    )}
-                  </ul>
                 </div>
-              )}
-            </div>
-
-            {/* Mobile Menu Button */}
-            <div className="md:hidden">
+              </div>
               <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 type="button"
-                className="text-white hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-red-500"
-                aria-label="Toggle menu"
+                onClick={() => setMobileSearchOpen(false)}
+                className="p-2 text-gray-400 hover:text-gray-600 rounded-md"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  {mobileMenuOpen ? (
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  ) : (
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M4 6h16M4 12h16M4 18h16"
-                    />
-                  )}
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
+            </form>
+          </div>
+        )}
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-white border-b border-gray-200 shadow-lg">
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              {navItems.map((item) => (
+                <button
+                  key={item.name}
+                  onClick={() => { navigate(item.path); setMobileMenuOpen(false); }}
+                  className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
+                    location.pathname === item.path
+                      ? 'text-red-600 bg-red-50 border-l-4 border-red-600'
+                      : 'text-gray-700 hover:text-red-600 hover:bg-gray-50'
+                  }`}
+                >
+                  {item.name}
+                </button>
+              ))}
             </div>
           </div>
-        </div>
-      </nav>
-
-      {/* Mobile Menu - moved outside the main nav bar to be full-width */}
-      {mobileMenuOpen && (
-        <div className="md:hidden mt-2 bg-[#222831] shadow-lg rounded-b-lg">
-          <button
-            onClick={() => {
-              navigate("/");
-              setMobileMenuOpen(false);
-            }}
-            className="block px-4 py-3 text-white hover:bg-red-500 w-full text-left"
-          >
-            Home
-          </button>
-          <button
-            onClick={() => {
-              navigate("/products");
-              setMobileMenuOpen(false);
-            }}
-            className="block px-4 py-3 text-white hover:bg-red-500 w-full text-left"
-          >
-            Shop
-          </button>
-          <button
-            onClick={() => {
-              navigate("/about");
-              setMobileMenuOpen(false);
-            }}
-            className="block px-4 py-3 text-white hover:bg-red-500 w-full text-left"
-          >
-            About
-          </button>
-          <button
-            onClick={() => {
-              navigate("/contact");
-              setMobileMenuOpen(false);
-            }}
-            className="block px-4 py-3 text-white hover:bg-red-500 w-full text-left"
-          >
-            Contact
-          </button>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 }
 

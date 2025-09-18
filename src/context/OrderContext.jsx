@@ -61,11 +61,12 @@ export const OrderProvider = ({ children }) => {
 
    }
 
-   const addCartPayment = async (paymentId, subtotal) => {
+   const addCartPayment = async (paymentId, subtotal,type) => {
+
       try {
          const userResponse = await Axios_instance.get(`users/${user.id}`)
          const userResponseData = userResponse.data
-         const order = [{ id: Date.now(),userId:user.id,products: cartItems, status:"pending",payment: paymentId, subTotal: subtotal, date: new Date().toISOString().split("T")[0], shippingAddress: shippingDetails },...userResponseData.orders ]
+         const order = [{ id: Date.now(),userId:user.id,products: cartItems, status:"pending",paymentType:type.type,payment: paymentId, subTotal: subtotal, date: new Date().toISOString().split("T")[0], shippingAddress: shippingDetails },...userResponseData.orders ]
 
          setOrderDetails(order)
          const response = await Axios_instance.patch(`users/${user.id}`, { orders: order })
@@ -98,15 +99,17 @@ export const OrderProvider = ({ children }) => {
 
    }
 
-   const addBuyNowPayment = async (paymentId, subtotal, productId) => {
+   const addBuyNowPayment = async (paymentId, subtotal, productId,type) => {
+
 
       try {
+         console.log(type.type)
          const product = await Axios_instance.get(`products/${productId}`)
          const ProductData = { productId: product.data.id, productName: product.data.name, productPrice: product.data.price, productImage: product.data.image, productQuantity: 1 }
 
          const userResponse = await Axios_instance.get(`users/${user.id}`)
          const userResponseData = userResponse.data
-         const order = [ { id: Date.now(), products: [ProductData],userId:user.id, status:"pending",payment: paymentId, subTotal: subtotal, date: new Date().toISOString().split("T")[0], shippingAddress: shippingDetails },...userResponseData.orders]
+         const order = [ { id: Date.now(), products: [ProductData],userId:user.id, status:"pending",paymentType:type.type,payment: paymentId, subTotal: subtotal, date: new Date().toISOString().split("T")[0], shippingAddress: shippingDetails },...userResponseData.orders]
 
          setOrderDetails(order)
          await Axios_instance.patch(`users/${user.id}`, { orders: order })

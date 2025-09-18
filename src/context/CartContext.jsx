@@ -42,8 +42,7 @@ export const CartProvider = ({ children }) => {
         if (user.id) {
             fetchCartData()
         }
-
-    }, [subTotal])
+    }, [])
 
 
 
@@ -75,7 +74,7 @@ export const CartProvider = ({ children }) => {
                 const userUpdated = { ...userData, cart }
 
 
-                const cartUpdated = await Axios_instance.put(`/users/${user.id}`, userUpdated)
+                await Axios_instance.put(`/users/${user.id}`, userUpdated)
                 const subtotal = cart.reduce((sum, item) => sum + item.productPrice * item.productQuantity, 0);
                 setSubTotal(subtotal);
                 toast.success("Added to cart!");
@@ -132,7 +131,9 @@ export const CartProvider = ({ children }) => {
             console.log(UpdatedCart)
 
         }
-        catch (e) { }
+        catch (e) {
+            console.log(e)
+         }
 
         console.log(cartItemCount)
     }
@@ -153,13 +154,15 @@ export const CartProvider = ({ children }) => {
             }
             const filteredCart = cartData.filter((item) => item.productId != id)
             setCartItems(filteredCart)
-            const updatedCart = await Axios_instance.patch(`/users/${user.id}`, { cart: filteredCart })
+            await Axios_instance.patch(`/users/${user.id}`, { cart: filteredCart })
 
             toast.success("Item Removed ")
             const subtotal = filteredCart.reduce((sum, item) => sum + item.productPrice * item.productQuantity, 0);
             setSubTotal(subtotal);
         }
-        catch (e) { }
+        catch (e) {
+            console.log(e)
+         }
 
         console.log(cartItemCount)
     }
@@ -167,7 +170,7 @@ export const CartProvider = ({ children }) => {
 
 
 
-    return (<CartContext.Provider value={{ addToCart, removeItem, updateQuantity,fetchCartData, cartItems, cartItemCount, subTotal }}>
+    return (<CartContext.Provider value={{ addToCart, removeItem, updateQuantity,fetchCartData, cartItems, cartItemCount, subTotal,setSubTotal }}>
         {children}
     </CartContext.Provider>)
 

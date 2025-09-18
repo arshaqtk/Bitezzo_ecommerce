@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
 
 export const ProductContext = createContext()
+
 export const ProductProvider = ({ children }) => {
     const [products, setProducts] = useState([])
     // const [refresh, setRefresh] = useState(false);
