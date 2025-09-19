@@ -16,14 +16,20 @@ function ProductDetailView() {
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    async function fetchData() {
+  async function fetchData() {
+    try {
       const { data } = await Axios_instance.get(`/products?id=${id}`);
-      console.log(data);
-      const filteredData = data.map(({ id, name, price, image, category, description, quantity }) => ({ id, name, price, image, description, category, quantity }));
-      setProduct(filteredData);
+      if (data.length > 0) {
+        const { id, name, price, image, category, description, quantity } = data[0];
+        setProduct([{ id, name, price, image, description, category, quantity }]);
+      }
+    } catch (error) {
+      console.error("Error fetching product:", error);
     }
-    fetchData();
-  }, [id]);
+  }
+  fetchData();
+}, [id]);
+
 
   // Fetch similar products based on category
   useEffect(() => {

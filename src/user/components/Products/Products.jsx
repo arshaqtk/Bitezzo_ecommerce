@@ -225,7 +225,7 @@ function Products() {
             : "space-y-6"
           }>
             {viewMode === 'grid' ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-4 md:px-8 max-w-screen-xl w-full">
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 px-2 sm:px-4 md:px-8 max-w-screen-xl w-full">
                 {product.map((item, index) => {
                   const { rating, count } = getRandomReviewData();
                   return (
@@ -234,15 +234,15 @@ function Products() {
                       className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group relative"
                     >
                       {/* Discount Badge */}
-                      <div className="absolute top-3 left-3 z-20">
-                        <span className="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-md">
+                      <div className="absolute top-2 sm:top-3 left-2 sm:left-3 z-20">
+                        <span className="bg-green-500 text-white text-xs font-bold px-1.5 sm:px-2 py-1 rounded-md">
                           -{Math.floor(Math.random() * 20 + 10)}%
                         </span>
                       </div>
 
                       {/* Wishlist Heart */}
                       <button
-                        className="absolute top-3 right-3 z-20 p-2 rounded-full bg-white/80 backdrop-blur-sm transition-all duration-200 hover:bg-white hover:scale-110"
+                        className="absolute top-2 sm:top-3 right-2 sm:right-3 z-20 p-1.5 sm:p-2 rounded-full bg-white/80 backdrop-blur-sm transition-all duration-200 hover:bg-white hover:scale-110"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleAddToWishlist(item);
@@ -250,7 +250,7 @@ function Products() {
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5"
+                          className="h-4 w-4 sm:h-5 sm:w-5"
                           fill={isInWishlist(item.id) ? "#ef4444" : "none"}
                           stroke={isInWishlist(item.id) ? "#ef4444" : "#6b7280"}
                           strokeWidth={2}
@@ -262,7 +262,7 @@ function Products() {
 
                       {/* Image Section */}
                       <div
-                        className="relative h-48 overflow-hidden cursor-pointer"
+                        className="relative h-32 sm:h-48 overflow-hidden cursor-pointer"
                         onClick={() => navigate(`/productview/${item.id}`)}
                       >
                         <img
@@ -274,13 +274,13 @@ function Products() {
                       </div>
 
                       {/* Content Section */}
-                      <div className="p-4">
+                      <div className="p-3 sm:p-4">
                         {/* Stars Rating */}
-                        <div className="flex items-center gap-1 mb-2">
+                        <div className="flex items-center gap-1 mb-1 sm:mb-2">
                           {[...Array(5)].map((_, i) => (
                             <svg
                               key={i}
-                              className={`h-3 w-3 ${i < Math.round(rating) ? "text-yellow-400 fill-current" : "text-gray-300"}`}
+                              className={`h-2.5 w-2.5 sm:h-3 sm:w-3 ${i < Math.round(rating) ? "text-yellow-400 fill-current" : "text-gray-300"}`}
                               viewBox="0 0 24 24"
                             >
                               <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 18.896l-7.416 3.871 1.48-8.279L.004 9.306l8.332-1.151L12 .587z" />
@@ -290,14 +290,14 @@ function Products() {
                         </div>
 
                         {/* Product Name */}
-                        <h3 className="font-semibold text-gray-800 text-sm mb-3 line-clamp-2 leading-tight">
+                        <h3 className="font-semibold text-gray-800 text-xs sm:text-sm mb-2 sm:mb-3 line-clamp-2 leading-tight">
                           {item.name}
                         </h3>
 
                         {/* Price and Add Button Row */}
                         <div className="flex items-center justify-between">
                           <div className="flex flex-col">
-                            <span className="text-lg font-bold text-gray-900">₹{item.price}</span>
+                            <span className="text-sm sm:text-lg font-bold text-gray-900">₹{item.price}</span>
                             <span className="text-xs text-gray-400 line-through">
                               ₹{Math.floor(item.price * 1.2)}
                             </span>
@@ -306,7 +306,7 @@ function Products() {
                           {/* Add to Cart Button */}
                           {isInCart(item.id) ? (
                             <button
-                              className="p-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                              className="p-1.5 sm:p-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 navigate("/cart");
@@ -314,7 +314,7 @@ function Products() {
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
-                                className="h-5 w-5"
+                                className="h-4 w-4 sm:h-5 sm:w-5"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
@@ -325,7 +325,7 @@ function Products() {
                             </button>
                           ) : (
                             <button
-                              className="p-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+                              className="p-1.5 sm:p-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleAddToCart(item);
@@ -333,7 +333,7 @@ function Products() {
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
-                                className="h-5 w-5"
+                                className="h-4 w-4 sm:h-5 sm:w-5"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"

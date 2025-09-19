@@ -1,218 +1,208 @@
-import { useContext, useReducer,useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
-import { AuthContext } from '../../context/AuthContext'
-import toast from 'react-hot-toast';
-
-
-function reducer(state, action) {
-  switch (action.type) {
-    case 'USER-NAME':
-      return { ...state, username: action.payload }
-    case 'E-MAIL':
-      return { ...state, email: action.payload }
-    case 'PASSWORD':
-      return { ...state, password: action.payload }
-    case 'CNFRM_PSWRD':
-      return { ...state, cnfmPswrd: action.payload }
-  }
-}
-const initialValue = {
-  username: "",
-  email: "",
-  password: "",
-  cnfmPswrd: ""
-}
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+import {
+  EyeIcon,
+  EyeSlashIcon,
+  EnvelopeIcon,
+  LockClosedIcon,
+  UserIcon,
+} from "@heroicons/react/24/outline";
+import { ChefHat } from "lucide-react";
+import toast from "react-hot-toast";
 
 function Signup() {
-
-  // const navigate = useNavigate()
-  const [state, dispatch] = useReducer(reducer, initialValue)
-  const { signup } = useContext(AuthContext)
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [showError,setShowError]=useState('')
-  const navigate = useNavigate()
+  const [showError, setShowError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { signup } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-
-  const handlesubmit = async (e) => {
-
-    e.preventDefault()
-
-
+  const handleFormData = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
     try {
-
-      if (state.password !== state.cnfmPswrd) {
-        toast.error("password and cnfrm are not same")
-        throw new Error("password and cnfrm are not same")
-
+      if (!name.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
+        toast.error("Please fill in all fields");
+      } else if (password !== confirmPassword) {
+        toast.error("Passwords do not match");
+      } else {
+        await signup(name, email, password);
       }
-
-      else if (state.password.length < 8) {
-        toast.error("Password is lessthan 8 characters")
-        throw new Error("Password is lessthan 8 characters")
-      }
-
-      else if (
-        !state.username.trim() ||
-        !state.email.trim() ||
-        !state.password.trim() ||
-        !state.cnfmPswrd.trim()
-      ) {
-        toast.error("Please fill in all fields")
-        throw new Error("Please fill in all fields");
-      }
-
-      else {
-        const newUser = {
-          username: state.username,
-          email: state.email,
-          password: state.password
-        }
-        await signup(newUser)
-      }
-
     } catch (e) {
-      setShowError(e.message)
+      setShowError(e.message);
+    } finally {
+      setIsLoading(false);
     }
-    console.log(showError)
-  }
+  };
 
   return (
-    <>
-     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-6">
-  <div className="flex bg-white rounded-2xl shadow-xl overflow-hidden max-w-4xl w-full gap-6">
-    
-    {/* Left Side Image */}
-    <div className="hidden lg:flex w-1/2">
-      <img
-        src="https://images.pexels.com/photos/70497/pexels-photo-70497.jpeg"
-        alt="Food"
-        className="rounded-l-2xl h-full w-full object-cover"
-      />
-    </div>
-
-    {/* Right Side Form */}
-    <div className="flex justify-center items-center w-full lg:w-1/2 p-8">
-      <div className="w-full max-w-md">
-        {/* Project Name */}
-        <h2 className="text-4xl font-extrabold text-yellow-600 mb-6 text-center">
-          🍴 Bitezzo
-        </h2>
-
-        <form onSubmit={handlesubmit} className="space-y-5">
-          {/* Username */}
-          <div>
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-              Name
-            </label>
-            <input
-              type="text"
-              placeholder="Enter your name"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none"
-              required
-              onChange={(e) => dispatch({ type: "USER-NAME", payload: e.target.value })}
-            />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 via-white to-gray-200 p-6">
+      <div className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
+        
+        {/* Left Branding */}
+        <div className="md:w-1/2 bg-gradient-to-br from-indigo-500 to-blue-600 text-white p-10 flex flex-col justify-center items-center">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
+              <ChefHat className="w-7 h-7 text-white" />
+            </div>
+            <h1 className="text-3xl font-bold">Bitezzo</h1>
           </div>
+          <h2 className="text-2xl font-semibold mb-3">Culinary Excellence</h2>
+          <p className="text-blue-100 text-center leading-relaxed text-sm">
+            Join us and start your journey with the finest dishes crafted by our expert chefs.
+          </p>
+          <img
+            src="https://images.pexels.com/photos/70497/pexels-photo-70497.jpeg"
+            alt="Food"
+            className="rounded-lg shadow-lg mt-6 w-52 md:w-64"
+          />
+        </div>
 
-          {/* Email */}
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              E-mail
-            </label>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none"
-              required
-              onChange={(e) => dispatch({ type: "E-MAIL", payload: e.target.value })}
-            />
-          </div>
+        {/* Right Signup Form */}
+        <div className="md:w-1/2 p-10 flex items-center justify-center">
+          <div className="w-full max-w-md">
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold text-gray-800">Create Account</h3>
+              <p className="text-gray-500 text-sm">
+                Fill in your details to register and get started
+              </p>
+            </div>
 
-          {/* Password */}
-          <div className="relative">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-3 py-2 pr-10 focus:ring-yellow-400 focus:border-yellow-400 outline-none"
-              required
-              onChange={(e) => dispatch({ type: "PASSWORD", payload: e.target.value })}
-            />
-            <button
-              type="button"
-              className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? (
-                <EyeSlashIcon className="h-5 w-5" />
-              ) : (
-                <EyeIcon className="h-5 w-5" />
+            <form onSubmit={handleFormData} className="space-y-5">
+              {/* Name */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Full Name
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    required
+                    placeholder="Enter your full name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 pl-11 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+                  />
+                  <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                </div>
+              </div>
+
+              {/* Email */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <input
+                    type="email"
+                    required
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 pl-11 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+                  />
+                  <EnvelopeIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                </div>
+              </div>
+
+              {/* Password */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    required
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 pl-11 pr-11 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+                  />
+                  <LockClosedIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    {showPassword ? (
+                      <EyeSlashIcon className="h-5 w-5" />
+                    ) : (
+                      <EyeIcon className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Confirm Password */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Confirm Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    required
+                    placeholder="Confirm your password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 pl-11 pr-11 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+                  />
+                  <LockClosedIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    {showConfirmPassword ? (
+                      <EyeSlashIcon className="h-5 w-5" />
+                    ) : (
+                      <EyeIcon className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Error */}
+              {showError && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                  <p className="text-red-600 text-sm text-center">{showError}</p>
+                </div>
               )}
-            </button>
+
+              {/* Submit */}
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-semibold text-base shadow-md transition disabled:opacity-60"
+              >
+                {isLoading ? "Creating Account..." : "Sign Up"}
+              </button>
+            </form>
+
+            {/* Login Link */}
+            <div className="text-center mt-6">
+              <p className="text-sm text-gray-600">
+                Already have an account?{" "}
+                <button
+                  onClick={() => navigate("/login")}
+                  className="text-indigo-600 font-semibold hover:underline"
+                >
+                  Sign In
+                </button>
+              </p>
+            </div>
           </div>
-
-          {/* Confirm Password */}
-          <div className="relative">
-            <label htmlFor="cnfrm-pswrd" className="block text-sm font-medium text-gray-700">
-              Confirm Password
-            </label>
-            <input
-              type={showConfirmPassword ? "text" : "password"}
-              placeholder="Re-enter your password"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-3 py-2 pr-10 focus:ring-yellow-400 focus:border-yellow-400 outline-none"
-              required
-              onChange={(e) => dispatch({ type: "CNFRM_PSWRD", payload: e.target.value })}
-            />
-            <button
-              type="button"
-              className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            >
-              {showConfirmPassword ? (
-                <EyeSlashIcon className="h-5 w-5" />
-              ) : (
-                <EyeIcon className="h-5 w-5" />
-              )}
-            </button>
-          </div>
-
-          {/* Error */}
-          <div>
-            <p className="text-red-500 text-center text-sm">
-              {showError ? showError : null}
-            </p>
-          </div>
-
-          {/* Submit */}
-          <button
-            type="submit"
-            className="w-full bg-yellow-500 text-white py-2 rounded-lg font-semibold hover:bg-yellow-600 transition duration-200"
-          >
-            Sign Up
-          </button>
-        </form>
-
-        <p className="mt-6 text-sm text-gray-600 text-center">
-          Already have an account?{" "}
-          <button
-            onClick={() => navigate("/login")}
-            className="text-yellow-600 font-semibold hover:underline border-none"
-          >
-            Login
-          </button>
-        </p>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-
-
-
-    </>
-  )
+  );
 }
 
-export default Signup
+export default Signup;

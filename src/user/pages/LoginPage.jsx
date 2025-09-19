@@ -1,134 +1,165 @@
-import { useContext, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { AuthContext } from '../../context/AuthContext'
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
-import toast from 'react-hot-toast';
-
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+import {
+  EyeIcon,
+  EyeSlashIcon,
+  EnvelopeIcon,
+  LockClosedIcon,
+} from "@heroicons/react/24/outline";
+import { ChefHat } from "lucide-react";
+import toast from "react-hot-toast";
 
 function Login() {
-
-  const [email, setEmail] = useState("")
-  const [password, SetPassword] = useState("")
+  const [email, setEmail] = useState("");
+  const [password, SetPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showError, setShowError] = useState('')
-  const { login } = useContext(AuthContext)
-  const navigate = useNavigate()
-
-
+  const [showError, setShowError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleFormData = async (e) => {
-    e.preventDefault()
-    console.log("form called")
+    e.preventDefault();
+    setIsLoading(true);
     try {
-      if (
-        !email.trim() ||
-        !password.trim()) {
+      if (!email.trim() || !password.trim()) {
         toast.error("Please fill in all fields");
       } else {
-        await login(email, password)
+        await login(email, password);
       }
-
-
     } catch (e) {
-      setShowError(e.message)
+      setShowError(e.message);
+    } finally {
+      setIsLoading(false);
     }
-  }
+  };
 
-  return (<div className="flex justify-center items-center min-h-screen bg-gray-100 p-6">
-  <div className="flex bg-white rounded-2xl shadow-xl overflow-hidden max-w-4xl w-full gap-6">
-    
-    {/* Left Side Image */}
-    <div className="hidden lg:flex w-1/2">
-      <img
-        src="https://images.pexels.com/photos/70497/pexels-photo-70497.jpeg"
-        alt="Food"
-        className="rounded-l-2xl h-full w-full object-cover"
-      />
-    </div>
-
-    {/* Right Side Form */}
-    <div className="flex justify-center items-center w-full lg:w-1/2 p-8">
-      <div className="w-full max-w-md">
-        {/* Project Name */}
-        <h2 className="text-4xl font-extrabold text-yellow-600 mb-6 text-center">
-          🍴 Bitezzo
-        </h2>
-
-        <form onSubmit={handleFormData} className="space-y-6">
-          {/* Email */}
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              required
-              placeholder="Enter Email"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none"
-              onChange={(e) => setEmail(e.target.value)}
-            />
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 via-white to-gray-200 p-6">
+      <div className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
+        
+        {/* Left Branding */}
+        <div className="md:w-1/2 bg-gradient-to-br from-indigo-500 to-blue-600 text-white p-10 flex flex-col justify-center items-center">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
+              <ChefHat className="w-7 h-7 text-white" />
+            </div>
+            <h1 className="text-3xl font-bold">Bitezzo</h1>
           </div>
+          <h2 className="text-2xl font-semibold mb-3">Culinary Excellence</h2>
+          <p className="text-blue-100 text-center leading-relaxed text-sm">
+            Sign in and continue your journey with the finest dishes crafted by our expert chefs.
+          </p>
+          <img
+            src="https://images.pexels.com/photos/70497/pexels-photo-70497.jpeg"
+            alt="Food"
+            className="rounded-lg shadow-lg mt-6 w-52 md:w-64"
+          />
+        </div>
 
-          {/* Password */}
-          <div className="relative">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <input
-              type={showPassword ? "text" : "password"}
-              id="password"
-              required
-              placeholder="Enter Password"
-              className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2 pr-10 focus:ring-yellow-400 focus:border-yellow-400 outline-none"
-              onChange={(e) => SetPassword(e.target.value)}
-            />
-            <button
-              type="button"
-              className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? (
-                <EyeSlashIcon className="h-5 w-5" />
-              ) : (
-                <EyeIcon className="h-5 w-5" />
+        {/* Right Login Form */}
+        <div className="md:w-1/2 p-10 flex items-center justify-center">
+          <div className="w-full max-w-md">
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold text-gray-800">Sign In</h3>
+              <p className="text-gray-500 text-sm">
+                Enter your credentials to access your account
+              </p>
+            </div>
+
+            <form onSubmit={handleFormData} className="space-y-5">
+              {/* Email */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <input
+                    type="email"
+                    required
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 pl-11 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+                  />
+                  <EnvelopeIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                </div>
+              </div>
+
+              {/* Password */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    required
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => SetPassword(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 pl-11 pr-11 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+                  />
+                  <LockClosedIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    {showPassword ? (
+                      <EyeSlashIcon className="h-5 w-5" />
+                    ) : (
+                      <EyeIcon className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Forgot Password */}
+              <div className="text-right">
+                <button
+                  type="button"
+                  className="text-sm text-indigo-600 hover:underline"
+                >
+                  Forgot Password?
+                </button>
+              </div>
+
+              {/* Error */}
+              {showError && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                  <p className="text-red-600 text-sm text-center">{showError}</p>
+                </div>
               )}
-            </button>
+
+              {/* Submit */}
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-semibold text-base shadow-md transition disabled:opacity-60"
+              >
+                {isLoading ? "Signing In..." : "Sign In"}
+              </button>
+            </form>
+
+            {/* Signup Link */}
+            <div className="text-center mt-6">
+              <p className="text-sm text-gray-600">
+                Don’t have an account?{" "}
+                <button
+                  onClick={() => navigate("/signup")}
+                  className="text-indigo-600 font-semibold hover:underline"
+                >
+                  Create Account
+                </button>
+              </p>
+            </div>
           </div>
-
-          {/* Error */}
-          <div>
-            <p className="text-red-500 text-center text-sm">
-              {showError ? showError : null}
-            </p>
-          </div>
-
-          {/* Submit */}
-          <button
-            type="submit"
-            className="w-full bg-yellow-500 text-white py-2 rounded-lg font-semibold hover:bg-yellow-600 transition duration-200"
-          >
-            Login
-          </button>
-        </form>
-
-        <p className="mt-6 text-sm text-gray-600 text-center">
-          Don’t have an account?{" "}
-          <button
-            onClick={() => navigate("/signup")}
-            className="text-yellow-600 font-semibold hover:underline border-none"
-          >
-            Sign Up
-          </button>
-        </p>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-
-
-
-  )
+  );
 }
 
-export default Login
+export default Login;
