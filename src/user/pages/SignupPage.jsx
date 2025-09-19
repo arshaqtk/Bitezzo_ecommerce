@@ -57,11 +57,11 @@ function Signup() {
           <p className="text-blue-100 text-center leading-relaxed text-sm">
             Join us and start your journey with the finest dishes crafted by our expert chefs.
           </p>
-          <img
+          {/* <img
             src="https://images.pexels.com/photos/70497/pexels-photo-70497.jpeg"
             alt="Food"
             className="rounded-lg shadow-lg mt-6 w-52 md:w-64"
-          />
+          /> */}
         </div>
 
         {/* Right Signup Form */}
