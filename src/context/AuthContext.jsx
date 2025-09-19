@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
         toast.error("Email id Already Exists")
       } else {
 
-        const userData = { ...newuser,phone:"", image: profileIcon, role: "user", isAuthenticated: true, cart: [], wishlist: [], shippingAddress: [], orders: [] }
+        const userData = { ...newuser, image: profileIcon, role: "user", isAuthenticated: true, cart: [], wishlist: [], shippingAddress: [], orders: [] }
 
         const Postresponse = await Axios_instance.post('/users', userData)
 

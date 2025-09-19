@@ -42,6 +42,7 @@ export default function UsersTable() {
 
   // Filter users based on search term and status
   const filteredUsers = users.filter(user => {
+    console.log(user)
     const matchesSearch = user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          user.email.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "all" || 
